@@ -16,7 +16,7 @@ function App() {
 
     const theme = createTheme({ palette: { mode } });
     useEffect(() => {
-        toast.success("Welcome to React-Toastify!");
+
     }, []);
     return (
         <ThemeProvider theme={theme}>

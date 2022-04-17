@@ -1,8 +1,11 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import reactDom from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import AppRoutes from "../components/AppRoutes";
+import Header from "../components/Header";
 
 function App() {
     const [mode, setMode] = useState(localStorage.getItem("theme") || "light");
@@ -14,11 +17,19 @@ function App() {
     const theme = createTheme({ palette: { mode } });
     useEffect(() => {
         toast.success("Welcome to React-Toastify!");
-        }, []);
+    }, []);
     return (
         <ThemeProvider theme={theme}>
-            <div>uewuieuiefuie</div>
-            <ToastContainer position="bottom-right" />
+            <BrowserRouter>
+                <Fragment>
+                    <Header
+                        isDarkTheme={mode === "dark"}
+                        onToggleDarkTheme={onToggleDarkTheme}
+                    />
+                    <AppRoutes />
+                    <ToastContainer position="bottom-right" />
+                </Fragment>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }

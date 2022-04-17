@@ -5,8 +5,19 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Grid,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+} from "@mui/material";
 
 function ContributionsPage() {
     return (
@@ -21,38 +32,127 @@ function ContributionsPage() {
 
 export default ContributionsPage;
 
-function ContributionItem({expanded=false}) {
+function ContributionItem({ expanded = undefined }) {
     return (
-        <Accordion expanded={expanded} >
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-            >
-                <Typography>Accordion 1</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Table>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>
-                                Date de debut
-                            </TableCell>
-                            <TableCell>
-                                22/32/2332
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>
-                                Date de fin
-                            </TableCell>
-                            <TableCell>
-                                22/32/2332
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </AccordionDetails>
-        </Accordion>
+        <Box sx={{ borderColor: "grey.500", padding: 2 }}>
+            <Accordion expanded={expanded}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography component="h3" variant="h4">
+                        Accordion 1
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container columnSpacing={{ md: 3 }}>
+                        <Grid item xs={6} md={6}>
+                            <Table>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>Coordonateur</TableCell>
+                                        <TableCell>Jean Robet</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Seance numero</TableCell>
+                                        <TableCell>15</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Nombre de membres</TableCell>
+                                        <TableCell>15</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Date de debut</TableCell>
+                                        <TableCell>22/32/2332</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Date de fin</TableCell>
+                                        <TableCell>22/32/2332</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                            <Box mt={1}>
+                                <Button variant="contained" fullWidth>
+                                    Payer ma cautisation
+                                </Button>
+                            </Box>
+                            <Box mt={1}>
+                                <Button
+                                    color="success"
+                                    variant="outlined"
+                                    fullWidth
+                                >
+                                    Payer une ancienne cautisation
+                                </Button>
+                            </Box>
+                            <Box mt={1}>
+                                <Button
+                                    color="error"
+                                    variant="contained"
+                                    fullWidth
+                                >
+                                    Quitter la cautisation
+                                </Button>
+                            </Box>
+                        </Grid>
+                        <Grid item md={6}>
+                            <Box
+                                component={Paper}
+                                sx={{
+                                    border: 0.4,
+                                    borderColor: "grey.500",
+                                    padding: 2,
+                                }}
+                            >
+                                <Typography component="h3" variant="h4">
+                                    Reglements
+                                </Typography>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>Reglements 1</TableCell>
+                                            <TableCell>
+                                                Lorem, ipsum dolor sit amet
+                                                consectetur adipisicing elit.
+                                                Fuga minima numquam odio,
+                                                officia alias, excepturi
+                                                molestiae autem error quasi
+                                                labore at nesciunt amet, iste
+                                                reiciendis rerum cum aut quae
+                                                sed!
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Reglements 2</TableCell>
+                                            <TableCell>22/32/2332</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+
+                                <Box mt={1}>
+                                    <Button
+                                        color="primary"
+                                        variant="outlined"
+                                        fullWidth
+                                    >
+                                        Plus de details
+                                    </Button>
+                                </Box>
+                                <Box mt={1}>
+                                    <Button
+                                        color="success"
+                                        variant="contained"
+                                        fullWidth
+                                    >
+                                        Rejoindre la cautisation
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+        </Box>
     );
 }

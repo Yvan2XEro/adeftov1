@@ -21,7 +21,7 @@ function ContributionsPage() {
 
 export default ContributionsPage;
 
-function ContributionItem({expanded=false}) {
+function ContributionItem({expanded=undefined}) {
     return (
         <Accordion expanded={expanded} >
             <AccordionSummary

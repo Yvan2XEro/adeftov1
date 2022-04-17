@@ -4,6 +4,7 @@ import ContributionsPage from '../pages/ContributionsPage'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
+import AdminHomePage from '../pages/admin/AdminHomePage'
 
 const APP_ROUTES = [
     {
@@ -21,6 +22,11 @@ const APP_ROUTES = [
     },{
         path: '/contributions',
         element: <ContributionsPage />,
+        exact: true
+    },
+    {
+        path: '/adminhome',
+        element: <AdminHomePage />,
         exact: true
     },
 ]

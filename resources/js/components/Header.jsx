@@ -9,12 +9,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Button, Switch } from "@mui/material";
+import { Button, Switch, useMediaQuery, useTheme } from "@mui/material";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { toast } from "react-toastify";
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from "./Drawer";
+
 
 export default function Header({ onToggleDarkTheme, isDarkTheme }) {
-
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,9 +39,11 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <NavLink to="/" className="nav-link" activeClassName="active">
+            <Button>
+                <NavLink to="/" className="nav-link" activeClassName="active">
               <HomeIcon />
             </NavLink>
+            </Button>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <NavLink className="nav-link" activeClassName="active" to="contributions">
@@ -100,8 +106,12 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
             onChange={onToggleDarkTheme}
             inputProps={{ "aria-label": "controlled" }}
           />
+          {isMobile && <IconButton onClick={() => setOpenDrawer(!openDrawer)}>
+                <MenuIcon />
+        </IconButton>}
         </Toolbar>
       </AppBar>
+      {isMobile && <Drawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />}
     </>
   );
 }

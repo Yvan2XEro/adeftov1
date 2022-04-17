@@ -40,8 +40,8 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
             </NavLink>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <NavLink className="nav-link" activeClassName="active" to="posts">
-              News
+            <NavLink className="nav-link" activeClassName="active" to="contributions">
+              Cautisations
             </NavLink>
           </Typography>
           {(
@@ -96,7 +96,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
 
           <Switch
             checked={isDarkTheme}
-            icon={<DarkModeIcon color="secondary" />}
+            icon={<DarkModeIcon color="primary" />}
             onChange={onToggleDarkTheme}
             inputProps={{ "aria-label": "controlled" }}
           />

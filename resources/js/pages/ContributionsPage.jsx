@@ -3,9 +3,14 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import AddCardIcon from '@mui/icons-material/AddCard';
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from '@mui/icons-material/Add';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import {
     Accordion,
     AccordionDetails,
@@ -18,6 +23,8 @@ import {
     TableCell,
     TableRow,
 } from "@mui/material";
+import PaymentModal from "../components/PaymentModal";
+import { Link } from "react-router-dom";
 
 function ContributionsPage() {
     return (
@@ -33,6 +40,7 @@ function ContributionsPage() {
 export default ContributionsPage;
 
 function ContributionItem({ expanded = undefined }) {
+    const [openModal, setOpenModal] = React.useState(false)
     return (
         <Box sx={{ borderColor: "grey.500", padding: 2 }}>
             <Accordion expanded={expanded}>
@@ -73,7 +81,7 @@ function ContributionItem({ expanded = undefined }) {
                                 </TableBody>
                             </Table>
                             <Box mt={1}>
-                                <Button variant="contained" fullWidth>
+                                <Button startIcon={<AttachMoneyIcon />} variant="contained" fullWidth>
                                     Payer ma cautisation
                                 </Button>
                             </Box>
@@ -81,7 +89,11 @@ function ContributionItem({ expanded = undefined }) {
                                 <Button
                                     color="success"
                                     variant="outlined"
+                                    onClick={() => {
+                                        setOpenModal(true)
+                                    }}
                                     fullWidth
+                                    startIcon={<AccessTimeIcon />}
                                 >
                                     Payer une ancienne cautisation
                                 </Button>
@@ -91,6 +103,7 @@ function ContributionItem({ expanded = undefined }) {
                                     color="error"
                                     variant="contained"
                                     fullWidth
+                                    startIcon={<PersonRemoveIcon />}
                                 >
                                     Quitter la cautisation
                                 </Button>
@@ -134,7 +147,10 @@ function ContributionItem({ expanded = undefined }) {
                                     <Button
                                         color="primary"
                                         variant="outlined"
+                                        component={Link}
+                                        to="/contributions/1/details"
                                         fullWidth
+                                        startIcon={<AddIcon />}
                                     >
                                         Plus de details
                                     </Button>
@@ -143,7 +159,10 @@ function ContributionItem({ expanded = undefined }) {
                                     <Button
                                         color="success"
                                         variant="contained"
+                                        to="/contributions/1/new-member"
+                                        component={Link}
                                         fullWidth
+                                        startIcon={<AddCardIcon />}
                                     >
                                         Rejoindre la cautisation
                                     </Button>
@@ -153,6 +172,7 @@ function ContributionItem({ expanded = undefined }) {
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+            <PaymentModal open={openModal} onClose={()=>setOpenModal(false)}/>
         </Box>
     );
 }

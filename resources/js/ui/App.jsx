@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import reactDom from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "../components/AppRoutes";
@@ -20,7 +20,7 @@ function App() {
     }, []);
     return (
         <ThemeProvider theme={theme}>
-            <BrowserRouter>
+            <HashRouter>
                 <Fragment>
                     <Header
                         isDarkTheme={mode === "dark"}
@@ -29,7 +29,7 @@ function App() {
                     <AppRoutes />
                     <ToastContainer position="bottom-right" />
                 </Fragment>
-            </BrowserRouter>
+            </HashRouter>
         </ThemeProvider>
     );
 }

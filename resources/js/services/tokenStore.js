@@ -2,7 +2,8 @@ const ACCESS_KEY = "uijdjdjdjdsjkjdsjkjkhshfhfjjkajdjkfjka";
 
 function getToken() {
     const token = window.localStorage.getItem(ACCESS_KEY);
-    if (token) return token;
+    if (!!token) return token;
+    return null;
 }
 
 function setToken(token) {

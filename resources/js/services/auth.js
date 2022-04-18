@@ -6,7 +6,7 @@ import tokenStore from "./tokenStore";
 async function login(credentials) {
     try {
         const response = await axios.post(`${API_URL}/login`, credentials);
-        const { token } = response.data.token;
+        const { token } = response.data;
         tokenStore.setToken(token);
         setAxiosToken(token);
         return Promise.resolve(response);
@@ -17,13 +17,25 @@ async function login(credentials) {
     }
 }
 
+async function register(data) {
+    try {
+        const response = await axios.post(`${API_URL}/register`, data);
+        const { token } = response.data;
+        tokenStore.setToken(token);
+        setAxiosToken(token);
+        return Promise.resolve(response);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
 function isAuthenticated() {
     const token = tokenStore.getToken();
-    if (token) {
-        const { exp } = jwtDecode(token);
-        if (exp * 1000 > new Date().getTime()) return true;
+    if (!token) {
+        return false;
     }
-    return false;
+    const { exp } = jwtDecode(token);
+    return exp * 1000 > new Date().getTime();
 }
 
 function logout() {
@@ -37,9 +49,14 @@ function setAxiosToken(token) {
 
 function setup() {
     const token = tokenStore.getToken();
-    if (token) {
-        const { exp } = jwtDecode(token);
-        if (exp * 1000 > new Date().getTime()) setAxiosToken(token);
+    if (token !== null) {
+        console.log("Token found!", typeof token);
+        try {
+            const { exp } = jwtDecode(token);
+            if (exp * 1000 > new Date().getTime()) setAxiosToken(token);
+        } catch (error) {
+            console.log("Token is invalid!");
+        }
     }
 }
 
@@ -47,5 +64,6 @@ export default {
     login,
     logout,
     setup,
+    register,
     isAuthenticated,
 };

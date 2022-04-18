@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\{Auth, Validator, Hash};
 use App\Models\ApiError;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -95,4 +95,11 @@ class AuthController extends Controller
         $error = new ApiError("User.LOGOUT_SUCCESS", 200);
         return response()->json($error);
     }
+
+    public function Profile()
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        return response()->json($user, 200);
+    }
+
 }

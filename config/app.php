@@ -192,6 +192,15 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Lang' => Illuminate\Support\Facades\Lang::class,
+        'Mail' => Illuminate\Support\Facades\Mail::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
+        'Blade' => Illuminate\Support\Facades\Blade::class,
+        'Cache' => Illuminate\Support\Facades\Cache::class,
+        'Config' => Illuminate\Support\Facades\Config::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
+        'Redirect' => Illuminate\Support\Facades\Redirect::class,
+        'Validator' => Illuminate\Support\Facades\Validator::class,
     ])->toArray(),
 
 ];

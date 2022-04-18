@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Box } from "@mui/system";
 import { Button, Drawer as MuiDrawer } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 function Drawer({ openDrawer, setOpenDrawer }) {
+    const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
     return (
         <MuiDrawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
             <Box
@@ -24,16 +26,16 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                             Acceuil
                         </Button>
                     </Box>
-                    <Box>
+                    {isAuthenticated ? <Box>
                         <Button
-                            to="/"
+                            to="/contributions"
                             component={Link}
                             onClick={() => setOpenDrawer(false)}
                         >
                             Cotisations
                         </Button>
-                    </Box>
-                    <Box mt={2}>
+                    </Box> :
+                    <><Box mt={2}>
                         <Button
                             to="/login"
                             size="small"
@@ -54,19 +56,21 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                         >
                             Register
                         </Button>
-                    </Box>
-                    <Box mt={2}>
+                    </Box> </>}
+                    {isAuthenticated && <Box mt={2}>
                         <Button
                             variant="outlined"
                             to="/register"
                             color="error"
                             size="small"
                             component={Link}
-                            onClick={() => setOpenDrawer(false)}
+                            onClick={() => {
+                                logout();
+                                setOpenDrawer(false)}}
                         >
                             Logout
                         </Button>
-                    </Box>
+                    </Box>}
                 </Box>
             </Box>
         </MuiDrawer>

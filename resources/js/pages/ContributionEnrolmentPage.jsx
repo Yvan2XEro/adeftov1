@@ -1,7 +1,18 @@
 import { Box, Button, FormControl, FormLabel, Grid, TextField, Typography } from "@mui/material";
-import React from "react";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 function ContributionEnrolmentPage() {
+    const navigate = useNavigate();
+    const { isAuthenticated} = React.useContext(AuthContext);
+    React.useEffect(() => {
+        if(!isAuthenticated) {
+            toast.error("Vous devez être connecté pour accéder à cette page");
+            navigate("/login");
+        }
+    }, [isAuthenticated]);
     return (
         <Box mt={10} ml={1}>
             <Typography component="h1" variant="h4">

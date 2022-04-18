@@ -1,7 +1,9 @@
 import { AppBar, Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React from "react";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views/lib/SwipeableViews";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 function ContributionDetailsPage() {
     const theme = useTheme();
@@ -9,6 +11,14 @@ function ContributionDetailsPage() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    const navigate = useNavigate();
+    const { isAuthenticated} = React.useContext(AuthContext);
+    React.useEffect(() => {
+        if(!isAuthenticated) {
+            toast.error("Vous devez être connecté pour accéder à cette page");
+            navigate("/login");
+        }
+    }, [isAuthenticated]);
 
     const handleChangeIndex = (index) => {
         setValue(index);

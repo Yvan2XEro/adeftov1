@@ -24,9 +24,19 @@ import {
     TableRow,
 } from "@mui/material";
 import PaymentModal from "../components/PaymentModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContextProvider";
+import { toast } from "react-toastify";
 
 function ContributionsPage() {
+    const navigate = useNavigate();
+    const { isAuthenticated} = React.useContext(AuthContext);
+    React.useEffect(() => {
+        if(!isAuthenticated) {
+            toast.error("Vous devez être connecté pour accéder à cette page");
+            navigate("/login");
+        }
+    }, [isAuthenticated]);
     return (
         <Box mt={10}>
             <ContributionItem expanded={true} />

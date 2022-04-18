@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import ImageTheme from "../components/ImageTheme";
 import { useNavigate } from "react-router-dom";
@@ -19,26 +19,17 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
-import axios from "axios";
 import auth from "../services/auth";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 export default function LoginPage() {
-    const navigate = useNavigate();
-    const handleLogin = () => {
-        setIsAuthenticated(true);
-        toast.success("Login success!");
-        navigate("/posts");
-    };
     return (
         <>
             <Grid container component="main" sx={{ height: "100vh" }}>
                 <ImageTheme />
-                <LoginForm
-                    onSuccess={handleLogin}
-                    onFailure={() => toast.error("Wrong credentials")}
-                />
+                <LoginForm />
             </Grid>
         </>
     );
@@ -49,23 +40,32 @@ const shema = yup.object().shape({
     password: yup.string().min(6).required(),
 });
 
-const LoginForm = ({ onSuccess, onFailure }) => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    //   const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log(username, password);
-
-    //   };
+const LoginForm = () => {
+    const navigate = useNavigate();
+    const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate("/contributions");
+        }
+    }, [isAuthenticated]);
     const submit = async (data) => {
-        await auth.login(data)
-            .then(() => alert("success!"))
+        await auth
+            .login(data)
+            .then(() => {
+                toast.success("Login success!");
+                setIsAuthenticated(true);
+                navigate("/contributions");
+            })
             .catch((err) => {
-                if(!err.response) {
-                    toast.error("Server error! Please try later!", {autoClose: false})
-                }
-                else {
-                    alert(err.response.data.message)
+                if (!err.response) {
+                    toast.error("Server error! Please try later!", {
+                        autoClose: false,
+                    });
+                } else if (
+                    err.response.status >= 400 &&
+                    err.response.status < 500
+                ) {
+                    toast.error("Wrong credentials!", { autoClose: false });
                 }
             });
     };
@@ -74,7 +74,7 @@ const LoginForm = ({ onSuccess, onFailure }) => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting, isValid },
-    } = useForm({ mode: "onChange",resolver: yupResolver(shema) });
+    } = useForm({ mode: "onChange", resolver: yupResolver(shema) });
 
     return (
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "../components/AppRoutes";
 import Header from "../components/Header";
+import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
 
 auth.setup();
@@ -18,21 +19,21 @@ function App() {
     };
 
     const theme = createTheme({ palette: { mode } });
-    useEffect(() => {
-
-    }, []);
+    useEffect(() => {}, []);
     return (
         <ThemeProvider theme={theme}>
-            <HashRouter>
-                <Fragment>
-                    <Header
-                        isDarkTheme={mode === "dark"}
-                        onToggleDarkTheme={onToggleDarkTheme}
-                    />
-                    <AppRoutes />
-                    <ToastContainer position="bottom-right" />
-                </Fragment>
-            </HashRouter>
+            <AuthContextProvider>
+                <HashRouter>
+                    <Fragment>
+                        <Header
+                            isDarkTheme={mode === "dark"}
+                            onToggleDarkTheme={onToggleDarkTheme}
+                        />
+                        <AppRoutes />
+                        <ToastContainer position="bottom-right" />
+                    </Fragment>
+                </HashRouter>
+            </AuthContextProvider>
         </ThemeProvider>
     );
 }

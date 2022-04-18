@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\User;
 // use App\Http\Controllers\Auth\ResetPasswordAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    $u  = User::find($request->user()->id);
+    $u["permissions"] = $u->permissions;
+    $u["roles"] = $u->roles;
+    return $u;
 });
 // Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
 // Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');

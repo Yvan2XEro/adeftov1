@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\ResetPasswordAPIController;
+// use App\Http\Controllers\Auth\ResetPasswordAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
-Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');
+// Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
+// Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');
 
 // 'middleware' => ['cors']
 Route::group([], function () {

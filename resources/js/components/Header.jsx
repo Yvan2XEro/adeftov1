@@ -13,12 +13,14 @@ import { Button, Switch, useMediaQuery, useTheme } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "./Drawer";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const [openDrawer, setOpenDrawer] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const navigate = useNavigate();
+    const { isAdmin, user, isAuthenticated } = useContext(AuthContext);
 
     const handleLogout = () => {};
 
@@ -48,69 +50,74 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                     </IconButton>
                     {!isMobile && (
                         <>
-                            <Typography
-                                variant="h6"
-                                component="div"
-                                sx={{ flexGrow: 1 }}
-                            >
-                                <NavLink
-                                    className="nav-link"
-                                    activeClassName="active"
-                                    to="contributions"
+                            {isAuthenticated && (
+                                <Typography
+                                    variant="h6"
+                                    component="div"
+                                    sx={{ flexGrow: 1 }}
                                 >
-                                    Cautisations
-                                </NavLink>
-                            </Typography>
+                                    <NavLink
+                                        className="nav-link"
+                                        activeClassName="active"
+                                        to="contributions"
+                                    >
+                                        Cautisations
+                                    </NavLink>
+                                </Typography>
+                            )}
 
-                            <IconButton
-                                size="small"
-                                edge="start"
-                                color="inherit"
-                                aria-label="menu"
-                                sx={{ mr: 2 }}
-                            >
-                                <NavLink
-                                    className="nav-link"
-                                    activeClassName="active"
-                                    to="login"
-                                >
-                                    <LoginIcon
-                                        size="large"
+                            {!isAuthenticated ? (
+                                <>
+                                    <IconButton
+                                        size="small"
                                         edge="start"
                                         color="inherit"
-                                    />
-                                </NavLink>
-                            </IconButton>
-                            <IconButton
-                                size="small"
-                                edge="start"
-                                color="inherit"
-                                aria-label="menu"
-                                sx={{ mr: 2 }}
-                            >
-                                <NavLink
-                                    className="nav-link"
-                                    activeClassName="active"
-                                    to="register"
-                                >
-                                    <PersonAddIcon />
-                                </NavLink>
-                            </IconButton>
-                             {
-                        <>
-                            <Typography variant="small" component="div">
-                                Yooo
-                            </Typography>
-                            <Button
-                                className="nav-link"
-                                edge="start"
-                                color="inherit"
-                                onClick={() => handleLogout()}
-                            >
-                                <ExitToAppIcon size="small" />
-                            </Button>
-                        </>
-                    }
+                                        aria-label="menu"
+                                        sx={{ mr: 2 }}
+                                    >
+                                        <NavLink
+                                            className="nav-link"
+                                            activeClassName="active"
+                                            to="login"
+                                        >
+                                            <LoginIcon
+                                                size="large"
+                                                edge="start"
+                                                color="inherit"
+                                            />
+                                        </NavLink>
+                                    </IconButton>
+                                    <IconButton
+                                        size="small"
+                                        edge="start"
+                                        color="inherit"
+                                        aria-label="menu"
+                                        sx={{ mr: 2 }}
+                                    >
+                                        <NavLink
+                                            className="nav-link"
+                                            activeClassName="active"
+                                            to="register"
+                                        >
+                                            <PersonAddIcon />
+                                        </NavLink>
+                                    </IconButton>
+                                </>
+                            ) : (
+                                <>
+                                    <Typography variant="small" component="div">
+                                        Yooo
+                                    </Typography>
+                                    <Button
+                                        className="nav-link"
+                                        edge="start"
+                                        color="inherit"
+                                        onClick={() => handleLogout()}
+                                    >
+                                        <ExitToAppIcon size="small" />
+                                    </Button>
+                                </>
+                            )}
                         </>
                     )}
 

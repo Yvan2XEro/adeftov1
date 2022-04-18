@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views/lib/SwipeableViews";
+import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import Historique from "./Historique";
 import Infos from "./Infos";

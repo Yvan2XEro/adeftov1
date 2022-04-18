@@ -1,5 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+import ContributionDetailsPage from '../pages/ContributionDetailsPage'
+import ContributionEnrolmentPage from '../pages/ContributionEnrolmentPage'
 import ContributionsPage from '../pages/ContributionsPage'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
@@ -22,6 +24,14 @@ const APP_ROUTES = [
     },{
         path: '/contributions',
         element: <ContributionsPage />,
+        exact: true
+    },{
+        path: '/contributions/:id/details',
+        element: <ContributionDetailsPage />,
+        exact: true
+    },{
+        path: '/contributions/:id/new-member',
+        element: <ContributionEnrolmentPage />,
         exact: true
     },
     {

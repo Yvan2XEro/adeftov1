@@ -6,6 +6,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "../components/AppRoutes";
 import Header from "../components/Header";
+import auth from "../services/auth";
+
+auth.setup();
 
 function App() {
     const [mode, setMode] = useState(localStorage.getItem("theme") || "light");

@@ -1,2 +1,2 @@
-require("./bootstrap");
-require("./ui/App.jsx");
+import "./bootstrap";
+import "./ui/App.jsx";

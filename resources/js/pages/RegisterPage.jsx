@@ -1,13 +1,11 @@
 import ImageTheme from "../components/ImageTheme";
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box } from "@mui/system";
 import {
     Avatar,
     Button,
     Grid,
-    Checkbox,
     Paper,
-    FormControlLabel,
     TextField,
     Typography,
     FormControl,
@@ -20,6 +18,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import auth from "../services/auth";
+import { AuthContext } from "../contexts/AuthContextProvider";
+import { LoadingButton } from "@mui/lab";
 
 function RegisterPage() {
     return (
@@ -38,12 +38,15 @@ const shema = yup.object().shape({
     phone: yup.string().required(),
     password: yup.string().min(6).required(),
 });
+
 function RegisterForm() {
     const navigate = useNavigate();
+    const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
     const submit = async (data) => {
         await auth.register(data)
             .then(() => {
                 toast.success("Register success!");
+                setIsAuthenticated(true);
                 navigate("/contributions");
             })
             .catch((err) => {
@@ -56,6 +59,11 @@ function RegisterForm() {
                 }
             });
     };
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate("/contributions");
+        }
+    }, [isAuthenticated]);
     const { register, handleSubmit, formState: { errors, isSubmitting, isValid },  } = useForm({
         resolver: yupResolver(shema),
         mode: 'onChange'
@@ -200,14 +208,16 @@ function RegisterForm() {
                             </Typography>
                         )}
                     </FormControl>
-                    <Button
+                    <LoadingButton
+                        loading={isSubmitting}
+                        disabled={!isValid}
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
                         Register
-                    </Button>
+                    </LoadingButton>
                     <Copyright sx={{ mt: 5 }} />
                 </Box>
             </Box>

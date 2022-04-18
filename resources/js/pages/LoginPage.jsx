@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import ImageTheme from "../components/ImageTheme";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ import { LoadingButton } from "@mui/lab";
 import auth from "../services/auth";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 export default function LoginPage() {
     return (
@@ -41,11 +42,18 @@ const shema = yup.object().shape({
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate("/contributions");
+        }
+    }, [isAuthenticated]);
     const submit = async (data) => {
         await auth
             .login(data)
             .then(() => {
                 toast.success("Login success!");
+                setIsAuthenticated(true);
                 navigate("/contributions");
             })
             .catch((err) => {

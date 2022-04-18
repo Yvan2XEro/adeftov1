@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { AuthContext } from "../contexts/AuthContextProvider";
 
 function Drawer({ openDrawer, setOpenDrawer }) {
-    const { isAdmin, user, isAuthenticated } = useContext(AuthContext);
+    const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
     return (
         <MuiDrawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
             <Box
@@ -64,7 +64,9 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                             color="error"
                             size="small"
                             component={Link}
-                            onClick={() => setOpenDrawer(false)}
+                            onClick={() => {
+                                logout();
+                                setOpenDrawer(false)}}
                         >
                             Logout
                         </Button>

@@ -1,5 +1,5 @@
 import ImageTheme from "../components/ImageTheme";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import {
     Avatar,
@@ -9,6 +9,7 @@ import {
     TextField,
     Typography,
     FormControl,
+    Alert,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Copyright from "../components/Copyright";
@@ -41,6 +42,7 @@ const shema = yup.object().shape({
 
 function RegisterForm() {
     const navigate = useNavigate();
+    const [errorApiMsg, setErrorApiMsg] = useState("");
     const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
     const submit = async (data) => {
         await auth.register(data)
@@ -54,8 +56,9 @@ function RegisterForm() {
                     toast.error("Server error! Please try later!", {autoClose: false})
                 }
                 else if(err.response.status >=400 && err.response.status<500) {
-                    console.log(err.response.data);
-                    toast.error('Wrong credentials!', {autoClose: false})
+                    console.log(err.response.data.errors);
+                    setErrorApiMsg(err.response.data.errors[0]);
+                    toast.error(`Erreur de l'enregistrement`)
                 }
             });
     };
@@ -208,6 +211,8 @@ function RegisterForm() {
                             </Typography>
                         )}
                     </FormControl>
+
+                    {errorApiMsg && <Alert severity="error">{errorApiMsg}</Alert>}
                     <LoadingButton
                         loading={isSubmitting}
                         disabled={!isValid}

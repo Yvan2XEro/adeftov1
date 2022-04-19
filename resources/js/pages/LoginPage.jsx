@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Copyright from "../components/Copyright";
 import {
+    Alert,
     Avatar,
     Box,
     Button,
@@ -43,6 +44,7 @@ const shema = yup.object().shape({
 const LoginForm = () => {
     const navigate = useNavigate();
     const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
+    const [errorApi, setErrorApi] = useState("");
     useEffect(() => {
         if(isAuthenticated) {
             navigate("/contributions");
@@ -65,6 +67,7 @@ const LoginForm = () => {
                     err.response.status >= 400 &&
                     err.response.status < 500
                 ) {
+                    setErrorApi('Invalid credentials');
                     toast.error("Wrong credentials!", { autoClose: false });
                 }
             });
@@ -150,6 +153,7 @@ const LoginForm = () => {
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
+                    {errorApi && <Alert severity="error">{errorApi}</Alert>}
                     <LoadingButton
                         type="submit"
                         fullWidth

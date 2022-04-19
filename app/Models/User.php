@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
@@ -24,7 +24,7 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
-        'phone'
+        'phone',
     ];
 
     /**
@@ -45,9 +45,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function permissions()
-    {
-        return $this->belongsToMany(Permission::class);
-    }
 }

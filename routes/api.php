@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Models\User;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // use App\Http\Controllers\Auth\ResetPasswordAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +37,20 @@ Route::group([], function () {
             Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
     });
 });
+
+
+/*
+|   EMAILS VERIFICATION
+|*/
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');

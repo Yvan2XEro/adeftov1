@@ -9,6 +9,7 @@ use App\Models\ApiError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 
 /**
  * @Group(name="Auth", description="The authentication endpoint")
@@ -41,16 +42,24 @@ class AuthController extends Controller
         }
         $request['password'] = Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
-        $user = User::create($request->toArray());
+        try {
+            $user = User::create($request->toArray());
+            //code...
+        } catch (\Exception $e) {
+            dd($e);
+        }
 
 
         # Atache Role to simple user
         // $user->attachRole('user');
-        // dd("icicicic");
-
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-        $response = ['token' => $token];
-        return response($response, 200);
+        try {
+            event(new Registered($user));
+        } finally  {
+            $user['roles'] = $user->roles;
+            $user['permissions'] = $user->permissions;
+            return response(['token' => $token, 'user' => $user], 200);
+        }
     }
 
     /**
@@ -74,7 +83,9 @@ class AuthController extends Controller
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $response = ['user' => $user, 'token' => $token, 'roles' => $user->roles, 'permissions' => $user->permissions];
+                $user['roles'] = $user->roles;
+                $user['permissions'] = $user->permissions;
+                $response = ['user' => $user, 'token' => $token];
                 return response($response, 200);
             } else {
                 $error = new ApiError("User.CONNEXION_FAILLED", 422);

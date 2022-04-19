@@ -6,6 +6,7 @@ import ContributionsPage from '../pages/ContributionsPage'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
+import AdminHomePage from '../pages/admin/AdminHomePage'
 
 const APP_ROUTES = [
     {
@@ -31,6 +32,11 @@ const APP_ROUTES = [
     },{
         path: '/contributions/:id/new-member',
         element: <ContributionEnrolmentPage />,
+        exact: true
+    },
+    {
+        path: '/admin',
+        element: <AdminHomePage />,
         exact: true
     },
 ]

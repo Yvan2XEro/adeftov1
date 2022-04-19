@@ -92,7 +92,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                             sx={{ flexGrow: 1 }}
                                         >
                                             <NavLink
-                                                className="nav-link"
+                                                className="paper.inherit"
                                                 activeClassName="active"
                                                 to="contributions"
                                             >

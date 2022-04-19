@@ -22,18 +22,18 @@ function App() {
     useEffect(() => {}, []);
     return (
         <ThemeProvider theme={theme}>
-            <AuthContextProvider>
-                <HashRouter>
-                    <Fragment>
+            <HashRouter>
+                <Fragment>
+                    <AuthContextProvider>
                         <Header
                             isDarkTheme={mode === "dark"}
                             onToggleDarkTheme={onToggleDarkTheme}
                         />
                         <AppRoutes />
                         <ToastContainer position="bottom-right" />
-                    </Fragment>
-                </HashRouter>
-            </AuthContextProvider>
+                    </AuthContextProvider>
+                </Fragment>
+            </HashRouter>
         </ThemeProvider>
     );
 }

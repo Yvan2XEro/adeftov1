@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\ContributionsController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // use App\Http\Controllers\Auth\ResetPasswordAPIController;
@@ -26,16 +27,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     $u["roles"] = $u->roles;
     return $u;
 });
+Route::middleware('auth:api')->post('/user', function (Request $request) {
+    $u  = User::find($request->user()->id);
+    $u["permissions"] = $u->permissions;
+    $u["roles"] = $u->roles;
+    return $u;
+});
 // Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
 // Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');
 
 // 'middleware' => ['cors']
-Route::group([], function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('login.api');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.api');
-    Route::middleware('auth:api')->group(function () {
-            Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
-    });
+Route::post('/login', [AuthController::class, 'login'])->name('login.api');
+Route::post('/register', [AuthController::class, 'register'])->name('register.api');
+Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
+Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/contributions', [ContributionsController::class, 'store'])->name('contributions.post');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
+    Route::put('/contributions/{id}', [ContributionsController::class, 'update'])->name('contributions.put');
+    Route::delete('/contributions/{id}', [ContributionsController::class, 'destroy'])->name('contributions.delete');
+    Route::post(
+    '/contributions/{id}/add-special-member', [ContributionsController::class, 'addSpecialMember'])->name('contributions.addSpecialMember');
+    Route::post('/contributions/{id}/remove-special-member', [ContributionsController::class, 'removeSpecialMember'])->name('contributions.removeSpecialMember');
 });
 
 

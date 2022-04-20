@@ -27,29 +27,21 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
             <CssBaseline />
             <AppBar position="fixed" color="inherit">
                 <Toolbar position="static">
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <Button>
-                            <NavLink
-                                to="/"
-                                className="nav-link"
-                                activeClassName="active"
-                            >
-                                <HomeIcon />
-                            </NavLink>
-                        </Button>
-                    </IconButton>
+                    <Button sx={{ mr: 2 }}>
+                        <NavLink
+                            to="/"
+                            className="nav-link"
+                            activeClassName="active"
+                        >
+                            <HomeIcon />
+                        </NavLink>
+                    </Button>
                     <Box ml="auto">
                         {!isMobile && (
                             <>
                                 {!isAuthenticated ? (
                                     <>
-                                        <IconButton
+                                        <Button
                                             size="small"
                                             edge="start"
                                             color="inherit"
@@ -67,7 +59,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                                     color="inherit"
                                                 />
                                             </NavLink>
-                                        </IconButton>
+                                        </Button>
                                         <IconButton
                                             size="small"
                                             edge="start"
@@ -119,14 +111,14 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                             inputProps={{ "aria-label": "controlled" }}
                         />
 
-                    {isMobile && (
-                        <IconButton
-                        sx={{ ml: "auto" }}
-                        onClick={() => setOpenDrawer(!openDrawer)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    )}
+                        {isMobile && (
+                            <Button
+                                sx={{ ml: "auto" }}
+                                onClick={() => setOpenDrawer(!openDrawer)}
+                            >
+                                <MenuIcon />
+                            </Button>
+                        )}
                     </Box>
                 </Toolbar>
             </AppBar>

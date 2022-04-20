@@ -8,6 +8,7 @@ import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import AdminHomePage from '../pages/admin/AdminHomePage'
 import AdminContributionsPage from '../pages/admin/AdminContributionsPage'
+import AdminAdhesionsPage from '../pages/admin/AdminAdhesionsPage'
 
 const APP_ROUTES = [
     {
@@ -43,6 +44,11 @@ const APP_ROUTES = [
     {
         path: '/admin/contributions',
         element: <AdminContributionsPage />,
+        exact: true
+    },
+    {
+        path: '/admin/contributions/:id/adhesions',
+        element: <AdminAdhesionsPage />,
         exact: true
     },
 ]

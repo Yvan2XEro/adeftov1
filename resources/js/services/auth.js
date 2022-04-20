@@ -54,6 +54,9 @@ function setup() {
         try {
             const { exp } = jwtDecode(token);
             if (exp * 1000 > new Date().getTime()) setAxiosToken(token);
+            else {
+                tokenStore.removeToken();
+            }
         } catch (error) {
             console.log("Token is invalid!");
         }

@@ -43,8 +43,9 @@ Route::get('/contributions', [ContributionsController::class, 'index'])->name('c
 Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/contributions', [ContributionsController::class, 'store'])->name('contributions.post');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
+
+    Route::post('/contributions', [ContributionsController::class, 'store'])->name('contributions.post');
     Route::put('/contributions/{id}', [ContributionsController::class, 'update'])->name('contributions.put');
     Route::delete('/contributions/{id}', [ContributionsController::class, 'destroy'])->name('contributions.delete');
     Route::post(

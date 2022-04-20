@@ -1,3 +1,4 @@
+import axios from "axios";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,12 +21,24 @@ function AuthContextProvider({ children }) {
     const navigate = useNavigate();
     const [user, setUser] = React.useState(null);
     const [isAdmin, setIsAdmin] = React.useState(false);
-    const logout = React.useCallback(() => {
+    const logout = React.useCallback((toast=true) => {
         auth.logout();
         setIsAuthenticated(false);
         navigate("/login");
-        toast.warn("Logout success!");
+        if(toast) {
+            toast.warn("Logout success!");
+        }
     }, []);
+    React.useEffect(() => {
+        axios.interceptors.response.use(undefined, (error) => {
+            if (error.response && error.response.status === 401) {
+                toast.error("You are not authorized!");
+                logout();
+                navigate("/login");
+            }
+            return Promise.reject(error);
+        });
+    },[]);
     return (
         <AuthContext.Provider
             value={{

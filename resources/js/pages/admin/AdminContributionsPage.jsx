@@ -23,108 +23,33 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddIcon from "@mui/icons-material/Add";
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
-
-const contributions = [
-    {
-        id: 1,
-        name: "Test de cotisation 1",
-        description: "Description et objectif de test de cotisation 1",
-        members: [
-            {
-                id: 1,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-            {
-                id: 2,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-        ],
-    },
-    {
-        id: 2,
-        name: "Test de cotisation 2",
-        description: "Description et objectif de test de cotisation 2",
-        members: [
-            {
-                id: 1,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-            {
-                id: 2,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-        ],
-    },
-    {
-        id: 3,
-        name: "Test de cotisation 3",
-        description: "Description et objectif de test de cotisation 3",
-        members: [
-            {
-                id: 1,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-            {
-                id: 2,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-            {
-                id: 3,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-            {
-                id: 4,
-                firstname: "Jean",
-                lastname: "Dupont",
-                email: "jean@gmail.com",
-                phone: "0123456789",
-                isAvailable: true,
-            },
-        ],
-    },
-];
+import { getAllContributions, updateContribution, addContribution } from "../../services/contributionsServices";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from 'yup'
+import { toast } from "react-toastify";
 
 function AdminContributionsPage() {
     const [selected, setSetSelected] = useState(null);
+    const [contributions, setContributions] = useState([])
     useEffect(() => {
         if (contributions.length > 0) {
             setSetSelected(contributions[0]);
         }
     }, [contributions]);
-
+    useEffect(()=>{
+        fetchContributions()
+    }, [])
+    const fetchContributions = useCallback(async () => {
+        getAllContributions().then(response=>{
+            setContributions(response.data.data)
+        })
+    }, [])
     return (
         <Box mt={10} ml={2}>
             <Box>
@@ -179,7 +104,7 @@ function AdminContributionsPage() {
                 </Grid>
                 <Grid item xs={12} md={8}>
                     <Box sx={{ maxHeight: 500, overflowY: "auto" }}>
-                        <SelectedContribution selected={selected} />
+                        <SelectedContribution selected={selected} onUpdate={()=>fetchContributions()} />
                     </Box>
                 </Grid>
             </Grid>
@@ -188,10 +113,15 @@ function AdminContributionsPage() {
 }
 
 const ITEMS_PER_PAGE = 3;
-const SelectedContribution = ({ selected }) => {
+const shema = yup.object().shape({
+    name: yup.string().min(3).required(),
+    description: yup.string().min(3).required(),
+});
+const SelectedContribution = ({ selected, onUpdate }) => {
     const [selectedContribution, setselectedContribution] = useState(null);
     const [page, setPage] = useState(1);
     useEffect(() => {
+        setPage(1);
         setselectedContribution(
             selected
                 ? selected
@@ -202,11 +132,26 @@ const SelectedContribution = ({ selected }) => {
                       members: [],
                   }
         );
+        reset();
     }, [selected]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [selected]);
+    const {register, handleSubmit, reset, formState: {errors, isSubmitting, isValid}} = useForm({
+        mode: 'onChange',
+        resolver: yupResolver(shema)
+    })
+    const submit = useCallback((data)=>{
+        if(selectedContribution.id){
+            updateContribution(selectedContribution.id, data).then(()=>{
+                onUpdate()
+                toast.success("La cotisation a été modifiée avec succès")
+            })
+        }else{
+            addContribution(data).then(()=>{
+                onUpdate()
+                toast.success("La cotisation a été ajoutée avec succès")
+            })
+        }
+    }, [selectedContribution, onUpdate])
     return (
         <Box>
             <AppBar position="static">
@@ -218,7 +163,7 @@ const SelectedContribution = ({ selected }) => {
                     </Typography>
                 {selectedContribution?.id && <Box ml="auto" flexDirection="row" py={1}>
                     <Button sx={{mr: 1}} title="Faire un retrait sur le solde de la cotisation">
-                        Solde: 1212 FCFA
+                        Solde: {selectedContribution.balance} FCFA
                     </Button>
                     <Button  component={Link} to="/admin/contributions/1/adhesions" sx={{mr: 1}} title="Demandes d'hadesion">
                         <Badge badgeContent={100} color="secondary">
@@ -227,30 +172,57 @@ const SelectedContribution = ({ selected }) => {
                     </Button>
                 </Box>}
             </AppBar>
-            <Box component="form" mt={1}>
+            <Box component="form" mt={1} onSubmit={handleSubmit(submit)}>
                 <Typography mb={1} component="h4" variant="h5">
                     Informations da la cotisation
                 </Typography>
                 <FormControl fullWidth>
                     <TextField
+
+                        multiline
+                        defaultValue={selectedContribution?.name}
+                        error={!!errors?.name}
                         fullWidth
-                        value={selectedContribution?.name}
-                        label={!selectedContribution?.name?"Nom de la cotisation":undefined}
+                        {...register('name')}
+                        label="Nom de la cotisation"
                     />
+                     {!!errors.name && (
+                            <Typography
+                                color="error"
+                                component="span"
+                                variant="caption"
+                            >
+                                {errors.name?.message}
+                            </Typography>
+                        )}
                 </FormControl>
                 <FormControl sx={{ mt: 2 }} fullWidth>
                     <TextField
                         multiline
                         minRows={4}
                         maxRows={4}
-                        value={selectedContribution?.description}
+                        defaultValue={selectedContribution?.description}
+                        error={!!errors?.description}
                         fullWidth
+                        {...register('description')}
                         label="Description et objectif"
                     />
+                     {!!errors.description && (
+                            <Typography
+                                color="error"
+                                component="span"
+                                variant="caption"
+                            >
+                                {errors.description?.message}
+                            </Typography>
+                        )}
                 </FormControl>
                 <LoadingButton
                     variant="contained"
                     color="primary"
+                    type="submit"
+                    loading={isSubmitting}
+                    disabled={!isValid}
                     sx={{ mt: 2 }}
                 >
                     Enregistrer

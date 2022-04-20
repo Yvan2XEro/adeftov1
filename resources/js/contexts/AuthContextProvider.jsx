@@ -21,11 +21,11 @@ function AuthContextProvider({ children }) {
     const navigate = useNavigate();
     const [user, setUser] = React.useState(null);
     const [isAdmin, setIsAdmin] = React.useState(false);
-    const logout = React.useCallback((toast=true) => {
+    const logout = React.useCallback((toast = true) => {
         auth.logout();
         setIsAuthenticated(false);
         navigate("/login");
-        if(toast) {
+        if (toast) {
             toast.warn("Logout success!");
         }
     }, []);
@@ -38,7 +38,20 @@ function AuthContextProvider({ children }) {
             }
             return Promise.reject(error);
         });
-    },[]);
+    }, []);
+    React.useEffect(() => {
+        if(isAuthenticated){
+            (async () => {
+            try {
+                await auth.getUser().then(response => {
+                    setUser(response.data);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        })()
+        }
+    }, [isAuthenticated]);
     return (
         <AuthContext.Provider
             value={{

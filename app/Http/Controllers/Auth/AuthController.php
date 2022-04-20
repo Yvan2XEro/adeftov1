@@ -113,4 +113,11 @@ class AuthController extends Controller
         return response()->json($user, 200);
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $user->update($request->all());
+        return response()->json($user, 200);
+    }
+
 }

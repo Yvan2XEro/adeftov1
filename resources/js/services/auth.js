@@ -47,6 +47,14 @@ function setAxiosToken(token) {
     axios.defaults.headers["Authorization"] = "Bearer " + token;
 }
 
+function getUser() {
+    return axios.get(`${API_URL}/user`);
+}
+
+function updateUser(data) {
+    return axios.put(`${API_URL}/user`, data);
+}
+
 function setup() {
     const token = tokenStore.getToken();
     if (token !== null) {
@@ -67,6 +75,8 @@ export default {
     login,
     logout,
     setup,
+    getUser,
+    updateUser,
     register,
     isAuthenticated,
 };

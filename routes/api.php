@@ -51,6 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post(
     '/contributions/{id}/add-special-member', [ContributionsController::class, 'addSpecialMember'])->name('contributions.addSpecialMember');
     Route::post('/contributions/{id}/remove-special-member', [ContributionsController::class, 'removeSpecialMember'])->name('contributions.removeSpecialMember');
+    Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');
 });
 
 

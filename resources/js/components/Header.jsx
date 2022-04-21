@@ -5,15 +5,22 @@ import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Box, Button, Switch, useMediaQuery, useTheme } from "@mui/material";
+import {
+    Box,
+    Button,
+    Switch,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "./Drawer";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import UserMenu from "./UserMenu";
 
 export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -22,19 +29,20 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const navigate = useNavigate();
     const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
 
+
     return (
         <>
             <CssBaseline />
             <AppBar position="fixed" color="inherit">
                 <Toolbar position="static">
-                    <Button sx={{ mr: 2 }}>
-                        <NavLink
+                    <Button sx={{ mr: 2 }} component={NavLink} to="/" color="inherit">
+                        {/* <NavLink
                             to="/"
                             className="nav-link"
                             activeClassName="active"
-                        >
+                        > */}
                             <HomeIcon />
-                        </NavLink>
+                        {/* </NavLink> */}
                     </Button>
                     <Box ml="auto">
                         {!isMobile && (
@@ -80,16 +88,18 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                     <>
                                         <Button
                                             variant="h6"
-                                            component="div"
+                                            component={NavLink}
+                                            to="/contributions"
+                                            activeClassName="paper.primary"
                                             sx={{ flexGrow: 1 }}
                                         >
-                                            <NavLink
+                                            {/* <NavLink
                                                 className="paper.inherit"
                                                 activeClassName="active"
                                                 to="contributions"
-                                            >
+                                            > */}
                                                 Cautisations
-                                            </NavLink>
+                                            {/* </NavLink> */}
                                         </Button>
                                         <Button
                                             className="nav-link"
@@ -99,6 +109,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                         >
                                             <ExitToAppIcon size="small" />
                                         </Button>
+                                        <UserMenu />
                                     </>
                                 )}
                             </>
@@ -128,3 +139,4 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
         </>
     );
 }
+

@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import auth from "../services/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -144,10 +144,10 @@ const Profile = ({ data }) => {
 };
 
 const shema = yup.object().shape({
-    email: yup.string().email().required(),
-    firstname: yup.string().min(3).required(),
-    lastname: yup.string().min(3).required(),
-    phone: yup.string().required(),
+    email: yup.string().email(),
+    firstname: yup.string().min(3),
+    lastname: yup.string().min(3),
+    phone: yup.string(),
     num_cni: yup.string(),
 });
 
@@ -162,6 +162,9 @@ function ProfileForm({ data, onChange }) {
     } = useForm({
         mode: "onChange",
         resolver: yupResolver(shema),
+        defaultValues: React.useMemo(() => {
+            return user;
+        }, [user]),
     });
     React.useEffect(() => {
         if (data) {
@@ -171,7 +174,7 @@ function ProfileForm({ data, onChange }) {
 
     const submit = async (data) => {
         await auth
-            .updateUser(data)
+            .updateUser({ ...data, phone: data.phone ? data.phone : "" })
             .then((response) => {
                 onChange(response.data);
                 toast.success("Modification effectuée avec succès");
@@ -182,11 +185,7 @@ function ProfileForm({ data, onChange }) {
     };
 
     return (
-        <Box
-            mt={10}
-            component="form"
-            onSubmit={handleSubmit(submit)}
-        >
+        <Box mt={10} component="form" onSubmit={handleSubmit(submit)}>
             <Box textAlign="center">
                 <FormControl
                     sx={{
@@ -238,7 +237,8 @@ function ProfileForm({ data, onChange }) {
                             </IconButton>
                         </label>
 
-                            {avatarUrl&&<Button
+                        {avatarUrl && (
+                            <Button
                                 sx={{ mx: "auto" }}
                                 onClick={() => {
                                     setAvatarUrl(null);
@@ -250,7 +250,8 @@ function ProfileForm({ data, onChange }) {
                                 size="large"
                             >
                                 <DeleteIcon />
-                            </Button>}
+                            </Button>
+                        )}
                     </Box>
                 </FormControl>
             </Box>
@@ -259,10 +260,10 @@ function ProfileForm({ data, onChange }) {
                 <TextField
                     label="Nom"
                     multiline
-                    error={!!errors.firstname?.message}
+                    error={!!errors.firstname}
                     fullWidth
                     {...register("firstname")}
-                    defaultValue={user?.firstname}
+                    // defaultValue={user?.firstname}
                 />
                 {errors.firstname?.message && (
                     <Typography variant="caption" color="error">
@@ -274,8 +275,8 @@ function ProfileForm({ data, onChange }) {
                 <TextField
                     {...register("lastname")}
                     multiline
-                    defaultValue={user?.lastname}
-                    error={!!errors.lastname?.message}
+                    // defaultValue={user?.lastname}
+                    error={!!errors.lastname}
                     label="Prenom"
                     fullWidth
                 />
@@ -289,8 +290,8 @@ function ProfileForm({ data, onChange }) {
                 <TextField
                     {...register("email")}
                     multiline
-                    error={!!errors.email?.message}
-                    defaultValue={user?.email}
+                    error={!!errors.email}
+                    // defaultValue={user?.email}
                     label="Email"
                     fullWidth
                 />
@@ -304,8 +305,8 @@ function ProfileForm({ data, onChange }) {
                 <TextField
                     {...register("phone")}
                     multiline
-                    error={!!errors.phone?.message}
-                    defaultValue={user?.phone}
+                    error={!!errors.phone}
+                    // defaultValue={user?.phone}
                     label="Numero de telephone"
                     fullWidth
                 />
@@ -319,8 +320,8 @@ function ProfileForm({ data, onChange }) {
                 <TextField
                     {...register("num_cni")}
                     multiline
-                    error={!!errors.num_cni?.message}
-                    defaultValue={user?.num_cni}
+                    error={!!errors.num_cni}
+                    // defaultValue={user?.num_cni}
                     label="Numero de CNI"
                     fullWidth
                 />
@@ -332,6 +333,7 @@ function ProfileForm({ data, onChange }) {
             </FormControl>
             <LoadingButton
                 type="submit"
+                sx={{ mt: 1 }}
                 fullWidth
                 color="primary"
                 loading={isSubmitting}

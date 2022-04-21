@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import { Button, Drawer as MuiDrawer } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import UserMenu from "./UserMenu";
 
 function Drawer({ openDrawer, setOpenDrawer }) {
     const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
@@ -16,6 +17,9 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                 <Button onClick={()=>setOpenDrawer(false)} color="inherit" sx={{ position: "absolute", right: 5, top: 5 }}>
                     <CloseIcon  />
                 </Button>
+                <Box>
+                    <UserMenu onSelectItem={()=>setOpenDrawer(false)} />
+                </Box>
                 <Box mt={3}>
                     <Box>
                         <Button

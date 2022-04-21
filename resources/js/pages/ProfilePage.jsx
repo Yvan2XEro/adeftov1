@@ -185,165 +185,250 @@ function ProfileForm({ data, onChange }) {
     };
 
     return (
-        <Box mt={10} component="form" onSubmit={handleSubmit(submit)}>
-            <Box textAlign="center">
-                <FormControl
-                    sx={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <Box>
-                        <Input
-                            id="avatar"
-                            type="file"
-                            sx={{ display: "none" }}
-                            accept="image/gif, image/jpeg, image/png"
-                            onChange={(e) => {
-                                const file = e.target.files[0];
-                                setAvatar(file);
-                                var reader = new FileReader();
-                                reader.onload = (e) => {
-                                    if (reader.readyState == 2) {
-                                        setAvatarUrl(reader.result);
-                                    }
-                                };
-                                reader.readAsDataURL(file);
-                            }}
-                        />
-                        <label htmlFor="avatar">
-                            <Avatar
-                                sx={{
-                                    width: 100,
-                                    height: 100,
-                                    mx: "auto",
-                                    cursor: "pointer",
+        <Box>
+            <Box mt={10} component="form" onSubmit={handleSubmit(submit)}>
+                <Box textAlign="center">
+                    <FormControl
+                        sx={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Box>
+                            <Input
+                                id="avatar"
+                                type="file"
+                                sx={{ display: "none" }}
+                                accept="image/gif, image/jpeg, image/png"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    setAvatar(file);
+                                    var reader = new FileReader();
+                                    reader.onload = (e) => {
+                                        if (reader.readyState == 2) {
+                                            setAvatarUrl(reader.result);
+                                        }
+                                    };
+                                    reader.readAsDataURL(file);
                                 }}
-                                alt="Cindy Baker"
-                                src={
-                                    avatarUrl
-                                        ? avatarUrl
-                                        : "https://cdn.pixabay.com/photo/2017/02/04/12/25/man-2037255__340.jpg"
-                                }
                             />
-                            <IconButton
-                                sx={{ mx: "auto" }}
-                                color="primary"
-                                aria-label="upload picture"
-                                component="span"
-                                size="large"
-                            >
-                                <PhotoCameraIcon />
-                            </IconButton>
-                        </label>
+                            <label htmlFor="avatar">
+                                <Avatar
+                                    sx={{
+                                        width: 100,
+                                        height: 100,
+                                        mx: "auto",
+                                        cursor: "pointer",
+                                    }}
+                                    alt="Cindy Baker"
+                                    src={
+                                        avatarUrl
+                                            ? avatarUrl
+                                            : "https://cdn.pixabay.com/photo/2017/02/04/12/25/man-2037255__340.jpg"
+                                    }
+                                />
+                                <IconButton
+                                    sx={{ mx: "auto" }}
+                                    color="primary"
+                                    aria-label="upload picture"
+                                    component="span"
+                                    size="large"
+                                >
+                                    <PhotoCameraIcon />
+                                </IconButton>
+                            </label>
 
-                        {avatarUrl && (
-                            <Button
-                                sx={{ mx: "auto" }}
-                                onClick={() => {
-                                    setAvatarUrl(null);
-                                    setAvatar(null);
-                                }}
-                                color="error"
-                                aria-label="upload picture"
-                                component="span"
-                                size="large"
-                            >
-                                <DeleteIcon />
-                            </Button>
-                        )}
-                    </Box>
+                            {avatarUrl && (
+                                <Button
+                                    sx={{ mx: "auto" }}
+                                    onClick={() => {
+                                        setAvatarUrl(null);
+                                        setAvatar(null);
+                                    }}
+                                    color="error"
+                                    aria-label="upload picture"
+                                    component="span"
+                                    size="large"
+                                >
+                                    <DeleteIcon />
+                                </Button>
+                            )}
+                        </Box>
+                    </FormControl>
+                </Box>
+
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <TextField
+                        label="Nom"
+                        multiline
+                        maxRows={1}
+                        error={!!errors.firstname}
+                        fullWidth
+                        {...register("firstname")}
+                        defaultValue={user?.firstname}
+                    />
+                    {errors.firstname?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.firstname?.message}
+                        </Typography>
+                    )}
                 </FormControl>
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <TextField
+                        {...register("lastname")}
+                        multiline
+                        maxRows={1}
+                        defaultValue={user?.lastname}
+                        error={!!errors.lastname}
+                        label="Prenom"
+                        fullWidth
+                    />
+                    {errors.lastname?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.lastname?.message}
+                        </Typography>
+                    )}
+                </FormControl>
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <TextField
+                        {...register("email")}
+                        multiline
+                        maxRows={1}
+                        error={!!errors.email}
+                        defaultValue={user?.email}
+                        label="Email"
+                        fullWidth
+                    />
+                    {errors.email?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.email?.message}
+                        </Typography>
+                    )}
+                </FormControl>
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <TextField
+                        {...register("phone")}
+                        multiline
+                        maxRows={1}
+                        error={!!errors.phone}
+                        defaultValue={user?.phone}
+                        label="Numero de telephone"
+                        fullWidth
+                    />
+                    {errors.phone?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.phone?.message}
+                        </Typography>
+                    )}
+                </FormControl>
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <TextField
+                        {...register("num_cni")}
+                        multiline
+                        maxRows={1}
+                        error={!!errors.num_cni}
+                        defaultValue={user?.num_cni}
+                        label="Numero de CNI"
+                        fullWidth
+                    />
+                    {errors.num_cni?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.num_cni?.message}
+                        </Typography>
+                    )}
+                </FormControl>
+                <LoadingButton
+                    type="submit"
+                    sx={{ mt: 1 }}
+                    fullWidth
+                    color="primary"
+                    loading={isSubmitting}
+                    variant="contained"
+                    disabled={!isValid}
+                >
+                    <Typography variant="h6">Enregistrer</Typography>
+                </LoadingButton>
             </Box>
-
-            <FormControl sx={{ mt: 1 }} fullWidth>
-                <TextField
-                    label="Nom"
-                    multiline
-                    error={!!errors.firstname}
-                    fullWidth
-                    {...register("firstname")}
-                    // defaultValue={user?.firstname}
-                />
-                {errors.firstname?.message && (
-                    <Typography variant="caption" color="error">
-                        {errors.firstname?.message}
-                    </Typography>
-                )}
-            </FormControl>
-            <FormControl sx={{ mt: 1 }} fullWidth>
-                <TextField
-                    {...register("lastname")}
-                    multiline
-                    // defaultValue={user?.lastname}
-                    error={!!errors.lastname}
-                    label="Prenom"
-                    fullWidth
-                />
-                {errors.lastname?.message && (
-                    <Typography variant="caption" color="error">
-                        {errors.lastname?.message}
-                    </Typography>
-                )}
-            </FormControl>
-            <FormControl sx={{ mt: 1 }} fullWidth>
-                <TextField
-                    {...register("email")}
-                    multiline
-                    error={!!errors.email}
-                    // defaultValue={user?.email}
-                    label="Email"
-                    fullWidth
-                />
-                {errors.email?.message && (
-                    <Typography variant="caption" color="error">
-                        {errors.email?.message}
-                    </Typography>
-                )}
-            </FormControl>
-            <FormControl sx={{ mt: 1 }} fullWidth>
-                <TextField
-                    {...register("phone")}
-                    multiline
-                    error={!!errors.phone}
-                    // defaultValue={user?.phone}
-                    label="Numero de telephone"
-                    fullWidth
-                />
-                {errors.phone?.message && (
-                    <Typography variant="caption" color="error">
-                        {errors.phone?.message}
-                    </Typography>
-                )}
-            </FormControl>
-            <FormControl sx={{ mt: 1 }} fullWidth>
-                <TextField
-                    {...register("num_cni")}
-                    multiline
-                    error={!!errors.num_cni}
-                    // defaultValue={user?.num_cni}
-                    label="Numero de CNI"
-                    fullWidth
-                />
-                {errors.num_cni?.message && (
-                    <Typography variant="caption" color="error">
-                        {errors.num_cni?.message}
-                    </Typography>
-                )}
-            </FormControl>
-            <LoadingButton
-                type="submit"
-                sx={{ mt: 1 }}
-                fullWidth
-                color="primary"
-                loading={isSubmitting}
-                variant="contained"
-                disabled={!isValid}
-            >
-                <Typography variant="h6">Enregistrer</Typography>
-            </LoadingButton>
+            <Box>
+                <ChangePasswordFrom user={user} />
+            </Box>
         </Box>
     );
 }
 
 export default ProfilePage;
+
+const pwShema = yup.object().shape({
+    oldPassword: yup.string().min(6, 'Au moins 6 caracteres').required(),
+    newPassword: yup.string().min(6, 'Au moins 6 caracteres').required(),
+});
+const ChangePasswordFrom = ({ user }) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isValid, isSubmitting },
+    } = useForm({
+        resolver: yupResolver(pwShema),
+        mode: "onChange",
+    });
+    const submit = async (data) => {
+            auth.updatePassword({...data,oldPassword:data.oldPassword.trim(),newPassword:data.newPassword.trim()})
+            .then(() => {
+                toast.success("Le mot de passe a été modifié avec succès");
+            })
+            .catch((e) => {
+                toast.error(e.response.data.message);
+            });
+    };
+
+    return (
+        <Box component="form" onSubmit={handleSubmit(submit)} mt={3}>
+            <Typography variant="h6">Changer le mot de passe</Typography>
+            <FormControl sx={{ mt: 1 }} fullWidth>
+                <TextField
+                    {...register("oldPassword")}
+                    multiline
+                    maxRows={1}
+                    id="oldPassword"
+                    name="oldPassword"
+                    error={!!errors.oldPassword}
+                    label="Ancien mot de passe"
+                    fullWidth
+                />
+                {errors.oldPassword?.message && (
+                    <Typography variant="caption" color="error">
+                        {errors.oldPassword?.message}
+                    </Typography>
+                )}
+            </FormControl>
+            <FormControl sx={{ mt: 1 }} fullWidth>
+                <TextField
+                    {...register("newPassword")}
+                    multiline
+                    maxRows={1}
+                    id="newPassword"
+                    name="newPassword"
+                    error={!!errors.newPassword}
+                    label="Nouveau mot de passe"
+                    fullWidth
+                />
+                {errors.newPassword?.message && (
+                    <Typography variant="caption" color="error">
+                        {errors.newPassword?.message}
+                    </Typography>
+                )}
+            </FormControl>
+            <LoadingButton
+                    type="submit"
+                    sx={{ mt: 1 }}
+                    fullWidth
+                    color="primary"
+                    loading={isSubmitting}
+                    variant="contained"
+                    disabled={!isValid}
+                >
+                    <Typography variant="h6">Changer mon mot de passe</Typography>
+                </LoadingButton>
+        </Box>
+    );
+};

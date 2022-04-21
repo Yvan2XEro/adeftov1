@@ -105,6 +105,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                             className="nav-link"
                                             edge="start"
                                             color="inherit"
+                                            title="Se deconnecter"
                                             onClick={() => logout()}
                                         >
                                             <ExitToAppIcon size="small" />
@@ -120,6 +121,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                             icon={<DarkModeIcon color="primary" />}
                             onChange={onToggleDarkTheme}
                             inputProps={{ "aria-label": "controlled" }}
+                            title="Changer de theme d'affichage"
                         />
 
                         {isMobile && (

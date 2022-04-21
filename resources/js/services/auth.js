@@ -55,6 +55,10 @@ function updateUser(data) {
     return axios.put(`${API_URL}/user`, data);
 }
 
+function updatePassword(data) {
+    return axios.put(`${API_URL}/user/password`, data);
+}
+
 function setup() {
     const token = tokenStore.getToken();
     if (token !== null) {
@@ -76,6 +80,7 @@ export default {
     logout,
     setup,
     getUser,
+    updatePassword,
     updateUser,
     register,
     isAuthenticated,

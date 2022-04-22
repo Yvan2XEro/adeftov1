@@ -75,6 +75,10 @@ function ContributionEnrolmentPage() {
             .then((response) => {
                 setLoading(false);
                 setMembership(response.data);
+                if(response.data.is_accepted) {
+                    toast.success("Vous êtes déjà inscrit à cette cotisation");
+                    navigate(`/contributions/${id}/details`);
+                }
             })
             .catch((err) => {
                 setLoading(false);

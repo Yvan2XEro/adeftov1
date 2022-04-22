@@ -45,6 +45,7 @@ class ContributionsController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $contribution = $user->contributions()->create($request->all());
+        $contribution->members()->attach($user);
         return response()->json($contribution, 201);
     }
 
@@ -125,6 +126,9 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->specialsMembers()->attach($request->input('member_id'));
+        if(!$contribution->members()->contains($request->input('member_id'))){
+            $contribution->members()->attach($request->input('member_id'));
+        }
         return response()->json($contribution, 200);
     }
 
@@ -231,7 +235,7 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
         $user = $request->user();
-        $membership = $contribution->membershipRequests()->where('user_id', $user->id)->where('is_accepted', false)->first();
+        $membership = $contribution->membershipRequests()->where('user_id', $user->id)->first();
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }

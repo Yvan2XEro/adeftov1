@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->decimal('balance', 10, 2)->default(0);
             $table->timestamps();
         });

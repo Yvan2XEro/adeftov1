@@ -35,10 +35,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // 'middleware' => ['cors']
 Route::post('/login', [AuthController::class, 'login'])->name('login.api');
 Route::post('/register', [AuthController::class, 'register'])->name('register.api');
-Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
-Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
+    Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
 
     Route::post('/contributions', [ContributionsController::class, 'store'])->name('contributions.post');
@@ -69,7 +69,11 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/membership-requests/{id}', [
         ContributionsController::class, 'updateMemberShipRequest'
     ])->name('contributions.updateMemberShipRequest');
-    Route::delete('/membership-requests/{id}', [ContributionsController::class, 'deleteMemberShipRequest'])->name('contributions.deleteMemberShipRequest');
+
+    Route::delete('/membership-requests/{id}', [
+    ContributionsController::class, 'deleteMemberShipRequest'])->name('contributions.deleteMemberShipRequest');
+
+    Route::put('/membership-requests/{id}/accept', [ContributionsController::class, 'acceptMembership'])->name('contributions.acceptMembership');
 
 
 

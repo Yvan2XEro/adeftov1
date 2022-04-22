@@ -9,24 +9,42 @@ import {
     Container,
     Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { deleteMembership, getMembershipsByContribution } from "../../services/contributionsServices";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AdminAdhesionsPage() {
+    const [memberships, setMemberships] = useState([]);
+    const {id} = useParams();
+    useEffect(() => {
+        fetchMemberships();
+    }, []);
+    const fetchMemberships = React.useCallback(() => {
+        getMembershipsByContribution(id).then((response) => {
+            setMemberships(response.data);
+        });
+    }, []);
+    const accept = React.useCallback(async(id) => {
+        await acceptMembership(id).then((response) => {
+            toast.success("Adhésion acceptée");
+            fetchMemberships();
+        }).catch((error) => {
+            toast.error("Une erreur est survenue");
+        });
+    }, []);
+
     return (
         <Container sx={{ mt: 10 }}>
             <Typography component="h1" variant="h4">
                 Demande d'hadesion a la cotisation 'Test de cotisation'
             </Typography>
             <Box flexDirection="row">
-                <Button>
-                    Tout accepter
-                </Button>
-                <Button color="error">
-                    Tout refuser
-                </Button>
+                <Button>Tout accepter</Button>
+                <Button color="error">Tout refuser</Button>
             </Box>
-            <Accordion>
+            {memberships.map(m=><Accordion key={m.id}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
@@ -37,10 +55,10 @@ function AdminAdhesionsPage() {
                     </Box>
                     <Box>
                         <Typography sx={{ ml: 1 }} component="h3" variant="h4">
-                            Jean Robert
+                            {m.user.firstname} {m.user.lastname}
                         </Typography>
-                        <Typography sx={{mt: 1}} component="p" variant="span">
-                            tel: 2324242424244
+                        <Typography sx={{ mt: 1 }} component="p" variant="span">
+                            tel: {m.user.phone}
                         </Typography>
                     </Box>
                 </AccordionSummary>
@@ -48,21 +66,19 @@ function AdminAdhesionsPage() {
                     <Typography component="h4" variant="h4">
                         Message de motivation:
                     </Typography>
-                    <Typography component="p">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Impedit aut aliquam corporis repellendus, exercitationem
-                        non necessitatibus doloribus ipsam, esse ipsa, totam
-                        atque alias corrupti qui? Rerum dolor recusandae esse
-                        voluptatibus!
-                    </Typography>
+                    {m.message?<Typography component="p">
+                        {m.message}
+                    </Typography>:<Typography component="p">
+                        Aucun message!
+                        </Typography>}
                 </AccordionDetails>
                 <AccordionActions>
-                    <Button variant="contained">Acepter</Button>
-                    <Button color="error" variant="outlined">
+                    <Button onClick={()=>accept(m.id)} variant="contained">Acepter</Button>
+                    <Button ocnClick={()=>deleteMembership(m.id).then(_=>fetchMemberships())} color="error" variant="outlined">
                         Refuser
                     </Button>
                 </AccordionActions>
-            </Accordion>
+            </Accordion>)}
         </Container>
     );
 }

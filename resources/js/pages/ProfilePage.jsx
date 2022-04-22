@@ -158,6 +158,7 @@ function ProfileForm({ data, onChange }) {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { isSubmitting, errors, isValid },
     } = useForm({
         mode: "onChange",
@@ -181,6 +182,9 @@ function ProfileForm({ data, onChange }) {
             })
             .catch((error) => {
                 toast.error("Une erreur est survenue");
+            })
+            .finally(() => {
+                reset();
             });
     };
 
@@ -359,8 +363,8 @@ function ProfileForm({ data, onChange }) {
 export default ProfilePage;
 
 const pwShema = yup.object().shape({
-    oldPassword: yup.string().min(6, 'Au moins 6 caracteres').required(),
-    newPassword: yup.string().min(6, 'Au moins 6 caracteres').required(),
+    oldPassword: yup.string().min(6, "Au moins 6 caracteres").required(),
+    newPassword: yup.string().min(6, "Au moins 6 caracteres").required(),
 });
 const ChangePasswordFrom = ({ user }) => {
     const {
@@ -372,7 +376,11 @@ const ChangePasswordFrom = ({ user }) => {
         mode: "onChange",
     });
     const submit = async (data) => {
-            auth.updatePassword({...data,oldPassword:data.oldPassword.trim(),newPassword:data.newPassword.trim()})
+        auth.updatePassword({
+            ...data,
+            oldPassword: data.oldPassword.trim(),
+            newPassword: data.newPassword.trim(),
+        })
             .then(() => {
                 toast.success("Le mot de passe a été modifié avec succès");
             })
@@ -387,6 +395,7 @@ const ChangePasswordFrom = ({ user }) => {
             <FormControl sx={{ mt: 1 }} fullWidth>
                 <TextField
                     {...register("oldPassword")}
+                    type="password"
                     multiline
                     maxRows={1}
                     id="oldPassword"
@@ -404,6 +413,7 @@ const ChangePasswordFrom = ({ user }) => {
             <FormControl sx={{ mt: 1 }} fullWidth>
                 <TextField
                     {...register("newPassword")}
+                    type="password"
                     multiline
                     maxRows={1}
                     id="newPassword"
@@ -419,16 +429,16 @@ const ChangePasswordFrom = ({ user }) => {
                 )}
             </FormControl>
             <LoadingButton
-                    type="submit"
-                    sx={{ mt: 1 }}
-                    fullWidth
-                    color="primary"
-                    loading={isSubmitting}
-                    variant="contained"
-                    disabled={!isValid}
-                >
-                    <Typography variant="h6">Changer mon mot de passe</Typography>
-                </LoadingButton>
+                type="submit"
+                sx={{ mt: 1 }}
+                fullWidth
+                color="primary"
+                loading={isSubmitting}
+                variant="contained"
+                disabled={!isValid}
+            >
+                <Typography variant="h6">Changer mon mot de passe</Typography>
+            </LoadingButton>
         </Box>
     );
 };

@@ -25,4 +25,8 @@ class Contribution extends Model
     {
         return $this->belongsToMany(User::class, 'contributions_specials_users');
     }
+    public function membershipRequests()
+    {
+        return $this->hasMany(MembershipRequest::class);
+    }
 }

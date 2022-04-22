@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contribution;
+use App\Models\MembershipRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -119,6 +120,14 @@ class ContributionsController extends Controller
     }
 
 
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function removeSpecialMember(Request $request, $id)
     {
         $contribution = Contribution::find($id);
@@ -130,5 +139,94 @@ class ContributionsController extends Controller
         }
         $contribution->specialsMembers()->detach($request->input('member_id'));
         return response()->json($contribution, 200);
+    }
+
+    // meberships management
+    public function addMembership(Request $request, $id)
+    {
+        $contribution = Contribution::find($id);
+        if(is_null($contribution)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $user = $request->user();
+        if($contribution->membershipRequests()->where('user_id', $user->id)->exists()){
+            return response()->json(['message' => 'You have already requested membership for this contribution'], 400);
+        }
+        $membershipRequest = $user->membershipRequests()->create([
+            'message' => $request->input('message'),
+            'contribution_id' => $contribution->id,
+        ]);
+        return response()->json($membershipRequest, 201);
+    }
+
+    public function getMemberships(Request $request, $id)
+    {
+        $contribution = Contribution::find($id);
+        if(is_null($contribution)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $memberships = $contribution->membershipRequests()->get();
+        foreach ($memberships as $membership) {
+            $membership->user;
+            $membership->contribution;
+        }
+        return response()->json($memberships, 200);
+    }
+
+    public function showMemberShipRequest(Request $request, $id)
+    {
+        $membership = MembershipRequest::find($id);
+        if(is_null($membership)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+
+        $membership->contribution;
+        $membership->user;
+        return response()->json($membership, 200);
+    }
+
+    public function updateMemberShipRequest(Request $request, $id)
+    {
+        $membership = MembershipRequest::find($id);
+        if(is_null($membership)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        if($membership->user_id != $request->user()->id && !$request->user()->hasRole('admin')){
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $membership->update($request->all());
+        $membership->contribution;
+        $membership->user;
+        return response()->json($membership, 200);
+    }
+
+    public function deleteMemberShipRequest(Request $request, $id)
+    {
+        $membership = MembershipRequest::find($id);
+        if(is_null($membership)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        if($membership->user_id != $request->user()->id && !$request->user()->hasRole('admin')){
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $membership->delete();
+        return response()->json(null, 204);
+    }
+
+    public function getMembershipByUserAndContribution(Request $request, $contributionId)
+    {
+        $contribution = Contribution::find($contributionId);
+        if(is_null($contribution)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $user = $request->user();
+        $membership = $contribution->membershipRequests()->where('user_id', $user->id)->first();
+        if(is_null($membership)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $membership->contribution;
+        $membership->user;
+        return response()->json($membership, 200);
     }
 }

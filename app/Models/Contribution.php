@@ -9,7 +9,9 @@ class Contribution extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'description', 'user_id', 'is_active', 'balance'];
-
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -22,5 +24,9 @@ class Contribution extends Model
     public function specialsMembers()
     {
         return $this->belongsToMany(User::class, 'contributions_specials_users');
+    }
+    public function membershipRequests()
+    {
+        return $this->hasMany(MembershipRequest::class);
     }
 }

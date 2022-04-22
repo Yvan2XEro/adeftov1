@@ -113,4 +113,33 @@ class AuthController extends Controller
         return response()->json($user, 200);
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $user->update($request->all());
+        return response()->json($user, 200);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $validator = Validator::make($request->all(), [
+            'oldPassword' => 'required',
+            'newPassword' => 'required|string|min:6',
+        ]);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+        if (Hash::check($request->oldPassword, $user->password)) {
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+            return response()->json([
+                'message' => 'Password changed successfully'
+            ], 200);
+        } else {
+            $error = new ApiError("User.PASSWORD_CHANGE_FAILLED", 422);
+            return response()->json($error, 422);
+        }
+    }
+
 }

@@ -165,7 +165,7 @@ const SelectedContribution = ({ selected, onUpdate }) => {
                     <Button sx={{mr: 1}} title="Faire un retrait sur le solde de la cotisation">
                         Solde: {selectedContribution.balance} FCFA
                     </Button>
-                    <Button  component={Link} to="/admin/contributions/1/adhesions" sx={{mr: 1}} title="Demandes d'hadesion">
+                    <Button  component={Link} to={`/admin/contributions/${selectedContribution?.id }/adhesions`} sx={{mr: 1}} title="Demandes d'hadesion">
                         <Badge badgeContent={100} color="secondary">
                             <Icon sx={{ fontSize: 30 }}>person_add</Icon>
                         </Badge>

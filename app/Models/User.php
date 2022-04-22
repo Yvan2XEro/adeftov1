@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'pivot',
     ];
 
     /**
@@ -55,5 +56,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function enrolledContributions()
     {
         return $this->belongsToMany(Contribution::class, 'contributions_users');
+    }
+
+    public function membershipRequests()
+    {
+        return $this->hasMany(MembershipRequest::class);
     }
 }

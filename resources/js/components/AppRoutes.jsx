@@ -9,7 +9,7 @@ import RegisterPage from '../pages/RegisterPage'
 import AdminHomePage from '../pages/admin/AdminHomePage'
 import AdminContributionsPage from '../pages/admin/AdminContributionsPage'
 import AdminAdhesionsPage from '../pages/admin/AdminAdhesionsPage'
-import AdminUsersPage from '../pages/admin/AdminUsersPage'
+import ProfilePage from '../pages/ProfilePage'
 
 const APP_ROUTES = [
     {
@@ -53,8 +53,8 @@ const APP_ROUTES = [
         exact: true
     },
     {
-        path: '/admin/contributions/users',
-        element: <AdminUsersPage />,
+        path: '/profile',
+        element: <ProfilePage />,
         exact: true
     },
 ]

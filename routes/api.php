@@ -27,30 +27,58 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     $u["roles"] = $u->roles;
     return $u;
 });
-Route::middleware('auth:api')->post('/user', function (Request $request) {
-    $u  = User::find($request->user()->id);
-    $u["permissions"] = $u->permissions;
-    $u["roles"] = $u->roles;
-    return $u;
-});
+
+
 // Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
 // Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');
 
 // 'middleware' => ['cors']
 Route::post('/login', [AuthController::class, 'login'])->name('login.api');
 Route::post('/register', [AuthController::class, 'register'])->name('register.api');
-Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
-Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
+    Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
 
     Route::post('/contributions', [ContributionsController::class, 'store'])->name('contributions.post');
     Route::put('/contributions/{id}', [ContributionsController::class, 'update'])->name('contributions.put');
     Route::delete('/contributions/{id}', [ContributionsController::class, 'destroy'])->name('contributions.delete');
     Route::post(
-    '/contributions/{id}/add-special-member', [ContributionsController::class, 'addSpecialMember'])->name('contributions.addSpecialMember');
+        '/contributions/{id}/add-special-member',
+        [ContributionsController::class, 'addSpecialMember']
+    )->name('contributions.addSpecialMember');
     Route::post('/contributions/{id}/remove-special-member', [ContributionsController::class, 'removeSpecialMember'])->name('contributions.removeSpecialMember');
+
+
+    Route::post('/contributions/{id}/membership-requests', [ContributionsController::class, 'addMembership'])->name('contributions.addMembership');
+    Route::get(
+        '/contributions/{id}/membership-requests',
+        [ContributionsController::class, 'getMemberships']
+    )->name('contributions.getMemberships');
+    Route::get(
+        '/membership-requests/{id}',
+        [ContributionsController::class, 'showMemberShipRequest']
+    )->name('contributions.showMemberShipRequest');
+
+    Route::get(
+        '/membership-requests/contributions/{contributionId}',
+        [ContributionsController::class, 'getMembershipByUserAndContribution']
+    )->name('contributions.getMembershipByUserAndContribution');
+
+    Route::put('/membership-requests/{id}', [
+        ContributionsController::class, 'updateMemberShipRequest'
+    ])->name('contributions.updateMemberShipRequest');
+
+    Route::delete('/membership-requests/{id}', [
+    ContributionsController::class, 'deleteMemberShipRequest'])->name('contributions.deleteMemberShipRequest');
+
+    Route::put('/membership-requests/{id}/accept', [ContributionsController::class, 'acceptMembership'])->name('contributions.acceptMembership');
+
+
+
+    Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');
+    Route::put('/user/password', [AuthController::class, 'changePassword'])->name('user.password');
 });
 
 

@@ -28,7 +28,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddIcon from "@mui/icons-material/Add";
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
-import { getAllContributions, updateContribution, addContribution } from "../../services/contributionsServices";
+import { getAllContributions, updateContribution, addContribution, removeSpecialMember, addSpecialMember, getContribution } from "../../services/contributionsServices";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup'
@@ -39,7 +39,7 @@ function AdminContributionsPage() {
     const [contributions, setContributions] = useState([])
     useEffect(() => {
         if (contributions.length > 0) {
-            setSetSelected(contributions[0]);
+            setSetSelected(contributions[0].id);
         }
     }, [contributions]);
     useEffect(()=>{
@@ -85,7 +85,7 @@ function AdminContributionsPage() {
                                 disablePadding
                             >
                                 <ListItemButton
-                                    onClick={() => setSetSelected(item)}
+                                    onClick={() => setSetSelected(item.id)}
                                 >
                                     <ListItemIcon>
                                         <ArrowForwardIosIcon
@@ -104,7 +104,7 @@ function AdminContributionsPage() {
                 </Grid>
                 <Grid item xs={12} md={8}>
                     <Box sx={{ maxHeight: 500, overflowY: "auto" }}>
-                        <SelectedContribution selected={selected} onUpdate={()=>fetchContributions()} />
+                        <SelectedContribution selectedId={selected} onUpdate={()=>fetchContributions()} />
                     </Box>
                 </Grid>
             </Grid>
@@ -117,23 +117,40 @@ const shema = yup.object().shape({
     name: yup.string().min(3).required(),
     description: yup.string().min(3).required(),
 });
-const SelectedContribution = ({ selected, onUpdate }) => {
+const SelectedContribution = ({ selectedId, onUpdate }) => {
     const [selectedContribution, setselectedContribution] = useState(null);
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [checking, setChecking] = useState(false);
     useEffect(() => {
         setPage(1);
-        setselectedContribution(
-            selected
-                ? selected
-                : {
-                      id: null,
-                      name: "",
-                      description: "",
-                      members: [],
-                  }
-        );
+        if(selectedId){
+            fetchSelectContribution(selectedId)
+        }
         reset();
-    }, [selected]);
+    }, [selectedId]);
+
+    const fetchSelectContribution = useCallback(async (selectedId) => {
+        setLoading(true);
+        getContribution(selectedId).then(response => {
+            setselectedContribution(response.data);
+            console.log(response.data.specials_members)
+            setLoading(false);
+        }).catch(error => {
+            setLoading(false);
+            console.log(error.response)
+            toast.error("Erreur lors de la récupération de la cotisation")
+        })
+    }, [getContribution]);
+
+    const isSpecialMember = (member) => {
+        return (selectedContribution.specials_members.find(
+            (m) => {
+                console.log(m.id === member.id)
+                return m.id === member.id
+            }
+        )) ? true : false;
+    };
 
     const {register, handleSubmit, reset, formState: {errors, isSubmitting, isValid}} = useForm({
         mode: 'onChange',
@@ -244,6 +261,7 @@ const SelectedContribution = ({ selected, onUpdate }) => {
                     </TableHead>
                     <TableBody>
                         {selectedContribution?.members
+                            .map(member => ({...member, isSpecial: isSpecialMember(member)}))
                             .slice(
                                 (page - 1) * ITEMS_PER_PAGE,
                                 (page - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
@@ -254,7 +272,26 @@ const SelectedContribution = ({ selected, onUpdate }) => {
                                     <TableCell>{m.lastname}</TableCell>
                                     <TableCell>{m.phone}</TableCell>
                                     <TableCell>
-                                        <Switch />
+                                        <Switch disabled={checking} checked={m.isSpecial}  onChange={()=>{
+                                            if(isSpecialMember(m)){
+                                                setChecking(true);
+                                                removeSpecialMember(selectedContribution.id, m.id).then(async()=>{
+                                                    setChecking(false);
+                                                    await fetchSelectContribution(selectedId)
+                                                }).catch(()=>{
+                                                    setChecking(false);
+                                                })
+                                            }else{
+                                                setChecking(true);
+                                                addSpecialMember(selectedContribution.id, m.id).then(async()=>{
+                                                    setChecking(false);
+                                                    await fetchSelectContribution(selectedId)
+                                                }).catch(()=>{
+                                                    setChecking(false);
+                                                })
+                                            }
+                                            setselectedContribution({...selectedContribution})
+                                        }} />
                                     </TableCell>
                                     <TableCell>
                                         <Switch />

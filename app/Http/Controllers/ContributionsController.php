@@ -45,6 +45,7 @@ class ContributionsController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $contribution = $user->contributions()->create($request->all());
+        $contribution->members()->attach($user);
         return response()->json($contribution, 201);
     }
 
@@ -125,6 +126,9 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->specialsMembers()->attach($request->input('member_id'));
+        if(!$contribution->members()->contains($request->input('member_id'))){
+            $contribution->members()->attach($request->input('member_id'));
+        }
         return response()->json($contribution, 200);
     }
 
@@ -212,11 +216,12 @@ class ContributionsController extends Controller
 
     public function deleteMemberShipRequest(Request $request, $id)
     {
+        $user = $request->user();
         $membership = MembershipRequest::find($id);
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if($membership->user_id != $request->user()->id && !$request->user()->hasRole('admin')){
+        if(!$user->hasRole('admin') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $membership->delete();
@@ -230,7 +235,7 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
         $user = $request->user();
-        $membership = $contribution->membershipRequests()->where('user_id', $user->id)->where('is_accepted', false)->first();
+        $membership = $contribution->membershipRequests()->where('user_id', $user->id)->first();
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }
@@ -250,6 +255,8 @@ class ContributionsController extends Controller
         if(!$user->hasRole('admin') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+        $membership->is_accepted = true;
+        $membership->save();
         $membership->contribution->members()->attach($membership->user_id);
         $membership->contribution->update(['is_active' => true]);
         $membership->contribution->user;
@@ -257,5 +264,50 @@ class ContributionsController extends Controller
         $membership->contribution->members;
         $membership->contribution->membershipRequests;
         return response()->json($membership, 200);
+    }
+
+    public function acceptAllMemberships(Request $request, $id)
+    {
+        $contribution = Contribution::find($id);
+        if(is_null($contribution)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $user = $request->user();
+        if(!$user->hasRole('admin') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $memberships = $contribution->membershipRequests()->where('is_accepted', false)->get();
+        foreach ($memberships as $membership) {
+            $membership->is_accepted = true;
+            $membership->save();
+            $membership->contribution->members()->attach($membership->user_id);
+            $membership->contribution->update(['is_active' => true]);
+        }
+        $contribution->user;
+        $contribution->specialsMembers;
+        $contribution->members;
+        $contribution->membershipRequests;
+        return response()->json($contribution, 200);
+    }
+
+    public function rejectAllMemberships(Request $request, $id)
+    {
+        $contribution = Contribution::find($id);
+        if(is_null($contribution)){
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        $user = $request->user();
+        if(!$user->hasRole('admin') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $memberships = $contribution->membershipRequests()->where('is_accepted', false)->get();
+        foreach ($memberships as $membership) {
+            $membership->delete();
+        }
+        $contribution->user;
+        $contribution->specialsMembers;
+        $contribution->members;
+        $contribution->membershipRequests;
+        return response()->json($contribution, 200);
     }
 }

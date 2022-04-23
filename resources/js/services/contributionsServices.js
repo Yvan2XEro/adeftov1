@@ -67,3 +67,15 @@ export function getMembershipByUserAndContribution(contributionId) {
 export function acceptMembership(id) {
     return axios.put(`${API_URL}/membership-requests/${id}/accept`);
 }
+
+export function rejectAllMembership(id) {
+    return axios.put(
+        `${API_URL}/contributions/${id}/reject-all-membership-requests`
+    );
+}
+
+export function acceptAllMembership(id) {
+    return axios.put(
+        `${API_URL}/contributions/${id}/accept-all-membership-requests`
+    );
+}

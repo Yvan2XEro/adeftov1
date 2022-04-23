@@ -10,14 +10,17 @@ import {
     Paper,
     TableHead,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContextProvider";
 
-function Infos() {
+function Infos({ contribution }) {
+    const {user} = useContext(AuthContext);
+
     return (
         <Grid container columnSpacing={{ md: 3 }}>
             <Grid item xs={6} md={6}>
@@ -25,7 +28,10 @@ function Infos() {
                     <TableBody>
                         <TableRow>
                             <TableCell>Coordonateur</TableCell>
-                            <TableCell>Jean Robet</TableCell>
+                            <TableCell>
+                                {contribution?.user.firstname}{" "}
+                                {contribution?.user.lastname}
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Seance numero</TableCell>
@@ -33,19 +39,13 @@ function Infos() {
                         </TableRow>
                         <TableRow>
                             <TableCell>Nombre de membres</TableCell>
-                            <TableCell>15</TableCell>
+                            <TableCell>
+                                {contribution?.members.length}
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Solde Actuel</TableCell>
-                            <TableCell>133000 FCFA</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Date de debut</TableCell>
-                            <TableCell>22/32/2332</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Date de fin</TableCell>
-                            <TableCell>22/32/2332</TableCell>
+                            <TableCell>{contribution?.balance} FCFA</TableCell>
                         </TableRow>
                         <Box mt={2}>
                             <Typography
@@ -56,20 +56,7 @@ function Infos() {
                                 Description et Objectif:
                             </Typography>
                             <Typography component="p">
-                                Lorem, ipsum dolor sit amet consectetur
-                                adipisicing elit. Doloribus delectus quia
-                                soluta! Vel corporis itaque deserunt reiciendis
-                                commodi ea omnis odio obcaecati minus. Saepe
-                                repellendus modi cum ad, fugiat a? Lorem, ipsum
-                                dolor sit amet consectetur adipisicing elit.
-                                Doloribus delectus quia soluta! Vel corporis
-                                itaque deserunt reiciendis commodi ea omnis odio
-                                obcaecati minus. Saepe repellendus modi cum ad,
-                                fugiat a? Lorem, ipsum dolor sit amet
-                                consectetur adipisicing elit. Doloribus delectus
-                                quia soluta! Vel corporis itaque deserunt
-                                reiciendis commodi ea omnis odio obcaecati
-                                minus. Saepe repellendus modi cum ad, fugiat a?
+                                {contribution?.description}
                             </Typography>
                         </Box>
                     </TableBody>
@@ -81,16 +68,6 @@ function Infos() {
                         fullWidth
                     >
                         Payer ma cautisation
-                    </Button>
-                </Box>
-                <Box mt={1}>
-                    <Button
-                        color="error"
-                        variant="contained"
-                        fullWidth
-                        startIcon={<PersonRemoveIcon />}
-                    >
-                        Quitter la cautisation
                     </Button>
                 </Box>
             </Grid>
@@ -127,7 +104,7 @@ function Infos() {
                             </TableBody>
                         </Table>
                         <Box mt={1}>
-                            <Button
+                            {!contribution?.members.find(m=>m.id===user?.id)?<Button
                                 color="success"
                                 variant="contained"
                                 to="/contributions/1/new-member"
@@ -136,7 +113,15 @@ function Infos() {
                                 startIcon={<AddCardIcon />}
                             >
                                 Rejoindre la cautisation
-                            </Button>
+                            </Button>:
+                            <Button
+                                color="error"
+                                variant="contained"
+                                fullWidth
+                                startIcon={<PersonRemoveIcon />}
+                            >
+                                Quitter la cautisation
+                            </Button>}
                         </Box>
                     </Box>
                     <Box
@@ -160,21 +145,13 @@ function Infos() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>Jean</TableCell>
-                                    <TableCell>Robert</TableCell>
-                                    <TableCell>123131313</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Jean</TableCell>
-                                    <TableCell>Robert</TableCell>
-                                    <TableCell>123131313</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Jean</TableCell>
-                                    <TableCell>Robert</TableCell>
-                                    <TableCell>123131313</TableCell>
-                                </TableRow>
+                                {contribution?.members.map((m) => (
+                                    <TableRow key={m.id}>
+                                        <TableCell>{m.firstname}</TableCell>
+                                        <TableCell>{m.lastname}</TableCell>
+                                        <TableCell>{m.phone}</TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </Box>

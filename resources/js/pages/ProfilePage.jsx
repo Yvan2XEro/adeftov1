@@ -370,6 +370,7 @@ const ChangePasswordFrom = ({ user }) => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isValid, isSubmitting },
     } = useForm({
         resolver: yupResolver(pwShema),
@@ -383,9 +384,14 @@ const ChangePasswordFrom = ({ user }) => {
         })
             .then(() => {
                 toast.success("Le mot de passe a été modifié avec succès");
+                reset();
             })
             .catch((e) => {
-                toast.error(e.response.data.message);
+                if(e.response.status === 422)
+                toast.error("Ancien mot de passe incorrect", {autoClose:false});
+                else{
+                    toast.error("Une erreur est survenue");
+                }
             });
     };
 

@@ -1,24 +1,26 @@
 import { AppBar, Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views/lib/SwipeableViews";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import { getContribution } from "../../services/contributionsServices";
 import Historique from "./Historique";
 import Infos from "./Infos";
 import Transactions from "./Transactions";
 
 function ContributionDetailsPage() {
+    const {id} = useParams()
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const navigate = useNavigate();
-    const { isAuthenticated} = React.useContext(AuthContext);
+    const { isAuthenticated } = React.useContext(AuthContext);
     React.useEffect(() => {
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             toast.error("Vous devez être connecté pour accéder à cette page");
             navigate("/login");
         }
@@ -27,19 +29,32 @@ function ContributionDetailsPage() {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
+    const [contribution, setContribution] = React.useState(null);
+    React.useEffect(()=>{
+        retriveContribution()
+    }, [])
+    const retriveContribution = React.useCallback(() => {
+        getContribution(id)
+            .then((response) => {
+                setContribution(response.data);
+            })
+            .catch((error) => {
+                toast.error("Erreur lors de la connection au serveur!");
+            });
+    }, [id]);
     return (
         <Box mt={8} sx={{ bgcolor: "background.paper" }}>
             <AppBar position="static" color="inherit">
-                <Box ml={1} >
+                <Box ml={1}>
                     <Typography pt={1} component="h3" variant="h4">
-                        Cautisation des supers gens
+                        {contribution?.name}
                     </Typography>
                     <Box flexDirection="row" mt={2}>
                         <Typography component="span" variant="p">
-                            3245 Contributeurs,
+                            {contribution?.members.length} Contributeurs,
                         </Typography>
                         <Typography component="span" ml={2} variant="p">
-                            solde: 2332323 FCFA
+                            solde: {contribution?.balance} FCFA
                         </Typography>
                     </Box>
                 </Box>
@@ -63,13 +78,13 @@ function ContributionDetailsPage() {
                 onChangeIndex={handleChangeIndex}
             >
                 <TabPanel value={value} index={0} dir={theme.direction}>
-                    <Infos />
+                    <Infos contribution={contribution} />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                    <Historique />
+                    <Historique contribution={contribution} />
                 </TabPanel>
                 <TabPanel value={value} index={2} dir={theme.direction}>
-                    <Transactions />
+                    <Transactions contribution={contribution} />
                 </TabPanel>
             </SwipeableViews>
         </Box>

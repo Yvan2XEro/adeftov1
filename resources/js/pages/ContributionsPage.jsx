@@ -173,7 +173,7 @@ function ContributionItem({ data, index }) {
                                         color="primary"
                                         variant="outlined"
                                         component={Link}
-                                        to="/contributions/1/details"
+                                        to={`/contributions/${data.id}/details`}
                                         fullWidth
                                         startIcon={<AddIcon />}
                                     >
@@ -184,7 +184,7 @@ function ContributionItem({ data, index }) {
                                     <Button
                                         color="success"
                                         variant="contained"
-                                        to="/contributions/1/new-member"
+                                        to={`/contributions/${data.id}/new-member`}
                                         component={Link}
                                         fullWidth
                                         startIcon={<AddCardIcon />}

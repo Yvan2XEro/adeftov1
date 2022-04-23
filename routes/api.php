@@ -74,7 +74,9 @@ Route::middleware('auth:api')->group(function () {
     ContributionsController::class, 'deleteMemberShipRequest'])->name('contributions.deleteMemberShipRequest');
 
     Route::put('/membership-requests/{id}/accept', [ContributionsController::class, 'acceptMembership'])->name('contributions.acceptMembership');
-
+    Route::put(
+    '/contributions/{id}/accept-all-membership-requests', [ContributionsController::class, 'acceptAllMemberships'])->name('contributions.acceptAllMemberships');
+    Route::put('/contributions/{id}/reject-all-membership-requests', [ContributionsController::class, 'rejectAllMemberships'])->name('contributions.rejectAllMemberships');
 
 
     Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');

@@ -80,7 +80,7 @@ class UserSeeder extends Seeder
             ]);
             $contribution->members()->attach($user->id);
             $session = $contribution->sessions()->create([
-                'date' => '2022-'. ($i<10? '0'.$i: $i) .'-15',
+                'date' => '2022-'. (($i+1)<10? '0'.$i+1: $i) . '-15 23:14:21',
             ]);
             $session->payments()->create([
                 'amount' => $faker->numberBetween(100, 1000),

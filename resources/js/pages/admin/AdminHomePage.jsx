@@ -34,7 +34,7 @@ export default function AdminHomePage() {
                                         </Icon>
                                     </Badge>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        Gestion des cautisations
+                                        Gestion des cotisations
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>

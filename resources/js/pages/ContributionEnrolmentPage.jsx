@@ -99,7 +99,7 @@ function ContributionEnrolmentPage() {
                     {membership.id===null?"Demande d'inscription": "Modifier ma demande"}
                 </Typography>
                 <Typography component="h3" mt={1} variant="h5">
-                    La cautisation des forts
+                    La cotisation des forts
                 </Typography>
                 <Grid container>
                     <Grid item xs={12} md={6} borderTop={0.3}>

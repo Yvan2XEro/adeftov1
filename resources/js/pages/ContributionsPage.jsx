@@ -114,7 +114,7 @@ function ContributionItem({ data, index }) {
                                     disabled={!data.is_active|| !iamMember()}
                                     fullWidth
                                 >
-                                    Payer ma cautisation
+                                    Payer ma cotisation
                                 </Button>
                             </Box>
                             <Box mt={1}>
@@ -128,7 +128,7 @@ function ContributionItem({ data, index }) {
                                     fullWidth
                                     startIcon={<AccessTimeIcon />}
                                 >
-                                    Payer une ancienne cautisation
+                                    Payer une ancienne cotisation
                                 </Button>
                             </Box>
                         </Grid>
@@ -164,7 +164,7 @@ function ContributionItem({ data, index }) {
                                         fullWidth
                                         startIcon={<AddCardIcon />}
                                     >
-                                        Rejoindre la cautisation
+                                        Rejoindre la cotisation
                                     </Button>:
 
                                         <Button
@@ -174,7 +174,7 @@ function ContributionItem({ data, index }) {
                                             disabled={data?.user_id===user?.id}
                                             startIcon={<PersonRemoveIcon />}
                                         >
-                                            Quitter la cautisation
+                                            Quitter la cotisation
                                         </Button>}
                                 </Box>
                             </Box>

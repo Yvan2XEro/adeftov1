@@ -7,25 +7,25 @@ const columns = [
     { field: "month", headerName: "Mois/Annee", width: 130 },
     {
         field: "particCount ",
-        headerName: "Personnes ayant cautises a temps",
+        headerName: "Personnes ayant cotises a temps",
         width: 200,
         type: 'number',
     },
     {
         field: "particLateCount ",
-        headerName: "Personnes ayant cautises en retard",
+        headerName: "Personnes ayant cotises en retard",
         width: 200,
         type: 'number'
     },
     {
         field: "totalPartic ",
-        headerName: "Total personnes ayant cautises",
+        headerName: "Total personnes ayant cotises",
         width: 200,
         type: 'number'
     },
     {
         field: "particLeftCount ",
-        headerName: `Personnes n' ayant cautises`,
+        headerName: `Personnes n' ayant cotises`,
         width: 200,
         type: 'number'
     },

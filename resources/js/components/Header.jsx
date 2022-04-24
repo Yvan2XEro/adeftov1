@@ -98,7 +98,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                                 activeclassname="active"
                                                 to="contributions"
                                             > */}
-                                                Cautisations
+                                                cotisations
                                             {/* </NavLink> */}
                                         </Button>
                                         <Button

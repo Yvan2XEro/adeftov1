@@ -11,7 +11,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="#">
-        Formation React
+        WDS Agency
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

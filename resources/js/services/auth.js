@@ -75,6 +75,10 @@ function setup() {
     }
 }
 
+function setAvatar(data) {
+    return axios.post(`${API_URL}/user/set-avatar`, data);
+}
+
 export default {
     login,
     logout,
@@ -82,6 +86,7 @@ export default {
     getUser,
     updatePassword,
     updateUser,
+    setAvatar,
     register,
     isAuthenticated,
 };

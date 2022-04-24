@@ -81,7 +81,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');
     Route::put('/user/password', [AuthController::class, 'changePassword'])->name('user.password');
-    Route::put('/user/set-avatar', [AuthController::class, 'setProfilePicture'])->name('user.setProfilePicture');
+    Route::post('/user/set-avatar', [AuthController::class, 'setProfilePicture'])->name('user.setProfilePicture');
+    Route::delete('/user/set-avatar', [AuthController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
 });
 
 

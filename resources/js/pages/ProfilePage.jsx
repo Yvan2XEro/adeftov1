@@ -7,10 +7,8 @@ import {
     Grid,
     IconButton,
     Input,
-    InputLabel,
     Table,
     TableCell,
-    TableHead,
     TableRow,
     TextField,
     Typography,
@@ -26,8 +24,8 @@ import auth from "../services/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { imagePath } from "../services/htt";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { imagePath, defaultImage } from "../services/htt";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -38,8 +36,6 @@ function ProfilePage() {
             navigate("/login");
         }
     }, [isAuthenticated]);
-    React.useEffect(() => {}, [user]);
-
     return (
         <Container mt={10}>
             <Grid container>
@@ -65,9 +61,7 @@ const Profile = ({ data }) => {
                 <Avatar
                     sx={{ width: 100, height: 100, mx: "auto" }}
                     alt="Cindy Baker"
-                    src={ data?.avatar
-                                            ? imagePath(data?.avatar)
-                                            : defaultImage}
+                    src={data?.avatar ? imagePath(data?.avatar) : defaultImage}
                 />
             </Box>
             <Box>
@@ -147,7 +141,6 @@ const Profile = ({ data }) => {
     );
 };
 
-const defaultImage = 'https://cdn.pixabay.com/photo/2017/02/25/22/04/user-icon-2098873__340.png';
 const shema = yup.object().shape({
     email: yup.string().email(),
     firstname: yup.string().min(3),
@@ -196,13 +189,16 @@ function ProfileForm({ data, onChange }) {
     const updateAvatar = async () => {
         const fd = new FormData();
         fd.append("image", avatar, avatar.name);
-        await auth.setAvatar(fd).then((response) => {
-            console.log(response.data);
-            onChange(response.data.user);
-            toast.success("Modification effectuée avec succès");
-        }).catch((error) => {
-            console.log(error.response);
-        });
+        await auth
+            .setAvatar(fd)
+            .then((response) => {
+                console.log(response.data);
+                onChange(response.data.user);
+                toast.success("Modification effectuée avec succès");
+            })
+            .catch((error) => {
+                console.log(error.response);
+            });
     };
 
     return (
@@ -243,11 +239,11 @@ function ProfileForm({ data, onChange }) {
                                     }}
                                     alt="Cindy Baker"
                                     src={
-                                        avatarUrl?avatarUrl: (
-                                            data?.avatar
+                                        avatarUrl
+                                            ? avatarUrl
+                                            : data?.avatar
                                             ? imagePath(data?.avatar)
                                             : defaultImage
-                                        )
                                     }
                                 />
                                 <IconButton
@@ -261,30 +257,31 @@ function ProfileForm({ data, onChange }) {
                                 </IconButton>
                             </label>
 
-                            {avatarUrl && (<>
-                                <Button
-                                    sx={{ mx: "auto" }}
-                                    onClick={() => {
-                                        setAvatarUrl(null);
-                                        setAvatar(null);
-                                    }}
-                                    color="error"
-                                    aria-label="upload picture"
-                                    size="large"
-                                >
-                                    <DeleteIcon />
-                                </Button>
-                                 <Button
-                                    sx={{ mx: "auto" }}
-                                    onClick={updateAvatar}
-                                    color="success"
-                                    variant="outlined"
-                                    aria-label="upload picture"
-                                    title="Appliquer la photo de profil"
-                                    size="large"
-                                >
-                                    <FileUploadIcon />
-                                </Button>
+                            {avatarUrl && (
+                                <>
+                                    <Button
+                                        sx={{ mx: "auto" }}
+                                        onClick={() => {
+                                            setAvatarUrl(null);
+                                            setAvatar(null);
+                                        }}
+                                        color="error"
+                                        aria-label="upload picture"
+                                        size="large"
+                                    >
+                                        <DeleteIcon />
+                                    </Button>
+                                    <Button
+                                        sx={{ mx: "auto" }}
+                                        onClick={updateAvatar}
+                                        color="success"
+                                        variant="outlined"
+                                        aria-label="upload picture"
+                                        title="Appliquer la photo de profil"
+                                        size="large"
+                                    >
+                                        <FileUploadIcon />
+                                    </Button>
                                 </>
                             )}
                         </Box>
@@ -416,9 +413,11 @@ const ChangePasswordFrom = ({ user }) => {
                 reset();
             })
             .catch((e) => {
-                if(e.response.status === 422)
-                toast.error("Ancien mot de passe incorrect", {autoClose:false});
-                else{
+                if (e.response.status === 422)
+                    toast.error("Ancien mot de passe incorrect", {
+                        autoClose: false,
+                    });
+                else {
                     toast.error("Une erreur est survenue");
                 }
             });

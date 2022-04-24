@@ -143,30 +143,7 @@ function ContributionItem({ data, index }) {
                                     padding: 2,
                                 }}
                             >
-                                <Typography component="h3" variant="h4">
-                                    Reglements
-                                </Typography>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell>Reglements 1</TableCell>
-                                            <TableCell>
-                                                Lorem, ipsum dolor sit amet
-                                                consectetur adipisicing elit.
-                                                Fuga minima numquam odio,
-                                                officia alias, excepturi
-                                                molestiae autem error quasi
-                                                labore at nesciunt amet, iste
-                                                reiciendis rerum cum aut quae
-                                                sed!
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Reglements 2</TableCell>
-                                            <TableCell>22/32/2332</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
+
 
                                 <Box mt={1}>
                                     <Button

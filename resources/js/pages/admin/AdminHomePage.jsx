@@ -13,7 +13,7 @@ export default function AdminHomePage() {
         <Container>
             <Grid container sx={{ mt: 10 }} elevate={6}>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin/contributions" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin/contributions" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent height="440">
@@ -31,7 +31,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent height="440">
@@ -47,7 +47,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>
@@ -63,7 +63,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>
@@ -79,7 +79,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>
@@ -95,7 +95,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>

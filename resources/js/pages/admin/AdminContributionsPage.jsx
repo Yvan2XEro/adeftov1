@@ -168,7 +168,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
     );
 
     const membershipsCount = useCallback(() => {
-        return selectedContribution?.membership_requests.filter(i=>!i.is_accepted).length;
+        return selectedContribution?.membership_requests?.filter(i=>!i.is_accepted).length;
     },[selectedContribution]);
 
     const isSpecialMember = (member) => {

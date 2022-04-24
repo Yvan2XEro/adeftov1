@@ -39,7 +39,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                         {/* <NavLink
                             to="/"
                             className="nav-link"
-                            activeClassName="active"
+                            activeclassname="active"
                         > */}
                             <HomeIcon />
                         {/* </NavLink> */}
@@ -58,7 +58,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                         >
                                             <NavLink
                                                 className="nav-link"
-                                                activeClassName="active"
+                                                activeclassname="active"
                                                 to="login"
                                             >
                                                 <LoginIcon
@@ -77,7 +77,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                         >
                                             <NavLink
                                                 className="nav-link"
-                                                activeClassName="active"
+                                                activeclassname="active"
                                                 to="register"
                                             >
                                                 <PersonAddIcon />
@@ -90,12 +90,12 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                             variant="h6"
                                             component={NavLink}
                                             to="/contributions"
-                                            activeClassName="paper.primary"
+                                            activeclassname="paper.primary"
                                             sx={{ flexGrow: 1 }}
                                         >
                                             {/* <NavLink
                                                 className="paper.inherit"
-                                                activeClassName="active"
+                                                activeclassname="active"
                                                 to="contributions"
                                             > */}
                                                 Cautisations

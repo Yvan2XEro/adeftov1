@@ -146,17 +146,43 @@ class AuthController extends Controller
     {
         $user = User::findOrFail(Auth::user()->id);
         $validator = Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
         if ($validator->fails()) {
-            return response(['errors' => $validator->errors()->all()], 422);
+            return response()->json(['errors' => $validator->errors()->all()], 422);
         }
         $imageName = uniqid('avatar_') . '.' . $request->image->getClientOriginalExtension();
         $request->image->move(public_path('images'), $imageName);
-        $user->avatar = $imageName;
+        if($user->avatar != null){
+            try{
+                unlink(public_path($user->avatar));
+            }catch(\Exception $e){
+
+            }
+        }
+        $user->avatar = 'images/'.$imageName;
         $user->save();
         return response()->json([
-            'message' => 'Image changed successfully'
+            'message' => 'Image changed successfully',
+            'user' => $user
+        ], 200);
+    }
+
+    public function deleteProfilePicture(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        if($user->avatar != null){
+            try{
+                unlink(public_path($user->avatar));
+            }catch(\Exception $e){
+
+            }
+        }
+        $user->avatar = null;
+        $user->save();
+        return response()->json([
+            'message' => 'Image deleted successfully',
+            'user' => $user
         ], 200);
     }
 

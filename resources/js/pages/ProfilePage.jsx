@@ -26,6 +26,8 @@ import auth from "../services/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { imagePath } from "../services/htt";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -63,7 +65,9 @@ const Profile = ({ data }) => {
                 <Avatar
                     sx={{ width: 100, height: 100, mx: "auto" }}
                     alt="Cindy Baker"
-                    src="https://cdn.pixabay.com/photo/2017/02/04/12/25/man-2037255__340.jpg"
+                    src={ data?.avatar
+                                            ? imagePath(data?.avatar)
+                                            : defaultImage}
                 />
             </Box>
             <Box>
@@ -143,6 +147,7 @@ const Profile = ({ data }) => {
     );
 };
 
+const defaultImage = 'https://cdn.pixabay.com/photo/2017/02/25/22/04/user-icon-2098873__340.png';
 const shema = yup.object().shape({
     email: yup.string().email(),
     firstname: yup.string().min(3),
@@ -188,6 +193,18 @@ function ProfileForm({ data, onChange }) {
             });
     };
 
+    const updateAvatar = async () => {
+        const fd = new FormData();
+        fd.append("image", avatar, avatar.name);
+        await auth.setAvatar(fd).then((response) => {
+            console.log(response.data);
+            onChange(response.data.user);
+            toast.success("Modification effectuée avec succès");
+        }).catch((error) => {
+            console.log(error.response);
+        });
+    };
+
     return (
         <Box>
             <Box mt={10} component="form" onSubmit={handleSubmit(submit)}>
@@ -226,9 +243,11 @@ function ProfileForm({ data, onChange }) {
                                     }}
                                     alt="Cindy Baker"
                                     src={
-                                        avatarUrl
-                                            ? avatarUrl
-                                            : "https://cdn.pixabay.com/photo/2017/02/04/12/25/man-2037255__340.jpg"
+                                        avatarUrl?avatarUrl: (
+                                            data?.avatar
+                                            ? imagePath(data?.avatar)
+                                            : defaultImage
+                                        )
                                     }
                                 />
                                 <IconButton
@@ -242,7 +261,7 @@ function ProfileForm({ data, onChange }) {
                                 </IconButton>
                             </label>
 
-                            {avatarUrl && (
+                            {avatarUrl && (<>
                                 <Button
                                     sx={{ mx: "auto" }}
                                     onClick={() => {
@@ -251,11 +270,22 @@ function ProfileForm({ data, onChange }) {
                                     }}
                                     color="error"
                                     aria-label="upload picture"
-                                    component="span"
                                     size="large"
                                 >
                                     <DeleteIcon />
                                 </Button>
+                                 <Button
+                                    sx={{ mx: "auto" }}
+                                    onClick={updateAvatar}
+                                    color="success"
+                                    variant="outlined"
+                                    aria-label="upload picture"
+                                    title="Appliquer la photo de profil"
+                                    size="large"
+                                >
+                                    <FileUploadIcon />
+                                </Button>
+                                </>
                             )}
                         </Box>
                     </FormControl>
@@ -348,7 +378,6 @@ function ProfileForm({ data, onChange }) {
                     color="primary"
                     loading={isSubmitting}
                     variant="contained"
-                    disabled={!isValid}
                 >
                     <Typography variant="h6">Enregistrer</Typography>
                 </LoadingButton>

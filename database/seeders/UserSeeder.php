@@ -59,6 +59,7 @@ class UserSeeder extends Seeder
             'name' => 'Adefto COTISATION',
             'description' => $faker->text(100),
         ]);
+        $contribution->members()->attach($j);
         $contribution->save();
 
         for ($i = 0; $i < 10; $i++) {

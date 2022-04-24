@@ -6,9 +6,20 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea, Container, Grid, Badge, Paper } from '@mui/material';
 import { NavLink, useNavigate } from "react-router-dom";
 import Icon from '@mui/material/Icon';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import { AuthContext } from '../../contexts/AuthContextProvider';
+import trust from '../../services/trust';
+import { toast } from 'react-toastify';
 
 export default function AdminHomePage() {
+    const {user} = React.useContext(AuthContext);
+    const navigate = useNavigate('/');
+    React.useEffect(() => {
+        if(!trust.isAdmin(user) || !trust.isSuperAdmin(user)){
+            toast.error('Vous n\'avez pas les droits nécessaires pour accéder à cette page');
+            navigate('/');
+        }
+    }, [user]);
+
     return (
         <Container>
             <Grid container sx={{ mt: 10 }} elevate={6}>

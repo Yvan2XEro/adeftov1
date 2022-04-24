@@ -61,6 +61,12 @@ export default ContributionsPage;
 function ContributionItem({ data, index }) {
     const [openModal, setOpenModal] = React.useState(false);
     const [expanded, setExpanded] = React.useState(index===0);
+    const {user} = React.useContext(AuthContext);
+    const iamMember = React.useCallback(()=> {
+        console.log(data?.members.find((member) => member.id === user?.id));
+        return data?.members.find((member) => member.id === user?.id);
+    },[data, user]);
+
     return (
         <Box sx={{ borderColor: "grey.500", padding: 2 }}>
             <Accordion expanded={expanded}>
@@ -105,6 +111,7 @@ function ContributionItem({ data, index }) {
                                 <Button
                                     startIcon={<AttachMoneyIcon />}
                                     variant="contained"
+                                    disabled={!data.is_active|| !iamMember()}
                                     fullWidth
                                 >
                                     Payer ma cautisation
@@ -117,20 +124,11 @@ function ContributionItem({ data, index }) {
                                     onClick={() => {
                                         setOpenModal(true);
                                     }}
+                                    disabled={!data.is_active|| !iamMember()}
                                     fullWidth
                                     startIcon={<AccessTimeIcon />}
                                 >
                                     Payer une ancienne cautisation
-                                </Button>
-                            </Box>
-                            <Box mt={1}>
-                                <Button
-                                    color="error"
-                                    variant="contained"
-                                    fullWidth
-                                    startIcon={<PersonRemoveIcon />}
-                                >
-                                    Quitter la cautisation
                                 </Button>
                             </Box>
                         </Grid>
@@ -158,7 +156,7 @@ function ContributionItem({ data, index }) {
                                     </Button>
                                 </Box>
                                 <Box mt={1}>
-                                    <Button
+                                    {!iamMember()?<Button
                                         color="success"
                                         variant="contained"
                                         to={`/contributions/${data.id}/new-member`}
@@ -167,7 +165,17 @@ function ContributionItem({ data, index }) {
                                         startIcon={<AddCardIcon />}
                                     >
                                         Rejoindre la cautisation
-                                    </Button>
+                                    </Button>:
+
+                                        <Button
+                                            color="error"
+                                            variant="contained"
+                                            fullWidth
+                                            disabled={data?.user_id===user?.id}
+                                            startIcon={<PersonRemoveIcon />}
+                                        >
+                                            Quitter la cautisation
+                                        </Button>}
                                 </Box>
                             </Box>
                         </Grid>

@@ -173,7 +173,6 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
 
     const isSpecialMember = (member) => {
         return selectedContribution.specials_members.find((m) => {
-            console.log(m.id === member.id);
             return m.id === member.id;
         })
             ? true
@@ -350,7 +349,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                                                 <TableCell>{m.phone}</TableCell>
                                                 <TableCell>
                                                     <Switch
-                                                        disabled={checking||user?.id===selectedContribution.user_id}
+                                                        disabled={checking||m?.id===selectedContribution.user_id}
                                                         checked={m.isSpecial || m.id === selectedContribution.user_id}
                                                         onChange={() => {
                                                             if (

@@ -21,7 +21,7 @@ class ContributionsController extends Controller
         foreach ($contributions as $contribution) {
             $contribution->user;
             $contribution->members;
-            if ($user && ($contribution->specialsMembers->contains($user) || $user->hasRole('admin'))) {
+            if ($user && ($contribution->specialsMembers->contains($user) || $user->hasRole('administrator'))) {
                 $contribution->specialsMembers;
                 $contribution->membershipRequests;
             }
@@ -65,7 +65,7 @@ class ContributionsController extends Controller
         $contribution->members;
         $contribution->specialsMembers;
         $user = $request->user();
-        if($contribution->specialsMembers->contains($user) || $user->hasRole('admin')){
+        if($contribution->specialsMembers->contains($user) || $user->hasRole('administrator') || $contribution->user_id == $user->id){
             $contribution->membershipRequests;
         }
         return $contribution;
@@ -90,7 +90,7 @@ class ContributionsController extends Controller
         if(is_null($contribution)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if($contribution->user_id != $request->user()->id && !$request->user()->hasRole('admin')){
+        if($contribution->user_id != $request->user()->id && !$request->user()->hasRole('administrator')){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->update($request->all());
@@ -110,7 +110,7 @@ class ContributionsController extends Controller
         if(is_null($contribution)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('admin')) {
+        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('administrator')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->delete();
@@ -122,7 +122,7 @@ class ContributionsController extends Controller
         if(is_null($contribution)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('admin')) {
+        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('administrator')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->specialsMembers()->attach($request->input('member_id'));
@@ -147,7 +147,7 @@ class ContributionsController extends Controller
         if(is_null($contribution)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('admin')) {
+        if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('administrator')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->specialsMembers()->detach($request->input('member_id'));
@@ -204,7 +204,7 @@ class ContributionsController extends Controller
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if($membership->user_id != $request->user()->id && !$request->user()->hasRole('admin')){
+        if($membership->user_id != $request->user()->id && !$request->user()->hasRole('administrator')){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -221,7 +221,7 @@ class ContributionsController extends Controller
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if(!$user->hasRole('admin') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $membership->delete();
@@ -252,7 +252,7 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
 
-        if(!$user->hasRole('admin') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $membership->is_accepted = true;
@@ -273,7 +273,7 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
         $user = $request->user();
-        if(!$user->hasRole('admin') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $memberships = $contribution->membershipRequests()->where('is_accepted', false)->get();
@@ -297,7 +297,7 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
         $user = $request->user();
-        if(!$user->hasRole('admin') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && $contribution->user_id != $user->id && $contribution->specialsMembers->contains($user->id) == false){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $memberships = $contribution->membershipRequests()->where('is_accepted', false)->get();

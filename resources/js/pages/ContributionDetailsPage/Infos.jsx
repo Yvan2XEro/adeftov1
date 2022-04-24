@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 
 function Infos({ contribution }) {
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     return (
         <Grid container columnSpacing={{ md: 3 }}>
@@ -61,15 +61,6 @@ function Infos({ contribution }) {
                         </Box>
                     </TableBody>
                 </Table>
-                <Box mt={1}>
-                    <Button
-                        startIcon={<AttachMoneyIcon />}
-                        variant="contained"
-                        fullWidth
-                    >
-                        Payer ma cautisation
-                    </Button>
-                </Box>
             </Grid>
             <Grid item md={6}>
                 <Box>
@@ -81,47 +72,42 @@ function Infos({ contribution }) {
                             padding: 2,
                         }}
                     >
-                        <Typography component="h3" variant="h4">
-                            Reglements
-                        </Typography>
-                        <Table>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>Reglements 1</TableCell>
-                                    <TableCell>
-                                        Lorem, ipsum dolor sit amet consectetur
-                                        adipisicing elit. Fuga minima numquam
-                                        odio, officia alias, excepturi molestiae
-                                        autem error quasi labore at nesciunt
-                                        amet, iste reiciendis rerum cum aut quae
-                                        sed!
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Reglements 2</TableCell>
-                                    <TableCell>22/32/2332</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
                         <Box mt={1}>
-                            {!contribution?.members.find(m=>m.id===user?.id)?<Button
-                                color="success"
-                                variant="contained"
-                                to="/contributions/1/new-member"
-                                component={Link}
-                                fullWidth
-                                startIcon={<AddCardIcon />}
-                            >
-                                Rejoindre la cautisation
-                            </Button>:
+
                             <Button
-                                color="error"
+                                sx={{mb: 1}}
+                                startIcon={<AttachMoneyIcon />}
                                 variant="contained"
                                 fullWidth
-                                startIcon={<PersonRemoveIcon />}
                             >
-                                Quitter la cautisation
-                            </Button>}
+                                Payer ma cautisation
+                            </Button>
+                            {!contribution?.members.find(
+                                (m) => m.id === user?.id
+                            ) ? (
+                                <Button
+                                    color="success"
+                                    variant="contained"
+                                    to="/contributions/1/new-member"
+                                    component={Link}
+                                    fullWidth
+                                    startIcon={<AddCardIcon />}
+                                >
+                                    Rejoindre la cautisation
+                                </Button>
+                            ) : (
+                                <Button
+                                    color="error"
+                                    variant="contained"
+                                    fullWidth
+                                    disabled={
+                                        user?.id === contribution?.user_id
+                                    }
+                                    startIcon={<PersonRemoveIcon />}
+                                >
+                                    Quitter la cautisation
+                                </Button>
+                            )}
                         </Box>
                     </Box>
                     <Box

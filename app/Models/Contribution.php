@@ -29,4 +29,9 @@ class Contribution extends Model
     {
         return $this->hasMany(MembershipRequest::class);
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
 }

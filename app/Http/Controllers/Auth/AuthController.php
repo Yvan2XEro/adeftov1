@@ -142,4 +142,22 @@ class AuthController extends Controller
         }
     }
 
+    public function setProfilePicture(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+        $imageName = uniqid('avatar_') . '.' . $request->image->getClientOriginalExtension();
+        $request->image->move(public_path('images'), $imageName);
+        $user->avatar = $imageName;
+        $user->save();
+        return response()->json([
+            'message' => 'Image changed successfully'
+        ], 200);
+    }
+
 }

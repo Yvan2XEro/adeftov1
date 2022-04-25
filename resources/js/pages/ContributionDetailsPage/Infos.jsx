@@ -80,7 +80,7 @@ function Infos({ contribution }) {
                                 variant="contained"
                                 fullWidth
                             >
-                                Payer ma cautisation
+                                Payer ma cotisation
                             </Button>
                             {!contribution?.members.find(
                                 (m) => m.id === user?.id
@@ -93,7 +93,7 @@ function Infos({ contribution }) {
                                     fullWidth
                                     startIcon={<AddCardIcon />}
                                 >
-                                    Rejoindre la cautisation
+                                    Rejoindre la cotisation
                                 </Button>
                             ) : (
                                 <Button
@@ -105,7 +105,7 @@ function Infos({ contribution }) {
                                     }
                                     startIcon={<PersonRemoveIcon />}
                                 >
-                                    Quitter la cautisation
+                                    Quitter la cotisation
                                 </Button>
                             )}
                         </Box>

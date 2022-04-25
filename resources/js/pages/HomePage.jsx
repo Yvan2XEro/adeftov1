@@ -16,7 +16,7 @@ function HomePage() {
         Bienvennu sur ADEFTO
       </Typography>
       <Typography component="p">
-        Faites vos cautisations depuis chez vous et en ligne.
+        Faites vos cotisations depuis chez vous et en ligne.
       </Typography>
     </Box>
   );

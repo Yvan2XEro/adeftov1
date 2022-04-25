@@ -6,14 +6,25 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea, Container, Grid, Badge, Paper } from '@mui/material';
 import { NavLink, useNavigate } from "react-router-dom";
 import Icon from '@mui/material/Icon';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import { AuthContext } from '../../contexts/AuthContextProvider';
+import trust from '../../services/trust';
+import { toast } from 'react-toastify';
 
 export default function AdminHomePage() {
+    const {user} = React.useContext(AuthContext);
+    const navigate = useNavigate('/');
+    React.useEffect(() => {
+        if(!trust.isAdmin(user) || !trust.isSuperAdmin(user)){
+            toast.error('Vous n\'avez pas les droits nécessaires pour accéder à cette page');
+            navigate('/');
+        }
+    }, [user]);
+
     return (
         <Container>
             <Grid container sx={{ mt: 10 }} elevate={6}>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin/contributions" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin/contributions" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent height="440">
@@ -23,7 +34,7 @@ export default function AdminHomePage() {
                                         </Icon>
                                     </Badge>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        Gestion des cautisations
+                                        Gestion des cotisations
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>
@@ -31,7 +42,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent height="440">
@@ -63,7 +74,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>
@@ -79,7 +90,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>
@@ -95,7 +106,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeClassName="active" Style="text-decoration: none">
+                    <NavLink to="/admin" className="nav-link" activeclassname="active" Style="text-decoration: none">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>

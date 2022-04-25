@@ -30,7 +30,7 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddIcon from "@mui/icons-material/Add";
 import { LoadingButton } from "@mui/lab";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
     getAllContributions,
     updateContribution,
@@ -49,9 +49,14 @@ import { AuthContext } from "../../contexts/AuthContextProvider";
 function AdminContributionsPage() {
     const [selected, setSetSelected] = useState(null);
     const [contributions, setContributions] = useState([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     useEffect(() => {
         if (contributions.length > 0) {
-            setSetSelected(contributions[0].id);
+            const id = !!searchParams?.get("selected_id")
+                ? searchParams?.get("selected_id")
+                : contributions[0].id;
+            setSetSelected(id);
         }
     }, [contributions]);
     useEffect(() => {
@@ -72,10 +77,13 @@ function AdminContributionsPage() {
                     <Button
                         variant={selected ? "outlined" : "contained"}
                         color="primary"
-                        onClick={() => setSetSelected(null)}
+                        onClick={() => {
+                            setSetSelected(null)
+                            setSearchParams({})
+                        }}
                         startIcon={<AddIcon />}
                     >
-                        Creer une nouvelle cautisation
+                        Creer une nouvelle cotisation
                     </Button>
 
                     <List
@@ -97,7 +105,10 @@ function AdminContributionsPage() {
                                 disablePadding
                             >
                                 <ListItemButton
-                                    onClick={() => setSetSelected(item.id)}
+                                    onClick={() => {
+                                        setSetSelected(item.id)
+                                         setSearchParams({selected_id: item.id})
+                                    }}
                                 >
                                     <ListItemIcon>
                                         <ArrowForwardIosIcon
@@ -168,12 +179,13 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
     );
 
     const membershipsCount = useCallback(() => {
-        return selectedContribution?.membership_requests.filter(i=>!i.is_accepted).length;
-    },[selectedContribution]);
+        return selectedContribution?.membership_requests?.filter(
+            (i) => !i.is_accepted
+        ).length;
+    }, [selectedContribution]);
 
     const isSpecialMember = (member) => {
         return selectedContribution.specials_members.find((m) => {
-            console.log(m.id === member.id);
             return m.id === member.id;
         })
             ? true
@@ -198,7 +210,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                 });
             } else {
                 addContribution(data).then((response) => {
-                    setSetSelected(response.data.id)
+                    setSetSelected(response.data.id);
                     onUpdate();
                     toast.success("La cotisation a été ajoutée avec succès");
                 });
@@ -206,7 +218,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
         },
         [selectedContribution, onUpdate]
     );
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     return (
         <Box>
             <AppBar position="static" color="inherit">
@@ -227,7 +239,9 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                             component={Link}
                             to={`/admin/contributions/${selectedContribution?.id}/adhesions`}
                             sx={{ mr: 1 }}
-                            title={`${membershipsCount()} Demande${membershipsCount()!=1?'s':''} d'hadesion`}
+                            title={`${membershipsCount()} Demande${
+                                membershipsCount() != 1 ? "s" : ""
+                            } d'hadesion`}
                         >
                             <Badge badgeContent={membershipsCount()}>
                                 <Icon sx={{ fontSize: 30 }}>person_add</Icon>
@@ -254,7 +268,9 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                         <FormControl fullWidth>
                             <TextField
                                 multiline
-                                defaultValue={selectedId?selectedContribution?.name:""}
+                                defaultValue={
+                                    selectedId ? selectedContribution?.name : ""
+                                }
                                 error={!!errors?.name}
                                 fullWidth
                                 {...register("name")}
@@ -275,7 +291,11 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                                 multiline
                                 minRows={4}
                                 maxRows={4}
-                                defaultValue={selectedId?selectedContribution?.description:""}
+                                defaultValue={
+                                    selectedId
+                                        ? selectedContribution?.description
+                                        : ""
+                                }
                                 error={!!errors?.description}
                                 fullWidth
                                 {...register("description")}
@@ -350,8 +370,16 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                                                 <TableCell>{m.phone}</TableCell>
                                                 <TableCell>
                                                     <Switch
-                                                        disabled={checking||user?.id===selectedContribution.user_id}
-                                                        checked={m.isSpecial || m.id === selectedContribution.user_id}
+                                                        disabled={
+                                                            checking ||
+                                                            m?.id ===
+                                                                selectedContribution.user_id
+                                                        }
+                                                        checked={
+                                                            m.isSpecial ||
+                                                            m.id ===
+                                                                selectedContribution.user_id
+                                                        }
                                                         onChange={() => {
                                                             if (
                                                                 isSpecialMember(

@@ -119,20 +119,19 @@ class ContributionsController extends Controller
 
     public function addSpecialMember(Request $request, $id) {
         $contribution = Contribution::find($id);
-        if(is_null($contribution)){
+        if(is_null($contribution)) {
             return response()->json(['message' => 'Record not found'], 404);
         }
         if ($contribution->user_id != $request->user()->id && !$request->user()->hasRole('administrator')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $contribution->specialsMembers()->attach($request->input('member_id'));
-        if(!$contribution->members()->contains($request->input('member_id'))){
-            $contribution->members()->attach($request->input('member_id'));
-        }
+        // dd($contribution->members()->contains($request->input('member_id')));
+        // if(!$contribution->members()->contains($request->input('member_id'))) {
+        //     $contribution->members()->attach($request->input('member_id'));
+        // }
         return response()->json($contribution, 200);
     }
-
-
 
     /**
      * Update the specified resource in storage.

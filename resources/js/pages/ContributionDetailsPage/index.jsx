@@ -1,24 +1,24 @@
-import { AppBar, Box, Tab, Tabs, Typography } from "@mui/material";
+import { Settings } from "@mui/icons-material";
+import { AppBar, Box, Button, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views/lib/SwipeableViews";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import { getContribution } from "../../services/contributionsServices";
 import Historique from "./Historique";
 import Infos from "./Infos";
-import Transactions from "./Transactions";
 
 function ContributionDetailsPage() {
-    const {id} = useParams()
+    const { id } = useParams();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const navigate = useNavigate();
-    const { isAuthenticated } = React.useContext(AuthContext);
+    const { isAuthenticated, user } = React.useContext(AuthContext);
     React.useEffect(() => {
         if (!isAuthenticated) {
             toast.error("Vous devez être connecté pour accéder à cette page");
@@ -30,9 +30,9 @@ function ContributionDetailsPage() {
         setValue(index);
     };
     const [contribution, setContribution] = React.useState(null);
-    React.useEffect(()=>{
-        retriveContribution()
-    }, [])
+    React.useEffect(() => {
+        retriveContribution();
+    }, []);
     const retriveContribution = React.useCallback(() => {
         getContribution(id)
             .then((response) => {
@@ -56,6 +56,17 @@ function ContributionDetailsPage() {
                         <Typography component="span" ml={2} variant="p">
                             solde: {contribution?.balance} FCFA
                         </Typography>
+                        {user?.id === contribution?.user_id && (
+                            <Button
+                                sx={{ ml: 10 }}
+                                variant="outlined"
+                                component={Link}
+                                to={"/admin/contributions?selected_id="+contribution?.id}
+                                title="Parametres de la cotisation"
+                            >
+                                <Settings />
+                            </Button>
+                        )}
                     </Box>
                 </Box>
 
@@ -69,7 +80,6 @@ function ContributionDetailsPage() {
                 >
                     <Tab label="Informations" {...a11yProps(0)} />
                     <Tab label="Historique" {...a11yProps(2)} />
-                    <Tab label="Transactions" {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
             <SwipeableViews
@@ -82,9 +92,6 @@ function ContributionDetailsPage() {
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
                     <Historique contribution={contribution} />
-                </TabPanel>
-                <TabPanel value={value} index={2} dir={theme.direction}>
-                    <Transactions contribution={contribution} />
                 </TabPanel>
             </SwipeableViews>
         </Box>

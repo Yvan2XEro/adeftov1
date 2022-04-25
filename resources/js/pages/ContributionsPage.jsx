@@ -61,6 +61,12 @@ export default ContributionsPage;
 function ContributionItem({ data, index }) {
     const [openModal, setOpenModal] = React.useState(false);
     const [expanded, setExpanded] = React.useState(index===0);
+    const {user} = React.useContext(AuthContext);
+    const iamMember = React.useCallback(()=> {
+        console.log(data?.members.find((member) => member.id === user?.id));
+        return data?.members.find((member) => member.id === user?.id);
+    },[data, user]);
+
     return (
         <Box sx={{ borderColor: "grey.500", padding: 2 }}>
             <Accordion expanded={expanded}>
@@ -105,9 +111,10 @@ function ContributionItem({ data, index }) {
                                 <Button
                                     startIcon={<AttachMoneyIcon />}
                                     variant="contained"
+                                    disabled={!data.is_active|| !iamMember()}
                                     fullWidth
                                 >
-                                    Payer ma cautisation
+                                    Payer ma cotisation
                                 </Button>
                             </Box>
                             <Box mt={1}>
@@ -117,20 +124,11 @@ function ContributionItem({ data, index }) {
                                     onClick={() => {
                                         setOpenModal(true);
                                     }}
+                                    disabled={!data.is_active|| !iamMember()}
                                     fullWidth
                                     startIcon={<AccessTimeIcon />}
                                 >
-                                    Payer une ancienne cautisation
-                                </Button>
-                            </Box>
-                            <Box mt={1}>
-                                <Button
-                                    color="error"
-                                    variant="contained"
-                                    fullWidth
-                                    startIcon={<PersonRemoveIcon />}
-                                >
-                                    Quitter la cautisation
+                                    Payer une ancienne cotisation
                                 </Button>
                             </Box>
                         </Grid>
@@ -143,30 +141,7 @@ function ContributionItem({ data, index }) {
                                     padding: 2,
                                 }}
                             >
-                                <Typography component="h3" variant="h4">
-                                    Reglements
-                                </Typography>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell>Reglements 1</TableCell>
-                                            <TableCell>
-                                                Lorem, ipsum dolor sit amet
-                                                consectetur adipisicing elit.
-                                                Fuga minima numquam odio,
-                                                officia alias, excepturi
-                                                molestiae autem error quasi
-                                                labore at nesciunt amet, iste
-                                                reiciendis rerum cum aut quae
-                                                sed!
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Reglements 2</TableCell>
-                                            <TableCell>22/32/2332</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
+
 
                                 <Box mt={1}>
                                     <Button
@@ -181,7 +156,7 @@ function ContributionItem({ data, index }) {
                                     </Button>
                                 </Box>
                                 <Box mt={1}>
-                                    <Button
+                                    {!iamMember()?<Button
                                         color="success"
                                         variant="contained"
                                         to={`/contributions/${data.id}/new-member`}
@@ -189,8 +164,18 @@ function ContributionItem({ data, index }) {
                                         fullWidth
                                         startIcon={<AddCardIcon />}
                                     >
-                                        Rejoindre la cautisation
-                                    </Button>
+                                        Rejoindre la cotisation
+                                    </Button>:
+
+                                        <Button
+                                            color="error"
+                                            variant="contained"
+                                            fullWidth
+                                            disabled={data?.user_id===user?.id}
+                                            startIcon={<PersonRemoveIcon />}
+                                        >
+                                            Quitter la cotisation
+                                        </Button>}
                                 </Box>
                             </Box>
                         </Grid>

@@ -11,10 +11,11 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { fetchMyUnpaidSessions } from "../services/contributionsServices";
 import moment from "moment";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import {toast} from "react-toastify"
 
 const style = {
     position: "absolute",
@@ -28,21 +29,27 @@ const style = {
 
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [amount, setAmount] = useState(500);
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
     const [phone, setPhone] = useState(user?.phone);
     useEffect(() => {
         setPhone(user?.phone);
-    }, [user])
+    }, [user]);
     useEffect(() => {
-        if(contribution!==null) {
-            fetchMyUnpaidSessions(contribution.id).then(response=>{
+        if (contribution !== null) {
+            fetchMyUnpaidSessions(contribution.id).then((response) => {
                 setSessions(response.data.reverse());
-                setSelectedSession(response.reverse().data[0]||null);
-            })
+                setSelectedSession(response.data.reverse()[0] || null);
+            });
         }
     }, [contribution]);
+
+    const processPayment = useCallback(() => {
+        if (selectedSession) {
+            toast.info("Veuillez conulter votre téléphone pour continuer", {autoClose: false});
+        }
+    }, [selectedSession]);
 
     return (
         <Modal
@@ -66,36 +73,63 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         id="demo-simple-select"
                         label="Age"
                         value={selectedSession?.id}
-                        onChange={(e)=>{
-                            setSelectedSession(sessions.find(session=>session.id===e.target.value));
+                        onChange={(e) => {
+                            setSelectedSession(
+                                sessions.find(
+                                    (session) => session.id === e.target.value
+                                )
+                            );
                         }}
                     >
-                        {sessions.map((item, i)=><MenuItem selected={i===0} key={item.id} value={item.id}>
-                            {moment(item.date).format("MMMM  YYYY")}
-                        </MenuItem>)}
+                        {sessions.map((item, i) => (
+                            <MenuItem
+                                selected={i === 0}
+                                key={item.id}
+                                value={item.id}
+                            >
+                                {moment(item.date).format("MMMM  YYYY")}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
-                {selectedSession && <Typography sx={{ mt: 2 }} component="p" variant="p">
-                    Mois de: {moment(selectedSession?.date).format("MMMM  YYYY")}
-                    <br/>
-                    Date limite: {moment(selectedSession?.date).format("DD MMMM YYYY")}
-                </Typography>}
-                <Typography sx={{ mt: 2 }} component="p" variant="p">
-                    Statut: Non paye
-                </Typography>
+                {selectedSession && (
+                    <>
+                        <Typography sx={{ mt: 2 }} component="p" variant="p">
+                            <Typography component="span" variant="srong">
+                                Mois de:
+                            </Typography>{" "}
+                            {moment(selectedSession?.date).format("MMMM  YYYY")}
+                            <br />
+                            <Typography component="span" variant="srong">
+                                Date limite:
+                            </Typography>{" "}
+                            {moment(selectedSession?.date).format(
+                                "DD MMMM YYYY"
+                            )}
+                        </Typography>
+                        <Typography component="p" variant="p">
+                            Statut: Non paye
+                        </Typography>
+                    </>
+                )}
                 <Box
                     sx={{
                         border: 0.4,
                         borderColor: "grey.500",
                         padding: 1,
-                        borderRadius: 1.5
+                        borderRadius: 1.5,
                     }}
                 >
                     <Typography component="p" variant="p">
                         Deffinissez la somme que vous voulez payer!
                     </Typography>
                     <FormControl sx={{ mt: 2 }} fullWidth>
-                        <TextField label="Somme a payer" type="number" value={amount} onChange={({target})=>setAmount(target.value)} />
+                        <TextField
+                            label="Somme a payer"
+                            type="number"
+                            value={amount}
+                            onChange={({ target }) => setAmount(target.value)}
+                        />
                     </FormControl>
                     <FormControl fullWidth sx={{ mt: 2 }}>
                         <Slider
@@ -110,12 +144,18 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         />
                     </FormControl>
                 </Box>
-                <FormControl fullWidth>
-                    <TextField fullWidth label="Numero de telephone pour le paiement" type="tel" value={phone} onChange={({target})=>setPhone(target.value)} />
+                <FormControl fullWidth sx={{ mt: 2 }}>
+                    <TextField
+                        fullWidth
+                        label="Numero de telephone pour le paiement"
+                        type="tel"
+                        value={phone}
+                        onChange={({ target }) => setPhone(target.value)}
+                    />
                 </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <Button variant="contained" size="medium" fullWidth>
+                        <Button onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<500 || phone?.lenght<9}>
                             {" "}
                             Proceder{" "}
                         </Button>

@@ -10,6 +10,7 @@ import AdminHomePage from '../pages/admin/AdminHomePage'
 import AdminContributionsPage from '../pages/admin/AdminContributionsPage'
 import AdminAdhesionsPage from '../pages/admin/AdminAdhesionsPage'
 import ProfilePage from '../pages/ProfilePage'
+import AdminUsersPage from '../pages/admin/AdminUsersPage'
 
 const APP_ROUTES = [
     {
@@ -55,6 +56,11 @@ const APP_ROUTES = [
     {
         path: '/profile',
         element: <ProfilePage />,
+        exact: true
+    }, 
+    {
+        path: '/admin/members',
+        element: <AdminUsersPage />,
         exact: true
     },
 ]

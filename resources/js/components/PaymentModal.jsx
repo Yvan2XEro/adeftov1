@@ -16,6 +16,7 @@ import { fetchMyUnpaidSessions, mesombPayment } from "../services/contributionsS
 import moment from "moment";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import {toast} from "react-toastify"
+import { LoadingButton } from "@mui/lab";
 
 const style = {
     position: "absolute",
@@ -29,6 +30,7 @@ const style = {
 
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [amount, setAmount] = useState(500);
+    const [pending, setPending] = useState(false);
     const { user } = useContext(AuthContext);
     const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
@@ -47,6 +49,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
 
     const processPayment = useCallback(async() => {
         if (selectedSession) {
+            setPending(true);
             toast.info("Veuillez conulter votre téléphone pour continuer", {autoClose: false});
             if(phone.indexOf("+237") === -1) {
                 setPhone(`+237${phone}`);
@@ -57,7 +60,9 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 session_id: selectedSession.id,
             }).then(()=>{
                 toast.success("Paiement effectué avec succès");
+                setPending(false);
             }).catch(()=>{
+                setPending(false);
                 toast.error("Erreur lors du paiement. Veillez réessayer SVP");
             })
         }
@@ -167,10 +172,10 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <Button onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<500 || phone?.lenght<9}>
+                        <LoadingButton loading={pending} onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<500 || phone?.lenght<9}>
                             {" "}
                             Proceder{" "}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                     <Box sx={{ mb: 2, mt: 2 }}>
                         <Button

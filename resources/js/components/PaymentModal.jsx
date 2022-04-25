@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { fetchMyUnpaidSessions } from "../services/contributionsServices";
+import { fetchMyUnpaidSessions, mesombPayment } from "../services/contributionsServices";
 import moment from "moment";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import {toast} from "react-toastify"
@@ -45,11 +45,23 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         }
     }, [contribution]);
 
-    const processPayment = useCallback(() => {
+    const processPayment = useCallback(async() => {
         if (selectedSession) {
             toast.info("Veuillez conulter votre téléphone pour continuer", {autoClose: false});
+            if(phone.indexOf("+237") === -1) {
+                setPhone(`+237${phone}`);
+            }
+            await mesombPayment({
+                amount,
+                phone: phone.trim(),
+                session_id: selectedSession.id,
+            }).then(()=>{
+                toast.success("Paiement effectué avec succès");
+            }).catch(()=>{
+                toast.error("Erreur lors du paiement. Veillez réessayer SVP");
+            })
         }
-    }, [selectedSession]);
+    }, [selectedSession, phone]);
 
     return (
         <Modal
@@ -150,7 +162,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         label="Numero de telephone pour le paiement"
                         type="tel"
                         value={phone}
-                        onChange={({ target }) => setPhone(target.value)}
+                        onChange={(e) => setPhone(e.target.value)}
                     />
                 </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">

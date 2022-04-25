@@ -16,17 +16,17 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 10, 2);
-            $table->string('currency');
-            $table->string('transaction_id');
-            $table->string('customer_name');
-            $table->string('customer_surname');
             $table->enum('status', ['pending', 'paid', 'failed', 'cancelled']);
-            $table->date('transaction_date')->nullable();
-            $table->string('payment_method')->default('');
-            $table->date('payment_date')->nullable();
-            $table->string('operation_id')->default('');
-            $table->text('description')->default('');
-            $table->text('payment_token')->default('');
+            // $table->string('currency');
+            // $table->string('transaction_id');
+            // $table->string('customer_name');
+            // $table->string('customer_surname');
+            // $table->date('transaction_date')->nullable();
+            // $table->string('payment_method')->default('');
+            // $table->date('payment_date')->nullable();
+            // $table->string('operation_id')->default('');
+            // $table->text('description')->default('');
+            // $table->text('payment_token')->default('');
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

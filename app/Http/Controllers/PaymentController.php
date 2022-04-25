@@ -62,6 +62,30 @@ class PaymentController extends Controller
         }
     }
 
+    public function mesombPayment(Request $request) {
+        $sessionId = $request->session_id;
+        $amount = $request->amount;
+        $phone = $request->phone;
+        $user = User::findOrFail($request->user()->id);
+        $payment = Payment::create([
+            'amount' => $amount,
+            'user_id' => $user->id,
+            'session_id' => $sessionId,
+        ]);
+        $response = $payment->payment($phone,  $amount)->pay();
+        if($response->success) {
+            $payment->status = 'paid';
+            return response()->json([
+                'message' => 'Payment successful',
+                'payment' => $payment,
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Payment failed',
+            'payment' => $payment,
+        ], 400);
+    }
+
     private function getCinetPayPaymentLink(
         Session $session,
         User $user,

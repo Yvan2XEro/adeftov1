@@ -85,17 +85,7 @@ class UserSeeder extends Seeder
             ]);
             $session->payments()->create([
                 'amount' => $faker->numberBetween(100, 1000),
-                'currency' => 'XAF',
-                'transaction_id' => uniqid(),
-                'customer_name' => $user->firstname,
-                'customer_surname' => $faker->lastname,
                 'status' => 'paid',
-                'transaction_date' => now(),
-                'payment_method' => 'mobile money',
-                'payment_date' => now(),
-                'operation_id' => $faker->numberBetween(1, 100),
-                'description' => $faker->text(100),
-                'payment_token' => $faker->text(100),
                 'user_id' => $user->id,
                 'session_id' => $session->id,
             ]);

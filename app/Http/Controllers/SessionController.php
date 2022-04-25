@@ -83,4 +83,18 @@ class SessionController extends Controller
         $session->delete();
         return response()->json(null, 204);
     }
+
+    //Find sessions of the contributionS having no Payment with the status 'paid' registered on the authenticated user
+    public function myUnpaidSessions(Request $request, $id)
+    {
+        $sessions = Session::whereHas('contribution', function ($query) use ($id) {
+            $query->where('contribution_id', $id);
+        })->whereDoesntHave('payments', function ($query) {
+            $query->where('user_id', auth()->user()->id)->where('status', 'paid');
+        })->get();
+        foreach ($sessions as $session) {
+            $session->contribution;
+        }
+        return response()->json($sessions, 200);
+    }
 }

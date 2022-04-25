@@ -3,6 +3,7 @@ import {
     Button,
     FormControl,
     InputLabel,
+    MenuItem,
     Modal,
     Paper,
     Select,
@@ -10,20 +11,39 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { fetchMyUnpaidSessions } from "../services/contributionsServices";
+import moment from "moment";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
 };
 
-function PaymentModal({ onSuccess, onFailure, open, onClose }) {
+function PaymentModal({ onSuccess, contribution, open, onClose }) {
+    const [amount, setAmount] = useState(500);
+    const {user} = useContext(AuthContext);
+    const [sessions, setSessions] = useState([]);
+    const [selectedSession, setSelectedSession] = useState(null);
+    const [phone, setPhone] = useState(user?.phone);
+    useEffect(() => {
+        setPhone(user?.phone);
+    }, [user])
+    useEffect(() => {
+        if(contribution!==null) {
+            fetchMyUnpaidSessions(contribution.id).then(response=>{
+                setSessions(response.data.reverse());
+                setSelectedSession(response.reverse().data[0]||null);
+            })
+        }
+    }, [contribution]);
+
     return (
         <Modal
             sx={{ border: "none" }}
@@ -45,11 +65,21 @@ function PaymentModal({ onSuccess, onFailure, open, onClose }) {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Age"
-                    ></Select>
+                        value={selectedSession?.id}
+                        onChange={(e)=>{
+                            setSelectedSession(sessions.find(session=>session.id===e.target.value));
+                        }}
+                    >
+                        {sessions.map((item, i)=><MenuItem selected={i===0} key={item.id} value={item.id}>
+                            {moment(item.date).format("MMMM  YYYY")}
+                        </MenuItem>)}
+                    </Select>
                 </FormControl>
-                {/* <Typography sx={{ mt: 2 }} component="p" variant="p">
-                    Seance du: 12/12/1212
-                </Typography> */}
+                {selectedSession && <Typography sx={{ mt: 2 }} component="p" variant="p">
+                    Mois de: {moment(selectedSession?.date).format("MMMM  YYYY")}
+                    <br/>
+                    Date limite: {moment(selectedSession?.date).format("DD MMMM YYYY")}
+                </Typography>}
                 <Typography sx={{ mt: 2 }} component="p" variant="p">
                     Statut: Non paye
                 </Typography>
@@ -65,21 +95,24 @@ function PaymentModal({ onSuccess, onFailure, open, onClose }) {
                         Deffinissez la somme que vous voulez payer!
                     </Typography>
                     <FormControl sx={{ mt: 2 }} fullWidth>
-                        <TextField label="Somme a payer" type="number" />
+                        <TextField label="Somme a payer" type="number" value={amount} onChange={({target})=>setAmount(target.value)} />
                     </FormControl>
                     <FormControl fullWidth sx={{ mt: 2 }}>
                         <Slider
                             aria-label="Restricted values"
-                            defaultValue={500}
-                            // valueLabelFormat={valueLabelFormat}
-                            // getAriaValueText={valuetext}
+                            // defaultValue={amount}
+                            value={amount}
+                            onChange={(_, value) => setAmount(value)}
                             step={500}
                             min={500}
-                            max={200000}
+                            max={500000}
                             valueLabelDisplay="auto"
                         />
                     </FormControl>
                 </Box>
+                <FormControl fullWidth>
+                    <TextField fullWidth label="Numero de telephone pour le paiement" type="tel" value={phone} onChange={({target})=>setPhone(target.value)} />
+                </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
                         <Button variant="contained" size="medium" fullWidth>

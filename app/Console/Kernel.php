@@ -22,10 +22,11 @@ class Kernel extends ConsoleKernel
             $contributions = Contribution::where('is_active', true)->get();
             foreach ($contributions as $contribution) {
                 $members = $contribution->members;
-                // Save new Session in DB
-                $session = $contribution->sessions()->create([
-                    'date' => now(),
+                // Save new Session in DB, with date from now + 30 days
+                $contribution->sessions()->create([
+                    'date' => date('Y-m-d', strtotime('+30 days')),
                 ]);
+                // Notify all members
             }
         })->monthlyOn(1, '00:00');
     }

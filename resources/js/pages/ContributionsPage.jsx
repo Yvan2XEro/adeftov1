@@ -59,8 +59,8 @@ function ContributionsPage() {
 export default ContributionsPage;
 
 function ContributionItem({ data, index }) {
-    const [openModal, setOpenModal] = React.useState(false);
     const [expanded, setExpanded] = React.useState(index===0);
+    const [selected, setSelected] = React.useState(null);
     const {user} = React.useContext(AuthContext);
     const iamMember = React.useCallback(()=> {
         console.log(data?.members.find((member) => member.id === user?.id));
@@ -113,22 +113,11 @@ function ContributionItem({ data, index }) {
                                     variant="contained"
                                     disabled={!data.is_active|| !iamMember()}
                                     fullWidth
+                                    onClick={() => {
+                                        setSelected(data);
+                                    }}
                                 >
                                     Payer ma cotisation
-                                </Button>
-                            </Box>
-                            <Box mt={1}>
-                                <Button
-                                    color="success"
-                                    variant="outlined"
-                                    onClick={() => {
-                                        setOpenModal(true);
-                                    }}
-                                    disabled={!data.is_active|| !iamMember()}
-                                    fullWidth
-                                    startIcon={<AccessTimeIcon />}
-                                >
-                                    Payer une ancienne cotisation
                                 </Button>
                             </Box>
                         </Grid>
@@ -183,8 +172,9 @@ function ContributionItem({ data, index }) {
                 </AccordionDetails>
             </Accordion>
             <PaymentModal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
+                open={selected!==null}
+                contribution={selected}
+                onClose={() => setSelected(null)}
             />
         </Box>
     );

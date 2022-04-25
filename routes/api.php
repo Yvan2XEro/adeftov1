@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\ContributionsController;
+use App\Http\Controllers\SessionController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // use App\Http\Controllers\Auth\ResetPasswordAPIController;
@@ -77,6 +78,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put(
     '/contributions/{id}/accept-all-membership-requests', [ContributionsController::class, 'acceptAllMemberships'])->name('contributions.acceptAllMemberships');
     Route::put('/contributions/{id}/reject-all-membership-requests', [ContributionsController::class, 'rejectAllMemberships'])->name('contributions.rejectAllMemberships');
+
+
+    Route::get('contributions/{id}/my-unpaid-sessions', [SessionController::class, 'myUnpaidSessions'])->name('contributions.myUnpaidSessions');
 
 
     Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');

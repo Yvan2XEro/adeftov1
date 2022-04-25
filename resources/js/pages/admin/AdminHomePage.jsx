@@ -12,13 +12,13 @@ import { toast } from 'react-toastify';
 
 export default function AdminHomePage() {
     const {user} = React.useContext(AuthContext);
-    const navigate = useNavigate('/');
-    React.useEffect(() => {
-        if(!trust.isAdmin(user) || !trust.isSuperAdmin(user)){
-            toast.error('Vous n\'avez pas les droits nécessaires pour accéder à cette page');
-            navigate('/');
-        }
-    }, [user]);
+    const navigate = useNavigate();
+    // React.useEffect(() => {
+    //     if(!trust.isAdmin(user) || !trust.isSuperAdmin(user)){
+    //         toast.error('Vous n\'avez pas les droits nécessaires pour accéder à cette page');
+    //         navigate('/');
+    //     }
+    // }, [user]);
 
     return (
         <Container>

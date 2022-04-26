@@ -25,6 +25,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  Autocomplete,
+  Stack,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState, useContext } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -42,6 +44,9 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddMemberModal from "../../components/AddMemberModal";
+import AddMemberModal from "../../components/AddMemberModal";
+
+
 
 
 
@@ -61,7 +66,7 @@ function AdminUsersPage() {
     createData('Maassaamoooh  ', 'Leonard', 111155545554,"massamooh@gmail.com"),
 
   ];
-  
+
   return (
     <Box mt={10} ml={2}>
       <Box>
@@ -84,8 +89,25 @@ function AdminUsersPage() {
             onClose={() => setOpenModal(false)}
           />
         </Grid>
-         <Grid item xs={6} md={6}>
-         
+         <Grid item xs={6} md={6}  mt={0}>
+         <Stack spacing={2} sx={{ width: 300, mx:10,}}>
+         <Autocomplete
+           freeSolo
+           id="admin-search-user"
+           disableClearable
+           options={rows.map((option) => option.nom)}
+           renderInput={(params) => (
+             <TextField
+               {...params}
+               label="Rechercher"
+               InputProps={{
+                 ...params.InputProps,
+                 type: 'search',
+               }}
+             />
+           )}
+         />
+       </Stack>
          </Grid>
       </Grid>
       <Grid container sx={{ mt:2,}} xs={12} md={12}>

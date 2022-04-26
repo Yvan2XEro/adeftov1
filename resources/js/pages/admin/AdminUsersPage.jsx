@@ -28,6 +28,10 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState, useContext } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import EditIcon from '@mui/icons-material/Edit';
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -40,6 +44,12 @@ import AddMemberModal from "../../components/AddMemberModal";
 function AdminUsersPage() {
   const [selected, setSetSelected] = useState(null);
   const [openModal, setOpenModal] = React.useState(false);
+  const [action, setAction] = React.useState('');
+
+  const handleChange = (event) => {
+    setAction(event.target.value);
+  };
+
   return (
     <Box mt={10} ml={2}>
       <Box>
@@ -96,7 +106,23 @@ function AdminUsersPage() {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Switch />
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+                  <InputLabel id="demo-simple-select-filled-label">Actions</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    value={action}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">
+                      <em>Actions</em>
+                    </MenuItem>
+                    <MenuItem value="Modifier"><EditIcon/>Modifier</MenuItem>
+                    <MenuItem value="Muter"><Icon sx={{ fontSize:20}}>information-circle</Icon>Muter</MenuItem>
+                    <MenuItem value="Banir"><Icon sx={{ fontSize:20}}>information-circle</Icon>Banir</MenuItem>
+                    <MenuItem value="Promouvoir"><Icon sx={{ fontSize:20}}>information-circle</Icon>Promouvoir</MenuItem>
+                  </Select>
+                </FormControl>
                   </TableCell>
                 </TableRow>
               </TableBody>

@@ -54,16 +54,16 @@ function AdminUsersPage() {
   const [selected, setSetSelected] = useState(null);
   const [openModal, setOpenModal] = React.useState(false);
 
-  function createData(nom, prenom,tel, email, ) {
+  function createData(nom, prenom, tel, email,) {
     return { nom, prenom, tel, email };
   }
-  
+
   const rows = [
-    createData('Gogo', 'Juju', 111155545554,"gogo@gmail.com"),
-    createData('Gogo', 'Juju', 111155545554,"gogo@gmail.com"),
-    createData('Gogo', 'Juju', 111155545554,"gogo@gmail.com"),
-    createData('Gogo', 'Juju', 111155545554,"gogo@gmail.com"),
-    createData('Maassaamoooh  ', 'Leonard', 111155545554,"massamooh@gmail.com"),
+    createData('Gogo', 'Juju', 111155545554, "gogo@gmail.com"),
+    createData('Gogo', 'Juju', 111155545554, "gogo@gmail.com"),
+    createData('Gogo', 'Juju', 111155545554, "gogo@gmail.com"),
+    createData('Gogo', 'Juju', 111155545554, "gogo@gmail.com"),
+    createData('Maassaamoooh  ', 'Leonard', 111155545554, "massamooh@gmail.com"),
 
   ];
 
@@ -89,29 +89,29 @@ function AdminUsersPage() {
             onClose={() => setOpenModal(false)}
           />
         </Grid>
-         <Grid item xs={6} md={6}  mt={0}>
-         <Stack spacing={2} sx={{ width: 300, mx:10,}}>
-         <Autocomplete
-           freeSolo
-           id="admin-search-user"
-           disableClearable
-           options={rows.map((option) => option.nom)}
-           renderInput={(params) => (
-             <TextField
-               {...params}
-               label="Rechercher"
-               InputProps={{
-                 ...params.InputProps,
-                 type: 'search',
-               }}
-             />
-           )}
-         />
-       </Stack>
-         </Grid>
+        <Grid item xs={6} md={6} mt={0}>
+          <Stack spacing={2} sx={{ width: 300, mx: 10, }}>
+            <Autocomplete
+              freeSolo
+              id="admin-search-user"
+              disableClearable
+              options={rows.map((option) => option.nom)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Rechercher"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
       </Grid>
-      <Grid container sx={{ mt:2,}} xs={12} md={12}>
-      <Grid item xs={12} md={12}>
+      <Grid container sx={{ mt: 2, }} xs={12} md={12}>
+        <Grid item xs={12} md={12}>
           <Paper elevate={6}>
             <Table>
               <TableHead>
@@ -130,52 +130,52 @@ function AdminUsersPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {rows.map((row) => (
-                <TableRow key={1}>
-                  <TableCell>
-                    {row.nom}
-                  </TableCell>
-                  <TableCell>
-                    {row.prenom}
-                  </TableCell>
-                  <TableCell>
-                    {row.tel}
-                  </TableCell>
+                {rows.map((row) => (
+                  <TableRow key={1}>
+                    <TableCell>
+                      {row.nom}
+                    </TableCell>
+                    <TableCell>
+                      {row.prenom}
+                    </TableCell>
+                    <TableCell>
+                      {row.tel}
+                    </TableCell>
 
-                  <TableCell>
-                    {row.email}
-                  </TableCell>
-                  <TableCell>
-                    <Button color="primary" variant="outlined" Style="width:4"> 
-                    <Icon sx={{ fontSize:30}}>information-circle</Icon>
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button color="primary" variant="outlined" Style="width:4"> 
-                    <EditIcon/>
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button color="primary" variant="outlined" Style="width:4"> 
-                    <DoNotDisturbOnTotalSilenceIcon/>
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button color="primary" variant="outlined" Style="width:4"> 
-                    <NotInterestedIcon/>
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button color="primary" variant="outlined" Style="width:4"> 
-                    <UpgradeIcon/>
-                    </Button>
-                  </TableCell>
-                </TableRow>))}
+                    <TableCell>
+                      {row.email}
+                    </TableCell>
+                    <TableCell>
+                      <Button color="primary" variant="outlined" Style="width:4">
+                        <Icon sx={{ fontSize: 30 }}>information-circle</Icon>
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button color="primary" variant="outlined" Style="width:4">
+                        <EditIcon />
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button color="primary" variant="outlined" Style="width:4">
+                        <DoNotDisturbOnTotalSilenceIcon />
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button color="primary" variant="outlined" Style="width:4">
+                        <NotInterestedIcon />
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button color="primary" variant="outlined" Style="width:4">
+                        <UpgradeIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>))}
               </TableBody>
             </Table>
           </Paper>
         </Grid>
-        </Grid>
+      </Grid>
 
     </Box>
 

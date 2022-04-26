@@ -17,9 +17,9 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                 <Button onClick={()=>setOpenDrawer(false)} color="inherit" sx={{ position: "absolute", right: 5, top: 5 }}>
                     <CloseIcon  />
                 </Button>
-                <Box>
+                {isAuthenticated && <Box>
                     <UserMenu onSelectItem={()=>setOpenDrawer(false)} />
-                </Box>
+                </Box>}
                 <Box mt={3}>
                     <Box>
                         <Button

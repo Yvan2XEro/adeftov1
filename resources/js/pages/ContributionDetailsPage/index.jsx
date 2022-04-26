@@ -5,6 +5,7 @@ import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views/lib/SwipeableViews";
 import { toast } from "react-toastify";
+import Spinner from "../../components/Spinner";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import { getContribution } from "../../services/contributionsServices";
 import Historique from "./Historique";
@@ -14,18 +15,12 @@ function ContributionDetailsPage() {
     const { id } = useParams();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
+    const [loading, setLoading] = React.useState(false);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const navigate = useNavigate();
     const { isAuthenticated, user } = React.useContext(AuthContext);
-    React.useEffect(() => {
-        if (!isAuthenticated) {
-            toast.error("Vous devez être connecté pour accéder à cette page");
-            navigate("/login");
-        }
-    }, [isAuthenticated]);
-
     const handleChangeIndex = (index) => {
         setValue(index);
     };
@@ -34,16 +29,20 @@ function ContributionDetailsPage() {
         retriveContribution();
     }, []);
     const retriveContribution = React.useCallback(() => {
+        setLoading(true);
         getContribution(id)
             .then((response) => {
                 setContribution(response.data);
+                setLoading(false);
             })
             .catch((error) => {
                 toast.error("Erreur lors de la connection au serveur!");
+                setLoading(false);
             });
     }, [id]);
     return (
         <Box mt={8} sx={{ bgcolor: "background.paper" }}>
+            {!loading?<>
             <AppBar position="static" color="inherit">
                 <Box ml={1}>
                     <Typography pt={1} component="h3" variant="h4">
@@ -94,6 +93,7 @@ function ContributionDetailsPage() {
                     <Historique contribution={contribution} />
                 </TabPanel>
             </SwipeableViews>
+            </>:<Spinner/>}
         </Box>
     );
 }

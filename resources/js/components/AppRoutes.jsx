@@ -1,78 +1,140 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import ContributionDetailsPage from '../pages/ContributionDetailsPage'
-import ContributionEnrolmentPage from '../pages/ContributionEnrolmentPage'
-import ContributionsPage from '../pages/ContributionsPage'
-import HomePage from '../pages/HomePage'
-import LoginPage from '../pages/LoginPage'
-import RegisterPage from '../pages/RegisterPage'
-import AdminHomePage from '../pages/admin/AdminHomePage'
-import AdminContributionsPage from '../pages/admin/AdminContributionsPage'
-import AdminAdhesionsPage from '../pages/admin/AdminAdhesionsPage'
-import ProfilePage from '../pages/ProfilePage'
-import AdminUsersPage from '../pages/admin/AdminUsersPage'
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import ContributionDetailsPage from "../pages/ContributionDetailsPage";
+import ContributionEnrolmentPage from "../pages/ContributionEnrolmentPage";
+import ContributionsPage from "../pages/ContributionsPage";
+import HomePage from "../pages/HomePage";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+import AdminHomePage from "../pages/admin/AdminHomePage";
+import AdminContributionsPage from "../pages/admin/AdminContributionsPage";
+import AdminAdhesionsPage from "../pages/admin/AdminAdhesionsPage";
+import ProfilePage from "../pages/ProfilePage";
+import AdminUsersPage from "../pages/admin/AdminUsersPage";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 const APP_ROUTES = [
     {
-        path: '/',
+        path: "/",
         element: <HomePage />,
-        exact: true
-    },{
-        path: '/login',
+        exact: true,
+        meta: {
+            auth: undefined,
+        },
+    },
+    {
+        path: "/login",
         element: <LoginPage />,
-        exact: true
-    },{
-        path: '/register',
+        exact: true,
+        meta: {
+            auth: false,
+        },
+    },
+    {
+        path: "/register",
         element: <RegisterPage />,
-        exact: true
-    },{
-        path: '/contributions',
+        exact: true,
+        meta: {
+            auth: false,
+        },
+    },
+    {
+        path: "/contributions",
         element: <ContributionsPage />,
-        exact: true
-    },{
-        path: '/contributions/:id/details',
+        exact: true,
+        meta: {
+            auth: true,
+        },
+    },
+    {
+        path: "/contributions/:id/details",
         element: <ContributionDetailsPage />,
-        exact: true
-    },{
-        path: '/contributions/:id/new-member',
+        exact: true,
+        meta: {
+            auth: true,
+        },
+    },
+    {
+        path: "/contributions/:id/new-member",
         element: <ContributionEnrolmentPage />,
-        exact: true
+        exact: true,
+        meta: {
+            auth: true,
+        },
     },
     {
-        path: '/admin',
+        path: "/admin",
         element: <AdminHomePage />,
-        exact: true
+        exact: true,
+        meta: {
+            auth: true,
+            admin: true,
+        },
     },
     {
-        path: '/admin/contributions',
+        path: "/admin/contributions",
         element: <AdminContributionsPage />,
-        exact: true
+        exact: true,
+        meta: {
+            auth: true,
+        },
     },
     {
-        path: '/admin/contributions/:id/adhesions',
+        path: "/admin/contributions/:id/adhesions",
         element: <AdminAdhesionsPage />,
-        exact: true
+        exact: true,
+        meta: {
+            auth: true,
+        },
     },
     {
-        path: '/profile',
+        path: "/profile",
         element: <ProfilePage />,
-        exact: true
-    }, 
-    {
-        path: '/admin/members',
-        element: <AdminUsersPage />,
-        exact: true
+        exact: true,
+        meta: {
+            auth: true,
+        },
     },
-]
+    {
+        path: "/admin/members",
+        element: <AdminUsersPage />,
+        exact: true,
+        meta: {
+            auth: true,
+        },
+    },
+];
 
 function AppRoutes() {
-  return (
+    return (
         <Routes>
-            {APP_ROUTES.map(({ path, element, exact }, i) => (
-                <Route exact={exact} path={path} element={element} key={i} />))
-            }
+            {APP_ROUTES.map(({ path, element, exact, meta }, i) => (
+                <Route
+                    exact={exact}
+                    path={path}
+                    element={<GuardRoute meta={meta}>{element}</GuardRoute>}
+                    key={i}
+                />
+            ))}
         </Routes>
-  )
+    );
 }
 
-export default AppRoutes
+export default AppRoutes;
+
+const GuardRoute = ({ children, meta }) => {
+    const { isAuthenticated, isAdmin } = React.useContext(AuthContext);
+    const navigate = useNavigate();
+    React.useEffect(() => {
+        if (meta.auth === false && isAuthenticated) {
+            navigate("/");
+        }
+        if (meta.auth === true && !isAuthenticated) {
+            navigate("/login");
+        }
+        if (meta.admin === true && !isAdmin) {
+            navigate("/");
+        }
+    }, [isAuthenticated, isAdmin, navigate, meta]);
+    return children;
+};

@@ -19,7 +19,7 @@ function AuthContextProvider({ children }) {
         auth.isAuthenticated()
     );
     const navigate = useNavigate();
-    const [user, setUser] = React.useState(null);
+    const [user, setLoggedUser] = React.useState(null);
     const [isAdmin, setIsAdmin] = React.useState(false);
     const logout = React.useCallback((toast = true) => {
         auth.logout();
@@ -29,6 +29,11 @@ function AuthContextProvider({ children }) {
             toast.warn("Logout success!");
         }
     }, []);
+    const setUser = React.useCallback((u) => {
+        setLoggedUser(u);
+        if(u)
+            setIsAdmin(u.roles.find(r=>(r.name==='adminitrator'||r.name==='superadminister'))!==undefined);
+    }, [setLoggedUser]);
     React.useEffect(() => {
         axios.interceptors.response.use(undefined, (error) => {
             if (error.response && error.response.status === 401) {

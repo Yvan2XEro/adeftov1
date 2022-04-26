@@ -45,9 +45,11 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import Spinner from "../../components/Spinner";
 
 function AdminContributionsPage() {
     const [selected, setSetSelected] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [contributions, setContributions] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -63,12 +65,17 @@ function AdminContributionsPage() {
         fetchContributions();
     }, []);
     const fetchContributions = useCallback(async () => {
+        setLoading(true);
         getAllContributions().then((response) => {
             setContributions(response.data.data);
-        });
+            setLoading(false);
+        }).catch(()=>{
+            setLoading(false);
+        })
     }, []);
     return (
         <Box mt={10} ml={2}>
+            {!loading?<>
             <Box>
                 <Typography variant="h4">Gestion des cotisations</Typography>
             </Box>
@@ -137,6 +144,7 @@ function AdminContributionsPage() {
                     </Box>
                 </Grid>
             </Grid>
+            </>: <Spinner   />}
         </Box>
     );
 }
@@ -166,7 +174,6 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
             getContribution(selectedId)
                 .then((response) => {
                     setselectedContribution(response.data);
-                    console.log(response.data.specials_members);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -220,7 +227,6 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
         },
         [selectedContribution, onUpdate]
     );
-    const { user } = useContext(AuthContext);
     return (
         <Box>
             <AppBar position="static" color="inherit">

@@ -1,14 +1,9 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import {
@@ -17,6 +12,7 @@ import {
     AccordionSummary,
     Box,
     Grid,
+    CircularProgress,
     Paper,
     Table,
     TableBody,
@@ -24,34 +20,32 @@ import {
     TableRow,
 } from "@mui/material";
 import PaymentModal from "../components/PaymentModal";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContextProvider";
-import { toast } from "react-toastify";
 import { getAllContributions } from "../services/contributionsServices";
+import Spinner from "../components/Spinner";
 
 function ContributionsPage() {
-    const navigate = useNavigate();
-    const { isAuthenticated } = React.useContext(AuthContext);
     const [contributions, setContributions] = React.useState([])
-
-    React.useEffect(() => {
-        if (!isAuthenticated) {
-            toast.error("Vous devez être connecté pour accéder à cette page");
-            navigate("/login");
-        }
-    }, [isAuthenticated]);
+    const [loading, setLoading] = React.useState(false);
     const fetchContributions = React.useCallback( () => {
         (async () => {
+            setLoading(true);
             await getAllContributions().then((response) => {
             setContributions(response.data.data);
+            setLoading(false);
+        }).catch(()=>{
+            setLoading(false);
         })})();
     }, []);
     React.useEffect(() => {
         fetchContributions();
     }, []);
     return (
-        <Box mt={10}>
-            {contributions.map((item, i)=><ContributionItem key={item.id} index={i} data={item} />)}
+        <Box flex={1} mt={10}>
+            {!loading?<>
+                {contributions.map((item, i)=><ContributionItem key={item.id} index={i} data={item} />)}
+            </>:<Spinner />}
         </Box>
     );
 }
@@ -63,7 +57,6 @@ function ContributionItem({ data, index }) {
     const [selected, setSelected] = React.useState(null);
     const {user} = React.useContext(AuthContext);
     const iamMember = React.useCallback(()=> {
-        console.log(data?.members.find((member) => member.id === user?.id));
         return data?.members.find((member) => member.id === user?.id);
     },[data, user]);
 

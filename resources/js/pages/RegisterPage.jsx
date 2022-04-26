@@ -56,7 +56,6 @@ function RegisterForm() {
                     toast.error("Server error! Please try later!", {autoClose: false})
                 }
                 else if(err.response.status >=400 && err.response.status<500) {
-                    console.log(err.response.data.errors);
                     setErrorApiMsg(err.response.data.errors[0]);
                     toast.error(`Erreur de l'enregistrement`)
                 }

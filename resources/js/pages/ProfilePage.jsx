@@ -192,7 +192,6 @@ function ProfileForm({ data, onChange }) {
         await auth
             .setAvatar(fd)
             .then((response) => {
-                console.log(response.data);
                 onChange(response.data.user);
                 toast.success("Modification effectuée avec succès");
             })

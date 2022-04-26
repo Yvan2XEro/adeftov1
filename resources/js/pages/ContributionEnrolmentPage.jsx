@@ -12,6 +12,7 @@ import {
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import {
     addMembership,
@@ -23,14 +24,8 @@ import {
 
 function ContributionEnrolmentPage() {
     const navigate = useNavigate();
-    const { isAuthenticated, user } = React.useContext(AuthContext);
-    React.useEffect(() => {
-        if (!isAuthenticated) {
-            toast.error("Vous devez être connecté pour accéder à cette page");
-            navigate("/login");
-        }
-    }, [isAuthenticated]);
     const [loading, setLoading] = React.useState(false);
+    const [fetching, setFetching] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
     const [membership, setMembership] = React.useState({
         message: "",
@@ -71,10 +66,10 @@ function ContributionEnrolmentPage() {
         }
     };
     const fetchMembership = async() => {
-        setLoading(true);
+        setFetching(true);
         await getMembershipByUserAndContribution(id)
             .then((response) => {
-                setLoading(false);
+                setFetching(false);
                 setMembership(response.data);
                 if(response.data.is_accepted) {
                     toast.success("Vous êtes déjà inscrit à cette cotisation");
@@ -82,7 +77,7 @@ function ContributionEnrolmentPage() {
                 }
             })
             .catch((err) => {
-                setLoading(false);
+                setFetching(false);
                 if (err.response.status >= 500) {
                     setMessage(
                         "Une erreur s'est produite! veillez reessayer plus tard!"
@@ -106,8 +101,8 @@ function ContributionEnrolmentPage() {
     }, []);
 
     return (
-        <Container>
-            <Box mt={10} ml={1} component="form" onSubmit={submit}>
+        <Container sx={{pt: 10}}>
+            {!fetching?<Box mt={10} ml={1} component="form" onSubmit={submit}>
                 <Typography component="h1" variant="h4">
                     {membership.id===null?"Demande d'inscription": "Modifier ma demande"}
                 </Typography>
@@ -173,7 +168,7 @@ function ContributionEnrolmentPage() {
                         Supprimer ma demande
                     </LoadingButton>}
                 </Box>
-            </Box>
+            </Box>:<Spinner/>}
         </Container>
     );
 }

@@ -36,6 +36,7 @@ import { toast } from "react-toastify";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddMemberModal from "../../components/AddMemberModal";
 
+
 function AdminUsersPage() {
   const [selected, setSetSelected] = useState(null);
   const [openModal, setOpenModal] = React.useState(false);
@@ -47,19 +48,60 @@ function AdminUsersPage() {
       <Grid container columnSpacing={3}>
         <Grid item xs={12} md={4}>
           <Button
-          variant={selected ? "outlined" : "contained"}
-                        color="primary"
-                        onClick={() => {
-                          setOpenModal(true);
-                      }}
-                        startIcon={<AddIcon />}
-            >         
+            variant={selected ? "outlined" : "contained"}
+            color="primary"
+            onClick={() => {
+              setOpenModal(true);
+            }}
+            startIcon={<AddIcon />}
+          >
             Creer un nouvel utilisateur
           </Button>
           <AddMemberModal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-            />
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+          />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Paper elevate={6}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nom</TableCell>
+                  <TableCell>Prenom</TableCell>
+                  <TableCell>Tel</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Infos Detaillées</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow key={1}>
+                  <TableCell>
+                    {"Massamooh Tefoye"}
+                  </TableCell>
+                  <TableCell>
+                    {"Leonard Cedric "}
+                  </TableCell>
+                  <TableCell>
+                    {654241563}
+                  </TableCell>
+
+                  <TableCell>
+                    {"franckzone2@gmail.com"}
+                  </TableCell>
+                  <TableCell>
+                    <Button color="primary" variant="outlined" Style="width:4"> 
+                    <Icon sx={{ fontSize:30}}>information-circle</Icon>
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Switch />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Paper>
         </Grid>
       </Grid>
     </Box>

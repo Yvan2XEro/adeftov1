@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Models\Contribution;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,6 +18,17 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            $contributions = Contribution::where('is_active', true)->get();
+            foreach ($contributions as $contribution) {
+                $members = $contribution->members;
+                // Save new Session in DB, with date from now + 30 days
+                $contribution->sessions()->create([
+                    'date' => date('Y-m-d', strtotime('+30 days')),
+                ]);
+                // Notify all members
+            }
+        })->monthlyOn(1, '00:00');
     }
 
     /**

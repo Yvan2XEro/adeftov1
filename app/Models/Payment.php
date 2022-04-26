@@ -4,22 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Malico\MeSomb\Helper\HasPayments;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPayments;
     protected $fillable = [
         'amount',
-        'currency',
-        'transaction_id',
-        'customer_name',
-        'customer_surname',
         'status',
-        'transaction_date',
-        'payment_method',
-        'payment_date',
-        'operation_id',
-        'payment_token',
         'user_id',
         'session_id',
     ];

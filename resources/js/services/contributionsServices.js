@@ -79,3 +79,11 @@ export function acceptAllMembership(id) {
         `${API_URL}/contributions/${id}/accept-all-membership-requests`
     );
 }
+
+export function fetchMyUnpaidSessions(id) {
+    return axios.get(`${API_URL}/contributions/${id}/my-unpaid-sessions`);
+}
+
+export function mesombPayment(data) {
+    return axios.post(`${API_URL}/init-messonb-payments`, data);
+}

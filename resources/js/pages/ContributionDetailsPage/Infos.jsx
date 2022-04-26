@@ -17,6 +17,30 @@ import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import { DataGrid } from "@mui/x-data-grid";
+
+const columns = [
+    {
+        field: "id",
+        headerName: "ID",
+        width: 70,
+    },
+    {
+        field: "firstname",
+        headerName: "Noms",
+        width: 150,
+    },
+    {
+        field: "lastname",
+        headerName: "Prenoms",
+        width: 150,
+    },
+    {
+        field: "phone",
+        headerName: "Numero tel",
+        width: 170,
+    },
+];
 
 function Infos({ contribution }) {
     const { user } = useContext(AuthContext);
@@ -73,9 +97,8 @@ function Infos({ contribution }) {
                         }}
                     >
                         <Box mt={1}>
-
                             <Button
-                                sx={{mb: 1}}
+                                sx={{ mb: 1 }}
                                 startIcon={<AttachMoneyIcon />}
                                 variant="contained"
                                 fullWidth
@@ -115,31 +138,22 @@ function Infos({ contribution }) {
                         sx={{
                             border: 0.4,
                             marginTop: 2,
+                            width: "100%",
+                            height: "400px",
                             borderColor: "grey.500",
                             padding: 2,
+                            pb: 3
                         }}
                     >
                         <Typography component="h3" variant="h4">
                             Membres
                         </Typography>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Noms</TableCell>
-                                    <TableCell>Prenom</TableCell>
-                                    <TableCell>Phone</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {contribution?.members.map((m) => (
-                                    <TableRow key={m.id}>
-                                        <TableCell>{m.firstname}</TableCell>
-                                        <TableCell>{m.lastname}</TableCell>
-                                        <TableCell>{m.phone}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <DataGrid
+                            columns={columns}
+                            rows={contribution?.members||[]}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                        />
                     </Box>
                 </Box>
             </Grid>

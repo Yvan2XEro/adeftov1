@@ -20,6 +20,7 @@ import {
 } from "../../services/contributionsServices";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { defaultImage, imagePath } from "../../services/htt";
 
 function AdminAdhesionsPage() {
     const [memberships, setMemberships] = useState([]);
@@ -74,7 +75,7 @@ function AdminAdhesionsPage() {
                         id="panel1a-header"
                     >
                         <Box>
-                            <Avatar src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200" />
+                            <Avatar src={m.user.avatar?imagePath(m.user.avatar):defaultImage} />
                         </Box>
                         <Box>
                             <Typography

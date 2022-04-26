@@ -32,7 +32,7 @@ function AuthContextProvider({ children }) {
     const setUser = React.useCallback((u) => {
         setLoggedUser(u);
         if(u)
-            setIsAdmin(u.roles.find(r=>(r.name==='adminitrator'||r.name==='superadminister'))!==undefined);
+            setIsAdmin(u.roles.find(r=>(r.name==='administrator'||r.name==='superadministrator'))!==undefined);
     }, [setLoggedUser]);
     React.useEffect(() => {
         axios.interceptors.response.use(undefined, (error) => {

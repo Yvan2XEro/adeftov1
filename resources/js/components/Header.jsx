@@ -93,14 +93,19 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                             activeclassname="paper.primary"
                                             sx={{ flexGrow: 1 }}
                                         >
-                                            {/* <NavLink
-                                                className="paper.inherit"
-                                                activeclassname="active"
-                                                to="contributions"
-                                            > */}
-                                                cotisations
-                                            {/* </NavLink> */}
+                                            cotisations
                                         </Button>
+                                        {isAdmin && (
+                                            <Button
+                                                variant="h6"
+                                                component={NavLink}
+                                                to="/admin"
+                                                activeclassname="paper.primary"
+                                                sx={{ flexGrow: 1 }}
+                                            >
+                                                administration
+                                            </Button>
+                                        )}
                                         <Button
                                             className="nav-link"
                                             edge="start"

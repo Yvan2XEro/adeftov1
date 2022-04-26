@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\ContributionsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // use App\Http\Controllers\Auth\ResetPasswordAPIController;
@@ -84,6 +85,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/contributions/{id}/my-unpaid-sessions', [SessionController::class, 'myUnpaidSessions'])->name('contributions.myUnpaidSessions');
     Route::post('/init-messonb-payments', [PaymentController::class, 'mesombPayment'])->name('contributions.mesombPayment');
 
+    Route::get('/users', [UserController::class, 'index'])->name('users.get');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.get');
+    Route::post('/users', [UserController::class, 'store'])->name('users.post');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.put');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.delete');
 
     Route::put('/user', [AuthController::class, 'updateProfile'])->name('user.update');
     Route::put('/user/password', [AuthController::class, 'changePassword'])->name('user.password');

@@ -450,7 +450,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                             onChange={(e, page) => {
                                 setPage(page);
                             }}
-                            count={selectedContribution?.members?.length}
+                            count={selectedContribution?.members?.length/ITEMS_PER_PAGE}
                             variant="outlined"
                             shape="rounded"
                         />

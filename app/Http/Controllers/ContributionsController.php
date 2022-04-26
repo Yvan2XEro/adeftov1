@@ -46,6 +46,7 @@ class ContributionsController extends Controller
         }
         $contribution = $user->contributions()->create($request->all());
         $contribution->members()->attach($user);
+        $contribution->is_active = true;
         return response()->json($contribution, 201);
     }
 
@@ -64,6 +65,10 @@ class ContributionsController extends Controller
         $contribution['user'] = $contribution->user()->first();
         $contribution->members;
         $contribution->specialsMembers;
+        $contribution->sessions;
+        foreach($contribution->sessions as $session) {
+            $session->payments;
+        }
         $user = $request->user();
         if($contribution->specialsMembers->contains($user) || $user->hasRole('administrator') || $contribution->user_id == $user->id){
             $contribution->membershipRequests;
@@ -251,17 +256,14 @@ class ContributionsController extends Controller
             return response()->json(['message' => 'Record not found'], 404);
         }
 
-        if(!$user->hasRole('administrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && !$user->hasRole('superadministrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+        $membership->contribution->members()->attach($membership->user_id);
         $membership->is_accepted = true;
         $membership->save();
-        $membership->contribution->members()->attach($membership->user_id);
         $membership->contribution->update(['is_active' => true]);
         $membership->contribution->user;
-        $membership->contribution->specialsMembers;
-        $membership->contribution->members;
-        $membership->contribution->membershipRequests;
         return response()->json($membership, 200);
     }
 
@@ -277,9 +279,9 @@ class ContributionsController extends Controller
         }
         $memberships = $contribution->membershipRequests()->where('is_accepted', false)->get();
         foreach ($memberships as $membership) {
+            $membership->contribution->members()->attach($membership->user_id);
             $membership->is_accepted = true;
             $membership->save();
-            $membership->contribution->members()->attach($membership->user_id);
             $membership->contribution->update(['is_active' => true]);
         }
         $contribution->user;

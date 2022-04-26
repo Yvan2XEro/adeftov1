@@ -60,6 +60,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 session_id: selectedSession.id,
             }).then(()=>{
                 toast.success("Paiement effectué avec succès");
+                onSuccess();
                 setPending(false);
             }).catch(()=>{
                 setPending(false);

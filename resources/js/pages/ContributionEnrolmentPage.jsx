@@ -16,6 +16,7 @@ import { AuthContext } from "../contexts/AuthContextProvider";
 import {
     addMembership,
     deleteMembership,
+    getContribution,
     getMembershipByUserAndContribution,
     updateMembership,
 } from "../services/contributionsServices";
@@ -89,9 +90,21 @@ function ContributionEnrolmentPage() {
                 }
             });
     };
+    const [contribution, setContribution] = React.useState(null);
     React.useEffect(() => {
         fetchMembership();
+        getContribution(id).then((response) => {
+            setContribution(response.data);
+        }).catch((err) => {
+            if (err.response.status >= 500) {
+                toast.error("Une erreur s'est produite! veillez reessayer plus tard!");
+            }else{
+                toast.error("Cette cotisation n'existe pas");
+            }
+        });
+
     }, []);
+
     return (
         <Container>
             <Box mt={10} ml={1} component="form" onSubmit={submit}>
@@ -99,7 +112,7 @@ function ContributionEnrolmentPage() {
                     {membership.id===null?"Demande d'inscription": "Modifier ma demande"}
                 </Typography>
                 <Typography component="h3" mt={1} variant="h5">
-                    La cotisation des forts
+                    {contribution?.name}
                 </Typography>
                 <Grid container>
                     <Grid item xs={12} md={6} borderTop={0.3}>

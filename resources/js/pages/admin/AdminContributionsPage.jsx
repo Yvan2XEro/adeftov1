@@ -78,8 +78,8 @@ function AdminContributionsPage() {
                         variant={selected ? "outlined" : "contained"}
                         color="primary"
                         onClick={() => {
-                            setSetSelected(null)
-                            setSearchParams({})
+                            setSetSelected(null);
+                            setSearchParams({});
                         }}
                         startIcon={<AddIcon />}
                     >
@@ -106,8 +106,10 @@ function AdminContributionsPage() {
                             >
                                 <ListItemButton
                                     onClick={() => {
-                                        setSetSelected(item.id)
-                                         setSearchParams({selected_id: item.id})
+                                        setSetSelected(item.id);
+                                        setSearchParams({
+                                            selected_id: item.id,
+                                        });
                                     }}
                                 >
                                     <ListItemIcon>
@@ -325,159 +327,129 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                 </AccordionDetails>
             </Accordion>
             {selectedId && selectedContribution?.id && (
-                <>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            onClick={() =>
-                                setExp((p) => ({ ...exp, members: !p.members }))
-                            }
-                        >
-                            <Typography mb={1} component="h4" variant="h5">
-                                Membres da la cotisation
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Nom</TableCell>
-                                        <TableCell>Prenom</TableCell>
-                                        <TableCell>Tel</TableCell>
-                                        <TableCell>Membre special</TableCell>
-                                        <TableCell>Active</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {selectedContribution?.members
-                                        .map((member) => ({
-                                            ...member,
-                                            isSpecial: isSpecialMember(member),
-                                        }))
-                                        .slice(
-                                            (page - 1) * ITEMS_PER_PAGE,
-                                            (page - 1) * ITEMS_PER_PAGE +
-                                                ITEMS_PER_PAGE
-                                        )
-                                        .map((m) => (
-                                            <TableRow key={m.id}>
-                                                <TableCell>
-                                                    {m.firstname}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {m.lastname}
-                                                </TableCell>
-                                                <TableCell>{m.phone}</TableCell>
-                                                <TableCell>
-                                                    <Switch
-                                                        disabled={
-                                                            checking ||
-                                                            m?.id ===
-                                                                selectedContribution.user_id
-                                                        }
-                                                        checked={
-                                                            m.isSpecial ||
-                                                            m.id ===
-                                                                selectedContribution.user_id
-                                                        }
-                                                        onChange={() => {
-                                                            if (
-                                                                isSpecialMember(
-                                                                    m
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        onClick={() =>
+                            setExp((p) => ({ ...exp, members: !p.members }))
+                        }
+                    >
+                        <Typography mb={1} component="h4" variant="h5">
+                            Membres da la cotisation
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Nom</TableCell>
+                                    <TableCell>Prenom</TableCell>
+                                    <TableCell>Tel</TableCell>
+                                    <TableCell>Membre special</TableCell>
+                                    <TableCell>Active</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {selectedContribution?.members
+                                    .map((member) => ({
+                                        ...member,
+                                        isSpecial: isSpecialMember(member),
+                                    }))
+                                    .slice(
+                                        (page - 1) * ITEMS_PER_PAGE,
+                                        (page - 1) * ITEMS_PER_PAGE +
+                                            ITEMS_PER_PAGE
+                                    )
+                                    .map((m) => (
+                                        <TableRow key={m.id}>
+                                            <TableCell>{m.firstname}</TableCell>
+                                            <TableCell>{m.lastname}</TableCell>
+                                            <TableCell>{m.phone}</TableCell>
+                                            <TableCell>
+                                                <Switch
+                                                    disabled={
+                                                        checking ||
+                                                        m?.id ===
+                                                            selectedContribution.user_id
+                                                    }
+                                                    checked={
+                                                        m.isSpecial ||
+                                                        m.id ===
+                                                            selectedContribution.user_id
+                                                    }
+                                                    onChange={() => {
+                                                        if (
+                                                            isSpecialMember(m)
+                                                        ) {
+                                                            setChecking(true);
+                                                            removeSpecialMember(
+                                                                selectedContribution.id,
+                                                                m.id
+                                                            )
+                                                                .then(
+                                                                    async () => {
+                                                                        setChecking(
+                                                                            false
+                                                                        );
+                                                                        await fetchSelectContribution(
+                                                                            selectedId
+                                                                        );
+                                                                    }
                                                                 )
-                                                            ) {
-                                                                setChecking(
-                                                                    true
-                                                                );
-                                                                removeSpecialMember(
-                                                                    selectedContribution.id,
-                                                                    m.id
-                                                                )
-                                                                    .then(
-                                                                        async () => {
-                                                                            setChecking(
-                                                                                false
-                                                                            );
-                                                                            await fetchSelectContribution(
-                                                                                selectedId
-                                                                            );
-                                                                        }
-                                                                    )
-                                                                    .catch(
-                                                                        () => {
-                                                                            setChecking(
-                                                                                false
-                                                                            );
-                                                                        }
+                                                                .catch(() => {
+                                                                    setChecking(
+                                                                        false
                                                                     );
-                                                            } else {
-                                                                setChecking(
-                                                                    true
-                                                                );
-                                                                addSpecialMember(
-                                                                    selectedContribution.id,
-                                                                    m.id
+                                                                });
+                                                        } else {
+                                                            setChecking(true);
+                                                            addSpecialMember(
+                                                                selectedContribution.id,
+                                                                m.id
+                                                            )
+                                                                .then(
+                                                                    async () => {
+                                                                        setChecking(
+                                                                            false
+                                                                        );
+                                                                        await fetchSelectContribution(
+                                                                            selectedId
+                                                                        );
+                                                                    }
                                                                 )
-                                                                    .then(
-                                                                        async () => {
-                                                                            setChecking(
-                                                                                false
-                                                                            );
-                                                                            await fetchSelectContribution(
-                                                                                selectedId
-                                                                            );
-                                                                        }
-                                                                    )
-                                                                    .catch(
-                                                                        () => {
-                                                                            setChecking(
-                                                                                false
-                                                                            );
-                                                                        }
+                                                                .catch(() => {
+                                                                    setChecking(
+                                                                        false
                                                                     );
+                                                                });
+                                                        }
+                                                        setselectedContribution(
+                                                            {
+                                                                ...selectedContribution,
                                                             }
-                                                            setselectedContribution(
-                                                                {
-                                                                    ...selectedContribution,
-                                                                }
-                                                            );
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Switch />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                </TableBody>
-                            </Table>
-                            <Pagination
-                                sx={{ mt: 1 }}
-                                page={page}
-                                onChange={(e, page) => {
-                                    setPage(page);
-                                }}
-                                count={selectedContribution?.members?.length}
-                                variant="outlined"
-                                shape="rounded"
-                            />
-                        </AccordionDetails>
-                    </Accordion>
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography mb={1} component="h4" variant="h5">
-                                Les reglements
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Voluptatem temporibus nihil, error
-                            reprehenderit veniam nam quis mollitia. Incidunt
-                            explicabo sed nam, sequi aliquid omnis atque
-                            accusantium exercitationem, nostrum quasi debitis!
-                        </AccordionDetails>
-                    </Accordion>
-                </>
+                                                        );
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Switch />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                        <Pagination
+                            sx={{ mt: 1 }}
+                            page={page}
+                            onChange={(e, page) => {
+                                setPage(page);
+                            }}
+                            count={selectedContribution?.members?.length}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </AccordionDetails>
+                </Accordion>
             )}
         </Box>
     );

@@ -12,7 +12,7 @@ import AdminAdhesionsPage from "../pages/admin/AdminAdhesionsPage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import { AuthContext } from "../contexts/AuthContextProvider";
-
+import AdminStatPage from "../pages/admin/AdminStatPage"
 const APP_ROUTES = [
     {
         path: "/",
@@ -90,6 +90,14 @@ const APP_ROUTES = [
     {
         path: "/profile",
         element: <ProfilePage />,
+        exact: true,
+        meta: {
+            auth: true,
+        },
+    },
+    {
+        path: "/admin/statistics",
+        element: <AdminStatPage />,
         exact: true,
         meta: {
             auth: true,

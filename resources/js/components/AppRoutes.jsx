@@ -131,7 +131,7 @@ function AppRoutes() {
 export default AppRoutes;
 
 const GuardRoute = ({ children, meta }) => {
-    const { isAuthenticated, isAdmin } = React.useContext(AuthContext);
+    const { isAuthenticated, isAdmin, user } = React.useContext(AuthContext);
     const navigate = useNavigate();
     React.useEffect(() => {
         if (meta.auth === false && isAuthenticated) {
@@ -143,6 +143,6 @@ const GuardRoute = ({ children, meta }) => {
         if (meta.admin === true && !isAdmin) {
             navigate("/");
         }
-    }, [isAuthenticated, isAdmin, navigate, meta]);
+    }, [isAuthenticated, isAdmin, navigate,user, meta]);
     return children;
 };

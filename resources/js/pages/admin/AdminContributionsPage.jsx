@@ -44,8 +44,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AuthContext } from "../../contexts/AuthContextProvider";
 import Spinner from "../../components/Spinner";
+import SearchIcon from '@mui/icons-material/Search';
+
 
 function AdminContributionsPage() {
     const [selected, setSetSelected] = useState(null);
@@ -66,85 +67,98 @@ function AdminContributionsPage() {
     }, []);
     const fetchContributions = useCallback(async () => {
         setLoading(true);
-        getAllContributions().then((response) => {
-            setContributions(response.data.data);
-            setLoading(false);
-        }).catch(()=>{
-            setLoading(false);
-        })
+        getAllContributions()
+            .then((response) => {
+                setContributions(response.data.data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     }, []);
     return (
         <Box mt={10} ml={2}>
-            {!loading?<>
-            <Box>
-                <Typography variant="h4">Gestion des cotisations</Typography>
-            </Box>
-            <Grid container columnSpacing={3}>
-                <Grid item xs={12} md={4}>
-                    <Button
-                        variant={selected ? "outlined" : "contained"}
-                        color="primary"
-                        onClick={() => {
-                            setSetSelected(null);
-                            setSearchParams({});
-                        }}
-                        startIcon={<AddIcon />}
-                    >
-                        Creer une nouvelle cotisation
-                    </Button>
-
-                    <List
-                        sx={{ width: "100%", bgcolor: "background.paper" }}
-                        subheader={
-                            <ListSubheader
-                                component="div"
-                                id="nested-list-subheader"
-                            >
-                                Liste de cotisations
-                            </ListSubheader>
-                        }
-                    >
-                        {contributions.map((item) => (
-                            <ListItem
-                                components={Paper}
-                                color="primary"
-                                key={item.id}
-                                disablePadding
-                            >
-                                <ListItemButton
-                                    onClick={() => {
-                                        setSetSelected(item.id);
-                                        setSearchParams({
-                                            selected_id: item.id,
-                                        });
-                                    }}
-                                >
-                                    <ListItemIcon>
-                                        <ArrowForwardIosIcon
-                                            color={
-                                                item.id === selected
-                                                    ? "primary"
-                                                    : "inherit"
-                                            }
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText>{item.name}</ListItemText>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                    <Box sx={{ maxHeight: 500, overflowY: "auto" }}>
-                        <SelectedContribution
-                            selectedId={selected}
-                            setSetSelected={setSetSelected}
-                            onUpdate={() => fetchContributions()}
-                        />
+            {!loading ? (
+                <>
+                    <Box>
+                        <Typography variant="h4">
+                            Gestion des cotisations
+                        </Typography>
                     </Box>
-                </Grid>
-            </Grid>
-            </>: <Spinner   />}
+                    <Grid container columnSpacing={3}>
+                        <Grid item xs={12} md={4}>
+                            <Button
+                                variant={selected ? "outlined" : "contained"}
+                                color="primary"
+                                onClick={() => {
+                                    setSetSelected(null);
+                                    setSearchParams({});
+                                }}
+                                startIcon={<AddIcon />}
+                            >
+                                Creer une nouvelle cotisation
+                            </Button>
+
+                            <List
+                                sx={{
+                                    width: "100%",
+                                    bgcolor: "background.paper",
+                                }}
+                                subheader={
+                                    <ListSubheader
+                                        component="div"
+                                        id="nested-list-subheader"
+                                    >
+                                        Liste de cotisations
+                                    </ListSubheader>
+                                }
+                            >
+                                {contributions.map((item) => (
+                                    <ListItem
+                                        components={Paper}
+                                        color="primary"
+                                        key={item.id}
+                                        disablePadding
+                                    >
+                                        <ListItemButton
+                                            onClick={() => {
+                                                setSetSelected(item.id);
+                                                setSearchParams({
+                                                    selected_id: item.id,
+                                                });
+                                            }}
+                                        >
+                                            <ListItemIcon>
+                                                <ArrowForwardIosIcon
+                                                    color={
+                                                        item.id === selected
+                                                            ? "primary"
+                                                            : "inherit"
+                                                    }
+                                                />
+                                            </ListItemIcon>
+                                            <ListItemText>
+                                                {item.name}
+                                            </ListItemText>
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Grid>
+                        <Grid item xs={12} md={8}>
+                            <Box sx={{ maxHeight: 500, overflowY: "auto" }}>
+                                <SelectedContribution
+                                    selectedId={selected}
+                                    setSetSelected={setSetSelected}
+                                    onUpdate={() => fetchContributions()}
+                                />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </>
+            ) : (
+                <Spinner />
+            )}
         </Box>
     );
 }
@@ -227,6 +241,15 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
         },
         [selectedContribution, onUpdate]
     );
+    const [searchKey, setSearchKey] = useState("");
+    const filteredMembers = useCallback(() => {
+        return selectedContribution?.members?.filter(
+            (i) =>
+                i.firstname.toLowerCase().includes(searchKey.toLowerCase()) ||
+                i.lastname.toLowerCase().includes(searchKey.toLowerCase()) ||
+                i.email.toLowerCase().includes(searchKey.toLowerCase())
+        );
+    }, [selectedContribution, searchKey]);
     return (
         <Box>
             <AppBar position="static" color="inherit">
@@ -345,6 +368,28 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
+                        <Box
+                            mt={2}
+                            sx={{
+                                ml: "auto",
+                                mr: "auto",
+                                display: "flex",
+                                alignItems: "flex-end",
+                                alignSelf: "center",
+                            }}
+                        >
+                            <SearchIcon
+                                sx={{ color: "action.active", mr: 1, my: 0.5 }}
+                            />
+                            <TextField
+                                id="input-with-sx"
+                                fullWidth
+                                value={searchKey}
+                                onChange={(e) => setSearchKey(e.target.value)}
+                                label="Rechercher par nom, prenom, email"
+                                variant="standard"
+                            />
+                        </Box>
                         <Table>
                             <TableHead>
                                 <TableRow>
@@ -356,7 +401,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {selectedContribution?.members
+                                {filteredMembers()
                                     .map((member) => ({
                                         ...member,
                                         isSpecial: isSpecialMember(member),
@@ -450,7 +495,10 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                             onChange={(e, page) => {
                                 setPage(page);
                             }}
-                            count={selectedContribution?.members?.length/ITEMS_PER_PAGE}
+                            count={
+                                Math.ceil(filteredMembers().length /
+                                ITEMS_PER_PAGE)
+                            }
                             variant="outlined"
                             shape="rounded"
                         />

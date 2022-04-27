@@ -23,6 +23,8 @@ function AuthContextProvider({ children }) {
     const [isAdmin, setIsAdmin] = React.useState(false);
     const logout = React.useCallback((toast = true) => {
         auth.logout();
+        setUser(null);
+        setIsAdmin(false);
         setIsAuthenticated(false);
         navigate("/login");
         if (toast) {

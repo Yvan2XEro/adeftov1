@@ -22,7 +22,7 @@ import {
     Tabs,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -137,12 +137,89 @@ function AdminStatPage() {
                         onChange={handleChange1}
                         aria-label="basic tabs example"
                     >
-                        <Tab label="Utilisateurs" {...a11yProps(0)} />
-                        <Tab label=" Cotisations" {...a11yProps(1)} />
+                        <Tab label="Cotisations" {...a11yProps(0)} />
+                        <Tab label="Utilisateurs " {...a11yProps(1)} />
                         <Tab label="Repartitions" {...a11yProps(2)} />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
+                    <Grid container md={12} xs={12}>
+                        <Grid item md={6} xs={12} elevate={6}>
+                            <Typography variant="h6" sx={{ mt: 2 }}>
+                                Evolution des Cotisations{" "}
+                            </Typography>
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">
+                                        Année
+                                    </InputLabel>
+                                    <Select
+                                        labelId="year-selection"
+                                        id="year-selection"
+                                        value={annee}
+                                        label="Année"
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={2020}>2020</MenuItem>
+                                        <MenuItem value={2021}>2021</MenuItem>
+                                        <MenuItem value={2022}>2022</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Chart />
+                            <Box>
+                                <Grid container>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <InsertDriveFileIcon />
+                                            Exporter en XLS
+                                        </Button>
+                                    </Grid>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <GridOnIcon />
+                                            Exporter en CSV
+                                        </Button>
+                                    </Grid>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <PictureAsPdfIcon />
+                                            Imprimer en PDF
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Grid>
+                        <Grid md={6} xs={12} elevate={6}>
+                            <div
+                                style={{ height: 400, width: "100%" }}
+                                sx={{ mt: 6 }}
+                            >
+                                <DataGrid
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                />
+                            </div>
+                        </Grid>
+                    </Grid>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
                     <Grid container md={12} xs={12}>
                         <Grid item md={6} xs={12} elevate={6}>
                             <Typography variant="h6" sx={{ mt: 2 }}>
@@ -168,34 +245,45 @@ function AdminStatPage() {
                             </Box>
                             <Chart />
                             <Box>
-                                <Button
-                                    variant="contained"
-                                    sx={{ ml: 2 }}
-                                    width="20"
-                                >
-                                    <InsertDriveFileIcon />
-                                    Exporter en XLS
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    sx={{ ml: 2 }}
-                                    width="20"
-                                >
-                                    <GridOnIcon />
-                                    Exporter en CSV
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    sx={{ ml: 2 }}
-                                    width="20"
-                                >
-                                    <PictureAsPdfIcon />
-                                    Imprimer en PDF
-                                </Button>
+                                <Grid container>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <InsertDriveFileIcon />
+                                            Exporter en XLS
+                                        </Button>
+                                    </Grid>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <GridOnIcon />
+                                            Exporter en CSV
+                                        </Button>
+                                    </Grid>
+                                    <Grid item md={4} xs={4}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{ ml: 2 }}
+                                            width="20"
+                                        >
+                                            <PictureAsPdfIcon />
+                                            Imprimer en PDF
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             </Box>
                         </Grid>
-                        <Grid md={6} xs={12} elevate={6} >
-                            <div style={{ height: 400, width: "100%" }} sx={{mt:6}}>
+                        <Grid md={6} xs={12} elevate={6}>
+                            <div
+                                style={{ height: 400, width: "100%" }}
+                                sx={{ mt: 6 }}
+                            >
                                 <DataGrid
                                     rows={rows}
                                     columns={columns}
@@ -207,9 +295,6 @@ function AdminStatPage() {
                             </div>
                         </Grid>
                     </Grid>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Item Two
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     Item Three

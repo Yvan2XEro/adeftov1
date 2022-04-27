@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
 import { Button, Drawer as MuiDrawer } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,12 +14,18 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                 ml={2}
                 sx={{ minWidth: 200, width: 200, position: "relative" }}
             >
-                <Button onClick={()=>setOpenDrawer(false)} color="inherit" sx={{ position: "absolute", right: 5, top: 5 }}>
-                    <CloseIcon  />
+                <Button
+                    onClick={() => setOpenDrawer(false)}
+                    color="inherit"
+                    sx={{ position: "absolute", right: 5, top: 5 }}
+                >
+                    <CloseIcon />
                 </Button>
-                {isAuthenticated && <Box>
-                    <UserMenu onSelectItem={()=>setOpenDrawer(false)} />
-                </Box>}
+                {isAuthenticated && (
+                    <Box>
+                        <UserMenu onSelectItem={() => setOpenDrawer(false)} />
+                    </Box>
+                )}
                 <Box mt={3}>
                     <Box>
                         <Button
@@ -30,51 +36,68 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                             Acceuil
                         </Button>
                     </Box>
-                    {isAuthenticated ? <Box>
-                        <Button
-                            to="/contributions"
-                            component={Link}
-                            onClick={() => setOpenDrawer(false)}
-                        >
-                            Cotisations
-                        </Button>
-                    </Box> :
-                    <><Box mt={2}>
-                        <Button
-                            to="/login"
-                            size="small"
-                            variant="contained"
-                            component={Link}
-                            onClick={() => setOpenDrawer(false)}
-                        >
-                            Login
-                        </Button>
-                    </Box>
-                    <Box mt={2}>
-                        <Button
-                            variant="outlined"
-                            to="/register"
-                            size="small"
-                            component={Link}
-                            onClick={() => setOpenDrawer(false)}
-                        >
-                            Register
-                        </Button>
-                    </Box> </>}
-                    {isAuthenticated && <Box mt={2}>
-                        <Button
-                            variant="outlined"
-                            to="/register"
-                            color="error"
-                            size="small"
-                            component={Link}
-                            onClick={() => {
-                                logout();
-                                setOpenDrawer(false)}}
-                        >
-                            Logout
-                        </Button>
-                    </Box>}
+                    {isAuthenticated ? (
+                        <Box>
+                            {isAdmin && (
+                                <Button
+                                    component={NavLink}
+                                    to="/admin"
+                                    activeclassname="paper.primary"
+                                >
+                                    administration
+                                </Button>
+                            )}
+                            <Button
+                                to="/contributions"
+                                component={Link}
+                                onClick={() => setOpenDrawer(false)}
+                            >
+                                Cotisations
+                            </Button>
+                        </Box>
+                    ) : (
+                        <>
+                            <Box mt={2}>
+                                <Button
+                                    to="/login"
+                                    size="small"
+                                    variant="contained"
+                                    component={Link}
+                                    onClick={() => setOpenDrawer(false)}
+                                >
+                                    Login
+                                </Button>
+                            </Box>
+                            <Box mt={2}>
+                                <Button
+                                    variant="outlined"
+                                    to="/register"
+                                    size="small"
+                                    component={Link}
+                                    onClick={() => setOpenDrawer(false)}
+                                >
+                                    Register
+                                </Button>
+                            </Box>{" "}
+                        </>
+                    )}
+                    {isAuthenticated && (
+                        <Box mt={2}>
+                            <Button
+                                variant="outlined"
+                                to="/register"
+                                color="error"
+                                size="small"
+                                component={Link}
+                                onClick={() => {
+                                    logout();
+                                    setOpenDrawer(false);
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </Box>
+                    )}
                 </Box>
             </Box>
         </MuiDrawer>

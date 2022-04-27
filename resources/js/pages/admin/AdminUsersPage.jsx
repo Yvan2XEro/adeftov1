@@ -25,6 +25,7 @@ import EditUserModal from "../../components/EditUserModal";
 import { allUsers } from "../../services/usersServices";
 import Spinner from "../../components/Spinner";
 import SearchIcon from '@mui/icons-material/Search';
+import { Info } from "@mui/icons-material";
 
 const ITEMS_PER_PAGE = 5;
 function AdminUsersPage() {
@@ -88,7 +89,7 @@ function AdminUsersPage() {
                                 fullWidth
                                 value={searchKey}
                                 onChange={(e) => setSearchKey(e.target.value)}
-                                label="Reachercher par nom, prenom, email"
+                                label="Rechercher par nom, prenom, email"
                                 variant="standard"
                             />
                         </Box>
@@ -140,18 +141,12 @@ function AdminUsersPage() {
                                                             color="primary"
                                                             variant="outlined"
                                                         >
-                                                            <Icon
-                                                                sx={{
-                                                                    fontSize: 30,
-                                                                }}
-                                                            >
-                                                                information-circle
-                                                            </Icon>
+                                                            <Info />
                                                         </Button>
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
-                                                            color="primary"
+                                                            color="success"
                                                             variant="outlined"
                                                         >
                                                             <EditIcon />
@@ -159,7 +154,7 @@ function AdminUsersPage() {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
-                                                            color="primary"
+                                                            color="warning"
                                                             variant="outlined"
                                                         >
                                                             <DoNotDisturbOnTotalSilenceIcon />
@@ -167,7 +162,7 @@ function AdminUsersPage() {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
-                                                            color="primary"
+                                                            color="error"
                                                             variant="outlined"
                                                         >
                                                             <NotInterestedIcon />
@@ -193,7 +188,7 @@ function AdminUsersPage() {
                             onChange={(_, page) => {
                                 setPage(page);
                             }}
-                            count={users.length / ITEMS_PER_PAGE}
+                            count={Math.ceil(filteredUsers()/ ITEMS_PER_PAGE)}
                             variant="outlined"
                             shape="rounded"
                         />

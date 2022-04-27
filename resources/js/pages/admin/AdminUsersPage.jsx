@@ -11,25 +11,28 @@ import {
     TableRow,
     TextField,
     Typography,
-    Autocomplete,
-    Stack,
     Pagination,
+    Avatar,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DoNotDisturbOnTotalSilenceIcon from "@mui/icons-material/DoNotDisturbOnTotalSilence";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import EditUserModal from "../../components/EditUserModal";
-import { allUsers } from "../../services/usersServices";
+import { allUsers, deleteUser } from "../../services/usersServices";
 import Spinner from "../../components/Spinner";
 import SearchIcon from '@mui/icons-material/Search';
 import { Info } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../contexts/AuthContextProvider";
+import { defaultImage, imagePath } from "../../services/htt";
 
 const ITEMS_PER_PAGE = 5;
 function AdminUsersPage() {
-    const [selected, setSetSelected] = useState(null);
+    const {user:loggedUser} = useContext(AuthContext);
+    const [selected, setSelected] = useState(null);
     const [openModal, setOpenModal] = React.useState(false);
     const [users, setUsers] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
@@ -101,6 +104,7 @@ function AdminUsersPage() {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
+                                            <TableCell>Avatar</TableCell>
                                             <TableCell>Nom</TableCell>
                                             <TableCell>Prenom</TableCell>
                                             <TableCell>Tel</TableCell>
@@ -108,7 +112,6 @@ function AdminUsersPage() {
                                             <TableCell>
                                                 Infos Detaillées
                                             </TableCell>
-                                            <TableCell>Modifier</TableCell>
                                             <TableCell>Muter</TableCell>
                                             <TableCell>Banir</TableCell>
                                             <TableCell>Promouvoir</TableCell>
@@ -124,6 +127,11 @@ function AdminUsersPage() {
                                             .map((user) => (
                                                 <TableRow key={user.id}>
                                                     <TableCell>
+                                                        <Avatar
+                                                         src={user.avatar?imagePath(user.avatar):defaultImage}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell>
                                                         {user.firstname}
                                                     </TableCell>
                                                     <TableCell>
@@ -138,14 +146,10 @@ function AdminUsersPage() {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
-                                                            color="primary"
-                                                            variant="outlined"
-                                                        >
-                                                            <Info />
-                                                        </Button>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
+                                                            onClick={()=>{
+                                                                setSelected(user)
+                                                                setOpenModal(true)
+                                                            }}
                                                             color="success"
                                                             variant="outlined"
                                                         >
@@ -162,7 +166,18 @@ function AdminUsersPage() {
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
+                                                            onClick={()=>{
+                                                                if(window.confirm("Etes vous sure de votre action?")) {
+                                                                    deleteUser(user.id).then(()=>{
+                                                                        toast.success("Utilisateur supprime du systeme!");
+                                                                        fetchUsers()
+                                                                    }).catch(_=>{
+                                                                        toast.error("Erreur lors de la suppression de l'utilisateur");
+                                                                    })
+                                                                }
+                                                            }}
                                                             color="error"
+                                                            disabled={user.id === loggedUser?.id}
                                                             variant="outlined"
                                                         >
                                                             <NotInterestedIcon />
@@ -200,7 +215,12 @@ function AdminUsersPage() {
 
             <EditUserModal
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                selected={selected}
+                onSuccess={fetchUsers}
+                onClose={() => {
+                    setSelected(null)
+                    setOpenModal(false)
+                }}
             />
         </Box>
     );

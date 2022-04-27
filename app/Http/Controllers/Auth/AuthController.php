@@ -46,7 +46,7 @@ class AuthController extends Controller
             $user = User::create($request->toArray());
             //code...
         } catch (\Exception $e) {
-            dd($e);
+            return response(['errors' => $e->getMessage()], 422);
         }
 
 
@@ -83,8 +83,8 @@ class AuthController extends Controller
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $user['roles'] = $user->roles;
-                $user['permissions'] = $user->permissions;
+                $user->roles;
+                $user->permissions;
                 $response = ['user' => $user, 'token' => $token];
                 return response($response, 200);
             } else {

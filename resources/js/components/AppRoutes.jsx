@@ -12,6 +12,7 @@ import AdminAdhesionsPage from "../pages/admin/AdminAdhesionsPage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import AdminUserDetails from "../pages/admin/AdminUserDetails";
 
 const APP_ROUTES = [
     {
@@ -96,11 +97,21 @@ const APP_ROUTES = [
         },
     },
     {
-        path: "/admin/members",
+        path: "/admin/users",
         element: <AdminUsersPage />,
         exact: true,
         meta: {
             auth: true,
+            admin: true
+        },
+    },
+    {
+        path: "/admin/users/:id",
+        element: <AdminUserDetails />,
+        exact: true,
+        meta: {
+            auth: true,
+            admin: true
         },
     },
 ];

@@ -8,6 +8,7 @@ import AppRoutes from "../components/AppRoutes";
 import Header from "../components/Header";
 import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
+import './styles.css'
 
 auth.setup();
 

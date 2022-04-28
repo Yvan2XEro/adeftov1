@@ -79,7 +79,7 @@ class UserSeeder extends Seeder
                 'user_id' => $user->id,
                 'is_accepted' => true,
             ]);
-            $contribution->members()->attach($user->id);
+            $contribution->members()->attach($user);
             $session = $contribution->sessions()->create([
                 'date' => '2022-'. (($i+1)<10? '0'.$i+1: $i) . '-15 23:14:21',
             ]);

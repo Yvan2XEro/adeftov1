@@ -20,3 +20,15 @@ export function addUser(data) {
 export function deleteUser(id) {
     return axios.delete(`${API_URL}/users/${id}`);
 }
+
+export function toggleIsAdmin(id) {
+    return axios.put(`${API_URL}/users/toggle-is-admin/${id}`);
+}
+
+export function checkIsAdmin(user) {
+    return (
+        user.roles.find(
+            (r) => r.name === "administrator" || r.name === "superadministrator"
+        ) !== undefined
+    );
+}

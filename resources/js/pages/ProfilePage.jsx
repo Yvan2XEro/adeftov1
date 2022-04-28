@@ -54,7 +54,7 @@ function ProfilePage() {
     );
 }
 
-const Profile = ({ data }) => {
+export const Profile = ({ data }) => {
     return (
         <Box mt={10}>
             <Box>

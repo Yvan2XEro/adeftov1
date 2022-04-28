@@ -86,6 +86,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/init-messonb-payments', [PaymentController::class, 'mesombPayment'])->name('contributions.mesombPayment');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.get');
+    Route::put('users/toggle-is-admin/{id}', [UserController::class, 'toggleUserIsAdmin'])->name('users.toggleUserIsAdmin');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.get');
     Route::post('/users', [UserController::class, 'store'])->name('users.post');
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.put');

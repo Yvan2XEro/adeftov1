@@ -75,6 +75,14 @@ class UserController extends Controller
         $user->roles;
         $user->permissions;
         $user->payments;
+        $user->contributions;
+        $user->enrolledContributions;
+        foreach($user->enrolledContributions as $contribution) {
+            $contribution->sessions;
+            foreach($contribution->sessions as $session) {
+                $session->payments;
+            }
+        }
         foreach ($user->payments as $payment) {
             $payment->session;
             $payment->session->contribution;
@@ -122,6 +130,29 @@ class UserController extends Controller
             $u->delete();
             return response()->json(['message' => 'User deleted successfully']);
 
+        }else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function toggleUserIsAdmin(Request $request, $id)
+    {
+        $user = $request->user();
+        if($user->hasRole('superadministrator') || $user->hasRole('administrator')){
+            $u = User::find($id);
+            if ($u->hasRole('administrator')) {
+                $u->detachRole('administrator');
+                return response()->json(['message' => 'User is no longer an administrator']);
+            }
+            elseif ($u->hasRole('superadministrator')) {
+                $u->detachRole('superadministrator');
+                return response()->json(['message' => 'User is no longer an superadministrator']);
+            }
+
+            else{
+                $u->attachRole('administrator');
+                return response()->json(['message' => 'User is now an administrator']);
+            }
         }else{
             return response()->json(['error' => 'Unauthorized'], 401);
         }

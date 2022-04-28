@@ -3,6 +3,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import auth from "../services/auth";
+import {checkIsAdmin} from "../services/usersServices"
 
 export const AuthContext = React.createContext({
     isAuthenticated: false,
@@ -52,6 +53,14 @@ function AuthContextProvider({ children }) {
             try {
                 await auth.getUser().then(response => {
                     setUser(response.data);
+
+                    const nextPathStr = localStorage.getItem('nextPath')
+                    if(nextPathStr) {
+                        const nextPath = JSON.parse(nextPathStr)
+                            if((!!nextPath.meta.admin && checkIsAdmin(response.data))||!nextPath.meta.admin)
+                                navigate(nextPath.path)
+                        localStorage.removeItem("nextPath")
+                    }
                 });
             } catch (error) {
                 console.log(error);

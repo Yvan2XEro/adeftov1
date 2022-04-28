@@ -123,7 +123,7 @@ function AppRoutes() {
                 <Route
                     exact={exact}
                     path={path}
-                    element={<GuardRoute meta={meta}>{element}</GuardRoute>}
+                    element={<GuardRoute path={path} meta={meta}>{element}</GuardRoute>}
                     key={i}
                 />
             ))}
@@ -133,17 +133,20 @@ function AppRoutes() {
 
 export default AppRoutes;
 
-const GuardRoute = ({ children, meta }) => {
+const GuardRoute = ({ children, meta, path }) => {
     const { isAuthenticated, isAdmin, user } = React.useContext(AuthContext);
     const navigate = useNavigate();
     React.useEffect(() => {
         if (meta.auth === false && isAuthenticated) {
+            localStorage.setItem("nextPath", path)
             navigate("/");
         }
         if (meta.auth === true && !isAuthenticated) {
+            localStorage.setItem("nextPath", path)
             navigate("/login");
         }
         if (meta.admin === true && !isAdmin) {
+            localStorage.setItem("nextPath",JSON.stringify({ path, meta}))
             navigate("/");
         }
     }, [isAuthenticated, isAdmin, navigate,user, meta]);

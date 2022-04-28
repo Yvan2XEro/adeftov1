@@ -23,10 +23,10 @@ function AdminUserDetails() {
   return (
     <Box mt={10}>
        <Grid container>
-           <Grid item sm={12} md={4}>
+           <Grid p={2} item sm={12} md={4}>
                 <Profile data={user} />
            </Grid>
-           <Grid>
+           <Grid p={2} sm={12} md={8}>
                <Infos data={user} />
            </Grid>
        </Grid>
@@ -59,7 +59,7 @@ const Infos = ({data}) => {
                </FormLabel>
                 <Select fullWidth>
 
-                {data?.enrolled_contributions.map(c=><MenuItem key={c.id}>
+                {data?.enrolled_contributions.map(c=><MenuItem key={c.id} onClick={()=>setSelected(c)}>
                     {c.name}
                 </MenuItem>)}
             </Select>

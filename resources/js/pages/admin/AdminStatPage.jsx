@@ -1,3 +1,4 @@
+import { ChevronRight } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -10,58 +11,14 @@ import {
     Tab,
     Tabs,
 } from "@mui/material";
+import moment from "moment";
 import PropTypes from "prop-types";
 import React from "react";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import GridOnIcon from "@mui/icons-material/GridOn";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import Chart from "../../components/Chart";
-// DataGrid Test Elts
+import Spinner from "../../components/Spinner"
+import {getAllContributions} from "../../services/contributionsServices"
 
-const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-        field: "firstName",
-        headerName: "First name",
-        width: 150,
-        editable: true,
-    },
-    {
-        field: "lastName",
-        headerName: "Last name",
-        width: 150,
-        editable: true,
-    },
-    {
-        field: "age",
-        headerName: "Age",
-        type: "number",
-        width: 110,
-        editable: true,
-    },
-    {
-        field: "fullName",
-        headerName: "Full name",
-        description: "This column has a value getter and is not sortable.",
-        sortable: false,
-        width: 160,
-        valueGetter: (params) =>
-            `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-];
 
-const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
-//End DataGrid Test Elts
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -95,10 +52,42 @@ function a11yProps(index) {
 }
 function AdminStatPage() {
     const [annee, setAge] = React.useState("");
-
+    const [loading, setLoading] = React.useState(false);
+    const [contributions, setContributions] = React.useState([])
+    const [selected, setSelected] = React.useState(null)
+    const [chartData, setChartData] = React.useState([])
     const handleChange = (event) => {
         setAge(event.target.value);
     };
+
+    const fetchData = React.useCallback(()=>{
+        setLoading(true)
+        getAllContributions().then(response=>{
+            setContributions(response.data.data);
+            setLoading(false);
+        }).catch(err=>{
+            console.log(err)
+            setLoading(false);
+        })
+    },[])
+
+    React.useEffect(()=>{fetchData()}, [])
+    React.useEffect(()=>{
+        if(contributions.length>0) {
+            setSelected(contributions[0])
+            setChartData(selected?.sessions.map(s=>{
+                let amount = 0;
+                s.payments?.filter(p=>p.status==='paid').forEach(p => {
+                    amount += p.amount
+                });
+                return {
+                    value:amount,
+                    label: moment(s.date).format("MMMM YYYY")
+                }
+            }))
+        }
+    }, [contributions])
+
     const [value, setValue] = React.useState(0);
     const handleChange1 = (event, newValue) => {
         setValue(newValue);
@@ -122,12 +111,31 @@ function AdminStatPage() {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    <Grid container md={12} xs={12}>
+                    {!loading ? <Grid container md={12} xs={12}>
                         <Grid item md={4} xs={12} elevate={6}>
+                            {!!selected && <Box alignItems="center" flexDirection="row" display="flex" >
+                                <ChevronRight  />
+                                <Typography component="h4">
+                                    {selected?.name}
+                                </Typography>
+                            </Box>}
                             <Typography variant="h6" sx={{ mt: 2 }}>
                                 Evolution des Cotisations{" "}
                             </Typography>
                             <Box sx={{ minWidth: 120 }}>
+                                <FormControl sx={{mt: 1}} fullWidth>
+                                    <InputLabel id="demo-simple-select-label">
+                                        Cotisation
+                                    </InputLabel>
+                                    <Select
+                                        labelId="year-selection"
+                                        id="year-selection"
+                                        value={selected?.id}
+                                        label="Année"
+                                    >
+                                        {contributions.map(c=><MenuItem onClick={()=>setSelected(c)} value={c.id} key={c.id}>{c.name}</MenuItem>)}
+                                    </Select>
+                                </FormControl>
                                 <FormControl sx={{mt: 1}} fullWidth>
                                     <InputLabel id="demo-simple-select-label">
                                         Année
@@ -163,9 +171,9 @@ function AdminStatPage() {
                             </Box>
                         </Grid>
                         <Grid md={8} xs={12} elevate={6}>
-                            <Chart />
+                            <Chart data={chartData} />
                         </Grid>
-                    </Grid>
+                    </Grid>:<Spinner />}
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                    Item two

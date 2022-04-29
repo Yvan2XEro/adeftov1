@@ -21,8 +21,12 @@ class ContributionsController extends Controller
         foreach ($contributions as $contribution) {
             $contribution->user;
             $contribution->members;
-            if ($user && ($contribution->specialsMembers->contains($user) || $user->hasRole('administrator'))) {
+            if ($user && ($contribution->specialsMembers->contains($user)|| $user->hasRole('administrator') || $user->hasRole('superadministrator'))) {
                 $contribution->specialsMembers;
+                $contribution->sessions;
+                foreach($contribution->sessions as $session) {
+                    $session->payments;
+                }
                 $contribution->membershipRequests;
             }
         }

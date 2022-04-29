@@ -12,7 +12,6 @@ async function login(credentials) {
         return Promise.resolve(response);
     } catch (error) {
         tokenStore.removeToken();
-        console.log("Login failled!");
         return Promise.reject(error);
     }
 }
@@ -62,7 +61,6 @@ function updatePassword(data) {
 function setup() {
     const token = tokenStore.getToken();
     if (token !== null) {
-        console.log("Token found!", typeof token);
         try {
             const { exp } = jwtDecode(token);
             if (exp * 1000 > new Date().getTime()) setAxiosToken(token);

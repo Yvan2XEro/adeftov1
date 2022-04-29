@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, Grid, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useCallback,useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -53,10 +53,10 @@ const Infos = ({data}) => {
     }
     return <Box>
         <Box>
-           <FormControl>
-               <FormLabel>
+           <FormControl fullWidth>
+               <InputLabel>
                    Cotisation
-               </FormLabel>
+               </InputLabel>
                 <Select fullWidth>
 
                 {data?.enrolled_contributions.map(c=><MenuItem key={c.id} onClick={()=>setSelected(c)}>

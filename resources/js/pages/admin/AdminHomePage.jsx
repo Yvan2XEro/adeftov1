@@ -81,7 +81,7 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeclassname="active">
+                    <NavLink to="/admin/statistics" className="nav-link" activeclassname="active">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
                                 <CardContent>

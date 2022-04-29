@@ -12,6 +12,7 @@ import AdminAdhesionsPage from "../pages/admin/AdminAdhesionsPage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import AdminStatPage from "../pages/admin/AdminStatPage"
 import AdminUserDetails from "../pages/admin/AdminUserDetails";
 
 const APP_ROUTES = [
@@ -97,6 +98,15 @@ const APP_ROUTES = [
         },
     },
     {
+        path: "/admin/statistics",
+        element: <AdminStatPage />,
+        exact: true,
+        meta: {
+            auth: true,
+            admin: true
+        },
+    },
+    {
         path: "/admin/users",
         element: <AdminUsersPage />,
         exact: true,
@@ -123,7 +133,7 @@ function AppRoutes() {
                 <Route
                     exact={exact}
                     path={path}
-                    element={<GuardRoute path={path} meta={meta}>{element}</GuardRoute>}
+                    element={<GuardRoute meta={meta}>{element}</GuardRoute>}
                     key={i}
                 />
             ))}
@@ -133,20 +143,23 @@ function AppRoutes() {
 
 export default AppRoutes;
 
-const GuardRoute = ({ children, meta, path }) => {
+const GuardRoute = ({ children, meta }) => {
     const { isAuthenticated, isAdmin, user } = React.useContext(AuthContext);
     const navigate = useNavigate();
     React.useEffect(() => {
+        const path = window.location.hash.substring(1, window.location.hash.length)
+        const route = JSON.stringify({ path, meta})
         if (meta.auth === false && isAuthenticated) {
-            localStorage.setItem("nextPath", path)
             navigate("/");
         }
         if (meta.auth === true && !isAuthenticated) {
-            localStorage.setItem("nextPath", path)
+            localStorage.setItem("nextPath", route)
             navigate("/login");
         }
         if (meta.admin === true && !isAdmin) {
-            localStorage.setItem("nextPath",JSON.stringify({ path, meta}))
+            const p = localStorage.getItem("nextPath")
+            if(!p)
+                localStorage.setItem("nextPath",route)
             navigate("/");
         }
     }, [isAuthenticated, isAdmin, navigate,user, meta]);

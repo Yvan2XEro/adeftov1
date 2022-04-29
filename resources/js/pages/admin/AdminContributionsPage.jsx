@@ -46,6 +46,7 @@ import { toast } from "react-toastify";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Spinner from "../../components/Spinner";
 import SearchIcon from '@mui/icons-material/Search';
+import {AuthContext} from '../../contexts/AuthContextProvider'
 
 
 function AdminContributionsPage() {
@@ -53,6 +54,7 @@ function AdminContributionsPage() {
     const [loading, setLoading] = useState(false);
     const [contributions, setContributions] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
+    const {isAdmin} = useContext(AuthContext);
 
     useEffect(() => {
         if (contributions.length > 0) {
@@ -87,7 +89,7 @@ function AdminContributionsPage() {
                     </Box>
                     <Grid container columnSpacing={3}>
                         <Grid item xs={12} md={4}>
-                            <Button
+                            {isAdmin && <Button
                                 variant={selected ? "outlined" : "contained"}
                                 color="primary"
                                 onClick={() => {
@@ -97,7 +99,7 @@ function AdminContributionsPage() {
                                 startIcon={<AddIcon />}
                             >
                                 Creer une nouvelle cotisation
-                            </Button>
+                            </Button>}
 
                             <List
                                 sx={{

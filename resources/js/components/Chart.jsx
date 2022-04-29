@@ -67,12 +67,13 @@ const chartConfigs = {
     dataFormat: "json",
     dataSource: {
         chart: {
-            caption: "Evolution de la cotisation [2017-18]",
+            caption: "Evolution de la cotisation [Adefto]",
             subCaption: "FCFA par mois",
             xAxisName: "Mois",
             yAxisName: "Montant (FCFA)",
             numberSuffix: " FCFA",
-            exportEnabled: 1,
+            exportEnabled:"1",
+            exportFileName:"Adefto Cotisations",
             theme: "fusion",
         },
         data: chartData,

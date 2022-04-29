@@ -169,7 +169,7 @@ function AdminStatPage() {
                             </Box>
                         </Grid>
                         <Grid md={8} xs={12} elevate={6}>
-                            <Chart />
+                            <Chart/>
                         </Grid>
                     </Grid>
                 </TabPanel>

@@ -84,7 +84,6 @@ export default function BasicTabs() {
           <Button variant="contained"  sx={{ml:2}}><InsertDriveFileIcon/>Exporter en XLS</Button>
           <Button variant="contained" sx={{ml:2}}><GridOnIcon/>Exporter en CSV</Button>
           <Button variant="contained" sx={{ml:2}}><PictureAsPdfIcon />Imprimer en PDF</Button>
-          
           </Box>
       </Grid>
   </Grid>

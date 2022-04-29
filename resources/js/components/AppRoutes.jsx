@@ -103,10 +103,10 @@ const APP_ROUTES = [
         exact: true,
         meta: {
             auth: true,
+            admin: true
         },
     },
     {
-
         path: "/admin/users",
         element: <AdminUsersPage />,
         exact: true,
@@ -147,13 +147,19 @@ const GuardRoute = ({ children, meta }) => {
     const { isAuthenticated, isAdmin, user } = React.useContext(AuthContext);
     const navigate = useNavigate();
     React.useEffect(() => {
+        const path = window.location.hash.substring(1, window.location.hash.length)
+        const route = JSON.stringify({ path, meta})
         if (meta.auth === false && isAuthenticated) {
             navigate("/");
         }
         if (meta.auth === true && !isAuthenticated) {
+            localStorage.setItem("nextPath", route)
             navigate("/login");
         }
         if (meta.admin === true && !isAdmin) {
+            const p = localStorage.getItem("nextPath")
+            if(!p)
+                localStorage.setItem("nextPath",route)
             navigate("/");
         }
     }, [isAuthenticated, isAdmin, navigate,user, meta]);

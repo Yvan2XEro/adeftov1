@@ -2,18 +2,7 @@ import {
     Box,
     Button,
     Grid,
-    Icon,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TextField,
     Typography,
-    Autocomplete,
-    Stack,
-    Pagination,
     Select,
     FormControl,
     MenuItem,
@@ -22,17 +11,7 @@ import {
     Tabs,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { DataGrid } from "@mui/x-data-grid";
-import React, { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DoNotDisturbOnTotalSilenceIcon from "@mui/icons-material/DoNotDisturbOnTotalSilence";
-import UpgradeIcon from "@mui/icons-material/Upgrade";
-import NotInterestedIcon from "@mui/icons-material/NotInterested";
-import EditUserModal from "../../components/EditUserModal";
-import { allUsers } from "../../services/usersServices";
-import Spinner from "../../components/Spinner";
-import SearchIcon from "@mui/icons-material/Search";
+import React from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import GridOnIcon from "@mui/icons-material/GridOn";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
@@ -144,12 +123,12 @@ function AdminStatPage() {
                 </Box>
                 <TabPanel value={value} index={0}>
                     <Grid container md={12} xs={12}>
-                        <Grid item md={6} xs={12} elevate={6}>
+                        <Grid item md={4} xs={12} elevate={6}>
                             <Typography variant="h6" sx={{ mt: 2 }}>
                                 Evolution des Cotisations{" "}
                             </Typography>
                             <Box sx={{ minWidth: 120 }}>
-                                <FormControl fullWidth>
+                                <FormControl sx={{mt: 1}} fullWidth>
                                     <InputLabel id="demo-simple-select-label">
                                         Année
                                     </InputLabel>
@@ -165,136 +144,31 @@ function AdminStatPage() {
                                         <MenuItem value={2022}>2022</MenuItem>
                                     </Select>
                                 </FormControl>
-                            </Box>
-                            <Chart />
-                            <Box>
-                                <Grid container>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <InsertDriveFileIcon />
-                                            Exporter en XLS
-                                        </Button>
-                                    </Grid>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <GridOnIcon />
-                                            Exporter en CSV
-                                        </Button>
-                                    </Grid>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <PictureAsPdfIcon />
-                                            Imprimer en PDF
-                                        </Button>
-                                    </Grid>
-                                </Grid>
+                                 <FormControl sx={{mt: 1}} fullWidth>
+                                    <InputLabel id="demo-simple-select-label">
+                                        Ville
+                                    </InputLabel>
+                                    <Select
+                                        labelId="year-selection"
+                                        id="year-selection"
+                                        value={annee}
+                                        label="Année"
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={"Dschang"}>Dschang</MenuItem>
+                                        <MenuItem value={"Yaounde"}>Yaounde</MenuItem>
+                                        <MenuItem value={"Douala"}>Douala</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Box>
                         </Grid>
-                        <Grid md={6} xs={12} elevate={6}>
-                            <div
-                                style={{ height: 400, width: "100%" }}
-                                sx={{ mt: 6 }}
-                            >
-                                <DataGrid
-                                    rows={rows}
-                                    columns={columns}
-                                    pageSize={5}
-                                    rowsPerPageOptions={[5]}
-                                    checkboxSelection
-                                    disableSelectionOnClick
-                                />
-                            </div>
+                        <Grid md={8} xs={12} elevate={6}>
+                            <Chart />
                         </Grid>
                     </Grid>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <Grid container md={12} xs={12}>
-                        <Grid item md={6} xs={12} elevate={6}>
-                            <Typography variant="h6" sx={{ mt: 2 }}>
-                                Evolution des utilisateurs{" "}
-                            </Typography>
-                            <Box sx={{ minWidth: 120 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">
-                                        Année
-                                    </InputLabel>
-                                    <Select
-                                        labelId="year-selection"
-                                        id="year-selection"
-                                        value={annee}
-                                        label="Année"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={2020}>2020</MenuItem>
-                                        <MenuItem value={2021}>2021</MenuItem>
-                                        <MenuItem value={2022}>2022</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                            <Chart />
-                            <Box>
-                                <Grid container>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <InsertDriveFileIcon />
-                                            Exporter en XLS
-                                        </Button>
-                                    </Grid>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <GridOnIcon />
-                                            Exporter en CSV
-                                        </Button>
-                                    </Grid>
-                                    <Grid item md={4} xs={4}>
-                                        <Button
-                                            variant="contained"
-                                            sx={{ ml: 2 }}
-                                            width="20"
-                                        >
-                                            <PictureAsPdfIcon />
-                                            Imprimer en PDF
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </Grid>
-                        <Grid md={6} xs={12} elevate={6}>
-                            <div
-                                style={{ height: 400, width: "100%" }}
-                                sx={{ mt: 6 }}
-                            >
-                                <DataGrid
-                                    rows={rows}
-                                    columns={columns}
-                                    pageSize={5}
-                                    rowsPerPageOptions={[5]}
-                                    checkboxSelection
-                                    disableSelectionOnClick
-                                />
-                            </div>
-                        </Grid>
-                    </Grid>
+                   Item two
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     Item Three

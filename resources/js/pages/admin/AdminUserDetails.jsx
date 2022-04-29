@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, Grid, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useCallback,useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -23,10 +23,10 @@ function AdminUserDetails() {
   return (
     <Box mt={10}>
        <Grid container>
-           <Grid item sm={12} md={4}>
+           <Grid p={2} item sm={12} md={4}>
                 <Profile data={user} />
            </Grid>
-           <Grid>
+           <Grid p={2} sm={12} md={8}>
                <Infos data={user} />
            </Grid>
        </Grid>
@@ -53,13 +53,13 @@ const Infos = ({data}) => {
     }
     return <Box>
         <Box>
-           <FormControl>
-               <FormLabel>
+           <FormControl fullWidth>
+               <InputLabel>
                    Cotisation
-               </FormLabel>
+               </InputLabel>
                 <Select fullWidth>
 
-                {data?.enrolled_contributions.map(c=><MenuItem key={c.id}>
+                {data?.enrolled_contributions.map(c=><MenuItem key={c.id} onClick={()=>setSelected(c)}>
                     {c.name}
                 </MenuItem>)}
             </Select>

@@ -21,6 +21,7 @@ export default function Chart({data}) {
                     xAxisName: "Mois",
                     yAxisName: "Montant (FCFA)",
                     numberSuffix: " FCFA",
+                    exportFileName: "ADEFTO Cotisation",
                     exportEnabled: 1,
                     theme: "fusion",
                 },

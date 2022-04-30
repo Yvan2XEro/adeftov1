@@ -1,4 +1,5 @@
 import {
+    Autocomplete,
     Avatar,
     Box,
     Button,
@@ -26,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { imagePath, defaultImage } from "../services/htt";
+import cities from "../assets/cities.json";
 
 function ProfilePage() {
     const navigate = useNavigate();
@@ -135,6 +137,19 @@ export const Profile = ({ data }) => {
                             <Typography variant="p">{data?.num_cni}</Typography>
                         </TableCell>
                     </TableRow>
+                    <TableRow>
+                        <TableCell>
+                            <Typography
+                                sx={{ fontWeight: "bold" }}
+                                variant="h6"
+                            >
+                                Arrondissement
+                            </Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="p">{data?.city}</Typography>
+                        </TableCell>
+                    </TableRow>
                 </Table>
             </Box>
         </Box>
@@ -147,6 +162,7 @@ const shema = yup.object().shape({
     lastname: yup.string().min(3),
     phone: yup.string(),
     num_cni: yup.string(),
+    city: yup.string(),
 });
 
 function ProfileForm({ data, onChange }) {
@@ -173,12 +189,19 @@ function ProfileForm({ data, onChange }) {
 
     const submit = async (data) => {
         await auth
-            .updateUser({ ...data, phone: data.phone ? data.phone : "" })
+            .updateUser(
+                _.flow([
+                    Object.entries,
+                    (arr) => arr.filter(([k, v]) => !!v),
+                    Object.fromEntries,
+                ])(data)
+            )
             .then((response) => {
                 onChange(response.data);
                 toast.success("Modification effectuée avec succès");
             })
             .catch((error) => {
+                console.log("ERRS",error);
                 toast.error("Une erreur est survenue");
             })
             .finally(() => {
@@ -364,6 +387,29 @@ function ProfileForm({ data, onChange }) {
                     {errors.num_cni?.message && (
                         <Typography variant="caption" color="error">
                             {errors.num_cni?.message}
+                        </Typography>
+                    )}
+                </FormControl>
+                <FormControl sx={{ mt: 1 }} fullWidth>
+                    <Autocomplete
+                        id="virtualize-demo"
+                        {...register("city")}
+                        multiline
+                        maxRows={1}
+                        options={[...cities]}
+                        label="Arrondissement"
+                        fullWidth
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                defaultValue={user?.city}
+                                label="Arrondissement"
+                            />
+                        )}
+                    />
+                    {errors.city?.message && (
+                        <Typography variant="caption" color="error">
+                            {errors.city?.message}
                         </Typography>
                     )}
                 </FormControl>

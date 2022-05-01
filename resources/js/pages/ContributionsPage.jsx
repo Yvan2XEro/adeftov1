@@ -123,8 +123,6 @@ function ContributionItem({ data, index }) {
                                     padding: 2,
                                 }}
                             >
-
-
                                 <Box mt={1}>
                                     <Button
                                         color="primary"

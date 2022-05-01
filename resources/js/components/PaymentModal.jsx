@@ -1,4 +1,5 @@
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -12,10 +13,13 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { fetchMyUnpaidSessions, mesombPayment } from "../services/contributionsServices";
+import {
+    fetchMyUnpaidSessions,
+    mesombPayment,
+} from "../services/contributionsServices";
 import moment from "moment";
 import { AuthContext } from "../contexts/AuthContextProvider";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 
 const style = {
@@ -47,25 +51,31 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         }
     }, [contribution]);
 
-    const processPayment = useCallback(async() => {
+    const processPayment = useCallback(async () => {
         if (selectedSession) {
             setPending(true);
-            toast.info("Veuillez conulter votre téléphone pour continuer", {autoClose: false});
-            if(phone.indexOf("+237") === -1) {
+            toast.info("Veuillez conulter votre téléphone pour continuer", {
+                autoClose: false,
+            });
+            if (phone.indexOf("+237") === -1) {
                 setPhone(`+237${phone}`);
             }
             await mesombPayment({
                 amount: 100,
                 phone: phone.trim(),
                 session_id: selectedSession.id,
-            }).then(()=>{
-                toast.success("Paiement effectué avec succès");
-                onSuccess();
-                setPending(false);
-            }).catch(()=>{
-                setPending(false);
-                toast.error("Erreur lors du paiement. Veillez réessayer SVP");
             })
+                .then(() => {
+                    toast.success("Paiement effectué avec succès");
+                    onSuccess();
+                    setPending(false);
+                })
+                .catch(() => {
+                    setPending(false);
+                    toast.error(
+                        "Erreur lors du paiement. Veillez réessayer SVP"
+                    );
+                });
         }
     }, [selectedSession, phone]);
 
@@ -80,8 +90,15 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         >
             <Box sx={style} component={Paper}>
                 <Typography sx={{ mt: 2 }} component="h4" variant="h4">
-                    Payer une ancienne cotisations
+                    Payer votre cotisations
                 </Typography>
+
+                {sessions.length < 1 && (
+                    <Alert severity="success">
+                        Vous avez déjà payé toutes les seances pour cette
+                        cotisation Attendez le lancement de laprochaine seance.
+                    </Alert>
+                )}
                 <FormControl sx={{ mt: 2 }} fullWidth>
                     <InputLabel id="demo-simple-select-label">
                         Seance
@@ -139,7 +156,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                     }}
                 >
                     <Typography component="p" variant="p">
-                        Deffinissez la somme que vous voulez payer!
+                        Deffinissez la somme que vous voulez payer (FCFA)
                     </Typography>
                     <FormControl sx={{ mt: 2 }} fullWidth>
                         <TextField
@@ -152,7 +169,6 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                     <FormControl fullWidth sx={{ mt: 2 }}>
                         <Slider
                             aria-label="Restricted values"
-                            // defaultValue={amount}
                             value={amount}
                             onChange={(_, value) => setAmount(value)}
                             step={500}
@@ -173,9 +189,19 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <LoadingButton loading={pending} onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<100 || phone?.lenght<9}>
-                            {" "}
-                            Proceder{" "}
+                        <LoadingButton
+                            loading={pending}
+                            onClick={processPayment}
+                            variant="contained"
+                            size="medium"
+                            fullWidth
+                            disabled={
+                                amount < 100 ||
+                                phone?.lenght < 9 ||
+                                sessions.length < 1
+                            }
+                        >
+                            Proceder
                         </LoadingButton>
                     </Box>
                     <Box sx={{ mb: 2, mt: 2 }}>
@@ -186,8 +212,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                             fullWidth
                             size="medium"
                         >
-                            {" "}
-                            Annuler{" "}
+                            Annuler
                         </Button>
                     </Box>
                 </Box>

@@ -1,15 +1,12 @@
 import { ChevronRight } from "@mui/icons-material";
 import {
     Box,
-    Button,
     Grid,
     Typography,
     Select,
     FormControl,
     MenuItem,
     InputLabel,
-    Tab,
-    Tabs,
 } from "@mui/material";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -17,6 +14,7 @@ import React from "react";
 import Chart from "../../components/Chart";
 import Spinner from "../../components/Spinner";
 import { getAllContributions } from "../../services/contributionsServices";
+import cities from "../../assets/cities.json";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -50,7 +48,6 @@ function a11yProps(index) {
     };
 }
 function AdminStatPage() {
-    const [annee, setAge] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [contributions, setContributions] = React.useState([]);
     const [selected, setSelected] = React.useState(null);
@@ -71,6 +68,14 @@ function AdminStatPage() {
             });
     }, []);
 
+    // Get all years from 2022 to current year
+    const getYears = React.useCallback(() => {
+        const years = [];
+        for (let i = 2022; i <= moment().year(); i++) {
+            years.push(i);
+        }
+        return years;
+    }, []);
     React.useEffect(() => {
         fetchData();
     }, []);
@@ -79,7 +84,8 @@ function AdminStatPage() {
             setSelected(contributions[0]);
             setChartData(
                 selected?.sessions
-                    .filter((s) => s.date.includes(year))
+                    .filter((s) => s.date.includes(year)
+                        && s.payments.find(p=>p.user.city.includes(town)) )
                     .map((s) => {
                         let amount = 0;
                         s.payments
@@ -96,28 +102,13 @@ function AdminStatPage() {
         }
     }, [contributions, year, town]);
 
-    const [value, setValue] = React.useState(0);
     return (
         <Box mt={10} ml={2}>
             <Box>
                 <Typography variant="h4">Statistiques</Typography>
             </Box>
             <Box sx={{ width: "100%" }}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <Tabs
-                        value={value}
-                        onChange={(_, newValue) => {
-                            setValue(newValue);
-                        }}
-                        aria-label="basic tabs example"
-                    >
-                        <Tab label="Cotisations" {...a11yProps(0)} />
-                        <Tab label="Utilisateurs " {...a11yProps(1)} />
-                        <Tab label="Repartitions" {...a11yProps(2)} />
-                    </Tabs>
-                </Box>
-                <TabPanel value={value} index={0}>
-                    {!loading ? (
+                {!loading ? (
                         <Grid container md={12} xs={12}>
                             <Grid item md={4} xs={12} elevate={6}>
                                 {!!selected && (
@@ -144,7 +135,7 @@ function AdminStatPage() {
                                             labelId="year-selection"
                                             id="year-selection"
                                             value={selected?.id}
-                                            label="Année"
+                                            label="Cotisation"
                                         >
                                             {contributions.map((c) => (
                                                 <MenuItem
@@ -169,66 +160,34 @@ function AdminStatPage() {
                                             value={year}
                                             label="Année"
                                         >
-                                            <MenuItem
-                                                onClick={() =>
-                                                    setYear("" + 2020)
-                                                }
-                                                value={2020}
+                                            {getYears().map(y=><MenuItem
+                                                onClick={() => setYear(''+y)}
+                                                value={y}
+                                                key={y}
                                             >
-                                                2020
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() =>
-                                                    setYear("" + 2021)
-                                                }
-                                                value={2021}
-                                            >
-                                                2021
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() =>
-                                                    setYear("" + 2022)
-                                                }
-                                                value={2022}
-                                            >
-                                                2022
-                                            </MenuItem>
+                                                {y}
+                                            </MenuItem>)}
                                         </Select>
                                     </FormControl>
                                     <FormControl sx={{ mt: 1 }} fullWidth>
-                                        <InputLabel id="demo-simple-select-label">
-                                            Ville
+                                          <InputLabel id="demo-simple-select-label">
+                                            Arrondissement
                                         </InputLabel>
                                         <Select
                                             labelId="year-selection"
                                             id="year-selection"
                                             value={town}
-                                            label="Année"
+                                            label="Arrondissement"
                                         >
-                                            <MenuItem
+                                            {cities.map(c =><MenuItem
                                                 onClick={() =>
-                                                    setTown("Dschang")
+                                                    setTown(c)
                                                 }
-                                                value={"Dschang"}
+                                                value={c}
+                                                key={c}
                                             >
-                                                Dschang
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() =>
-                                                    setTown("Yaounde")
-                                                }
-                                                value={"Yaounde"}
-                                            >
-                                                Yaounde
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() =>
-                                                    setTown("Douala")
-                                                }
-                                                value={"Douala"}
-                                            >
-                                                Douala
-                                            </MenuItem>
+                                                {c}
+                                            </MenuItem>)}
                                         </Select>
                                     </FormControl>
                                 </Box>
@@ -240,13 +199,6 @@ function AdminStatPage() {
                     ) : (
                         <Spinner />
                     )}
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Item two
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    Item Three
-                </TabPanel>
             </Box>
         </Box>
     );

@@ -21,7 +21,7 @@ import { LoadingButton } from "@mui/lab";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import auth from "../services/auth";
+import auth, { emailRegex } from "../services/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -156,57 +156,32 @@ export const Profile = ({ data }) => {
     );
 };
 
-const shema = yup.object().shape({
-    email: yup.string().email(),
-    firstname: yup.string().min(3),
-    lastname: yup.string().min(3),
-    phone: yup.string(),
-    num_cni: yup.string(),
-    city: yup.string(),
-});
-
 function ProfileForm({ data, onChange }) {
     const [avatar, setAvatar] = React.useState(null);
     const [avatarUrl, setAvatarUrl] = React.useState(null);
     const [user, setUser] = React.useState(data);
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { isSubmitting, errors, isValid },
-    } = useForm({
-        mode: "onChange",
-        resolver: yupResolver(shema),
-        defaultValues: React.useMemo(() => {
-            return user;
-        }, [user]),
-    });
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
     React.useEffect(() => {
         if (data) {
             setUser(data);
         }
     }, [data]);
 
-    const submit = async (data) => {
+    const submit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true)
         await auth
-            .updateUser(
-                _.flow([
-                    Object.entries,
-                    (arr) => arr.filter(([k, v]) => !!v),
-                    Object.fromEntries,
-                ])(data)
-            )
+            .updateUser(user)
             .then((response) => {
                 onChange(response.data);
+                setIsSubmitting(false);
                 toast.success("Modification effectuée avec succès");
             })
             .catch((error) => {
-                console.log("ERRS",error);
-                toast.error("Une erreur est survenue");
+                if(typeof error.response !== 'undefined')
+                    toast.error("Une erreur est survenue");
+                setIsSubmitting(false);
             })
-            .finally(() => {
-                reset();
-            });
     };
 
     const updateAvatar = async () => {
@@ -225,7 +200,7 @@ function ProfileForm({ data, onChange }) {
 
     return (
         <Box>
-            <Box mt={10} component="form" onSubmit={handleSubmit(submit)}>
+            <Box mt={10} component="form" onSubmit={submit}>
                 <Box textAlign="center">
                     <FormControl
                         sx={{
@@ -313,30 +288,26 @@ function ProfileForm({ data, onChange }) {
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
                         label="Nom"
-                        multiline
-                        maxRows={1}
-                        error={!!errors.firstname}
+                        error={user?.firstname?.length<3}
                         fullWidth
-                        {...register("firstname")}
-                        defaultValue={user?.firstname}
+                        value={user?.firstname}
+                        onChange={e=>setUser({...user, firstname:e.target.value})}
                     />
-                    {errors.firstname?.message && (
+                    {(user?.firstname?.length<3) && (
                         <Typography variant="caption" color="error">
-                            {errors.firstname?.message}
+                            Le nom doit contenir au moins 3 caracteres
                         </Typography>
                     )}
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        {...register("lastname")}
-                        multiline
-                        maxRows={1}
-                        defaultValue={user?.lastname}
-                        error={!!errors.lastname}
+                        error={user?.lastname?.length<3}
                         label="Prenom"
                         fullWidth
+                        value={user?.lastname}
+                        onChange={e=>setUser({...user, lastname:e.target.value})}
                     />
-                    {errors.lastname?.message && (
+                    {(user?.lastname?.length<3) && (
                         <Typography variant="caption" color="error">
                             {errors.lastname?.message}
                         </Typography>
@@ -344,72 +315,54 @@ function ProfileForm({ data, onChange }) {
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        {...register("email")}
-                        multiline
-                        maxRows={1}
-                        error={!!errors.email}
-                        defaultValue={user?.email}
+                       error={!emailRegex.test(user?.email)}
                         label="Email"
                         fullWidth
+                        value={user?.email}
+                        onChange={e=>setUser({...user, email:e.target.value})}
                     />
-                    {errors.email?.message && (
+                    {!emailRegex.test(user?.email) && (
                         <Typography variant="caption" color="error">
-                            {errors.email?.message}
+                           Veillez entrer un email valide
                         </Typography>
                     )}
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        {...register("phone")}
-                        multiline
-                        maxRows={1}
-                        error={!!errors.phone}
-                        defaultValue={user?.phone}
                         label="Numero de telephone"
                         fullWidth
+                        type="tel"
+                        value={user?.phone}
+                        onChange={e=>setUser({...user, phone:e.target.value})}
                     />
-                    {errors.phone?.message && (
-                        <Typography variant="caption" color="error">
-                            {errors.phone?.message}
-                        </Typography>
-                    )}
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        {...register("num_cni")}
-                        multiline
-                        maxRows={1}
-                        error={!!errors.num_cni}
-                        defaultValue={user?.num_cni}
+                        error={user?.num_cni?.length<3}
                         label="Numero de CNI"
                         fullWidth
+                        value={user?.num_cni}
+                        onChange={e=>setUser({...user, num_cni:e.target.value})}
                     />
-                    {errors.num_cni?.message && (
-                        <Typography variant="caption" color="error">
-                            {errors.num_cni?.message}
-                        </Typography>
-                    )}
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <Autocomplete
                         id="virtualize-demo"
-                        {...register("city")}
-                        multiline
-                        maxRows={1}
                         options={[...cities]}
                         label="Arrondissement"
                         fullWidth
+                        value={user?.city}
+                        onChange={(e,value)=>setUser({...user, city:value})}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                defaultValue={user?.city}
                                 label="Arrondissement"
                             />
                         )}
                     />
-                    {errors.city?.message && (
+                    {cities.indexOf(user?.city)<0 && (
                         <Typography variant="caption" color="error">
-                            {errors.city?.message}
+                            Veillez selectionner un arrondissement
                         </Typography>
                     )}
                 </FormControl>

@@ -10,6 +10,7 @@ import {
     Typography,
     FormControl,
     Alert,
+    Autocomplete,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Copyright from "../components/Copyright";
@@ -21,6 +22,7 @@ import { useForm } from "react-hook-form";
 import auth from "../services/auth";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import { LoadingButton } from "@mui/lab";
+import cities from "../assets/cities.json";
 
 function RegisterPage() {
     return (
@@ -32,43 +34,54 @@ function RegisterPage() {
 }
 export default RegisterPage;
 
+// City must be one of the cities in the cities.json file
 const shema = yup.object().shape({
     email: yup.string().email().required(),
     firstname: yup.string().min(3).required(),
     lastname: yup.string().min(3).required(),
     phone: yup.string().required(),
     password: yup.string().min(6).required(),
+    city: yup.string().oneOf(cities).required(),
 });
 
 function RegisterForm() {
     const navigate = useNavigate();
     const [errorApiMsg, setErrorApiMsg] = useState("");
-    const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
+    const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
     const submit = async (data) => {
-        await auth.register(data)
+        await auth
+            .register(data)
             .then(() => {
                 toast.success("Register success!");
                 setIsAuthenticated(true);
                 navigate("/contributions");
             })
             .catch((err) => {
-                if(!err.response) {
-                    toast.error("Server error! Please try later!", {autoClose: false})
-                }
-                else if(err.response.status >=400 && err.response.status<500) {
+                if (!err.response) {
+                    toast.error("Server error! Please try later!", {
+                        autoClose: false,
+                    });
+                } else if (
+                    err.response.status >= 400 &&
+                    err.response.status < 500
+                ) {
                     setErrorApiMsg(err.response.data.errors[0]);
-                    toast.error(`Erreur de l'enregistrement`)
+                    toast.error(`Erreur de l'enregistrement`);
                 }
             });
     };
     useEffect(() => {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             navigate("/contributions");
         }
     }, [isAuthenticated]);
-    const { register, handleSubmit, formState: { errors, isSubmitting, isValid },  } = useForm({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting, isValid },
+    } = useForm({
         resolver: yupResolver(shema),
-        mode: 'onChange'
+        mode: "onChange",
     });
     return (
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -174,7 +187,7 @@ function RegisterForm() {
                             id="phone"
                             label="Phone Number"
                             name="phone"
-                            error={!!errors.email?.message}
+                            error={!!errors.phone?.message}
                             variant="standard"
                         />
                         {!!errors.phone && (
@@ -187,6 +200,23 @@ function RegisterForm() {
                             </Typography>
                         )}
                     </FormControl>
+                    <FormControl sx={{ mt: 1 }} fullWidth>
+                        <Autocomplete
+                            id="virtualize-demo"
+                            options={[...cities]}
+                            label="Arrondissement"
+                            name="Arrondissement"
+                            fullWidth
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    {...register("city")}
+                                    variant="standard"
+                                    label="Arrondissement"
+                                />
+                            )}
+                        />
+                    </FormControl>
                     <FormControl fullWidth>
                         <TextField
                             margin="normal"
@@ -197,7 +227,7 @@ function RegisterForm() {
                             label="Password"
                             name="password"
                             type="password"
-                            error={!!errors.email?.message}
+                            error={!!errors.password?.message}
                             variant="standard"
                         />
                         {!!errors.password && (
@@ -210,11 +240,12 @@ function RegisterForm() {
                             </Typography>
                         )}
                     </FormControl>
-
-                    {errorApiMsg && <Alert severity="error">{errorApiMsg}</Alert>}
+                    {errorApiMsg && (
+                        <Alert severity="error">{errorApiMsg}</Alert>
+                    )}
                     <LoadingButton
                         loading={isSubmitting}
-                        disabled={!isValid}
+                        // disabled={!isValid}
                         type="submit"
                         fullWidth
                         variant="contained"

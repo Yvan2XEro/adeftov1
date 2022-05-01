@@ -12,7 +12,7 @@ import {
     AccordionSummary,
     Box,
     Grid,
-    CircularProgress,
+    Container,
     Paper,
     Table,
     TableBody,
@@ -61,8 +61,8 @@ function ContributionItem({ data, index }) {
     },[data, user]);
 
     return (
-        <Box sx={{ borderColor: "grey.500", padding: 2 }}>
-            <Accordion expanded={expanded}>
+        <Box sx={{padding:3 , boxShadow: 0}}>
+            <Accordion expanded={expanded} sx={{boxShadow: 5}}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     onClick={()=>setExpanded(v=>!v)}
@@ -74,94 +74,96 @@ function ContributionItem({ data, index }) {
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
+                <Container>
                     <Grid container columnSpacing={{ md: 3 }}>
-                        <Grid item xs={6} md={6}>
-                            <Table>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell>Coordonateur</TableCell>
-                                        <TableCell>{data.user.firstname+' '+data.user.lastname}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Date limite pour prochaine cotisation</TableCell>
-                                        <TableCell>02/02/2020</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Nombre de membres</TableCell>
-                                        <TableCell>{data.members.length}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Etat</TableCell>
-                                        <TableCell>
-                                            <Button size="small" color={!data.is_active?'warning': 'success'}>
-                                                {!data.is_active?"En pause":"En cours"}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                            <Box mt={1}>
-                                <Button
-                                    startIcon={<AttachMoneyIcon />}
-                                    variant="contained"
-                                    disabled={!data.is_active|| !iamMember()}
-                                    fullWidth
-                                    onClick={() => {
-                                        setSelected(data);
-                                    }}
-                                >
-                                    Payer ma cotisation
-                                </Button>
-                            </Box>
-                        </Grid>
-                        <Grid item md={6}>
-                            <Box
-                                component={Paper}
-                                sx={{
-                                    border: 0.4,
-                                    borderColor: "grey.500",
-                                    padding: 2,
+                    <Grid item xs={6} md={6} sx={{ boxShadow: 3, padding:2 }}>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>Coordonateur</TableCell>
+                                    <TableCell>{data.user.firstname+' '+data.user.lastname}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Date limite pour prochaine cotisation</TableCell>
+                                    <TableCell>02/02/2020</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Nombre de membres</TableCell>
+                                    <TableCell>{data.members.length}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Etat</TableCell>
+                                    <TableCell>
+                                        <Button size="small" color={!data.is_active?'warning': 'success'}>
+                                            {!data.is_active?"En pause":"En cours"}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                        <Box mt={1}>
+                            <Button
+                                startIcon={<AttachMoneyIcon />}
+                                variant="contained"
+                                disabled={!data.is_active|| !iamMember()}
+                                fullWidth
+                                onClick={() => {
+                                    setSelected(data);
                                 }}
                             >
-
-
-                                <Box mt={1}>
-                                    <Button
-                                        color="primary"
-                                        variant="outlined"
-                                        component={Link}
-                                        to={`/contributions/${data.id}/details`}
-                                        fullWidth
-                                        startIcon={<AddIcon />}
-                                    >
-                                        Plus de details
-                                    </Button>
-                                </Box>
-                                <Box mt={1}>
-                                    {!iamMember()?<Button
-                                        color="success"
-                                        variant="contained"
-                                        to={`/contributions/${data.id}/new-member`}
-                                        component={Link}
-                                        fullWidth
-                                        startIcon={<AddCardIcon />}
-                                    >
-                                        Rejoindre la cotisation
-                                    </Button>:
-
-                                        <Button
-                                            color="error"
-                                            variant="contained"
-                                            fullWidth
-                                            disabled={data?.user_id===user?.id}
-                                            startIcon={<PersonRemoveIcon />}
-                                        >
-                                            Quitter la cotisation
-                                        </Button>}
-                                </Box>
-                            </Box>
-                        </Grid>
+                                Payer ma cotisation
+                            </Button>
+                        </Box>
                     </Grid>
+                    <Grid item md={6}>
+                        <Box
+                            component={Paper}
+                            sx={{
+                                border: 0.4,
+                                borderColor: "grey.500",
+                                padding: 2,
+                            }}
+                        >
+
+
+                            <Box mt={1}>
+                                <Button
+                                    color="primary"
+                                    variant="outlined"
+                                    component={Link}
+                                    to={`/contributions/${data.id}/details`}
+                                    fullWidth
+                                    startIcon={<AddIcon />}
+                                >
+                                    Plus de details
+                                </Button>
+                            </Box>
+                            <Box mt={1}>
+                                {!iamMember()?<Button
+                                    color="success"
+                                    variant="contained"
+                                    to={`/contributions/${data.id}/new-member`}
+                                    component={Link}
+                                    fullWidth
+                                    startIcon={<AddCardIcon />}
+                                >
+                                    Rejoindre la cotisation
+                                </Button>:
+
+                                    <Button
+                                        color="error"
+                                        variant="contained"
+                                        fullWidth
+                                        disabled={data?.user_id===user?.id}
+                                        startIcon={<PersonRemoveIcon />}
+                                    >
+                                        Quitter la cotisation
+                                    </Button>}
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
+                </Container>
                 </AccordionDetails>
             </Accordion>
             <PaymentModal

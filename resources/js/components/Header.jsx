@@ -33,7 +33,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     return (
         <>
             <CssBaseline />
-            <AppBar position="fixed" color="inherit">
+            <AppBar position="fixed" color="inherit" sx={{ shadow:0 }}>
                 <Toolbar position="static">
                     <Button sx={{ mr: 2 }} component={NavLink} to="/" color="inherit">
                         {/* <NavLink

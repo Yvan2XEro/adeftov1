@@ -10,7 +10,7 @@ import {
     Paper,
     TableHead,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
@@ -18,6 +18,7 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import { DataGrid } from "@mui/x-data-grid";
+import PaymentModal from "../../components/PaymentModal";
 
 const columns = [
     {
@@ -44,6 +45,7 @@ const columns = [
 
 function Infos({ contribution }) {
     const { user } = useContext(AuthContext);
+    const [open, setOpen] = useState(false);
 
     return (
         <Grid container columnSpacing={{ md: 3 }}>
@@ -101,6 +103,7 @@ function Infos({ contribution }) {
                                 sx={{ mb: 1 }}
                                 startIcon={<AttachMoneyIcon />}
                                 variant="contained"
+                                onClick={() => setOpen(true)}
                                 fullWidth
                             >
                                 Payer ma cotisation
@@ -157,6 +160,12 @@ function Infos({ contribution }) {
                     </Box>
                 </Box>
             </Grid>
+             <>
+             <PaymentModal
+                open={open}
+                contribution={contribution}
+                onClose={() => setOpen(false)}
+            /></>
         </Grid>
     );
 }

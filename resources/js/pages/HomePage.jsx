@@ -49,18 +49,17 @@ function HomePage() {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{mr: 2}}
-                                conponent={Link}
-                                to="/register"
+                                sx={{ mr: 2 }}
+                                component={Link}
+                                to={"/register"}
                             >
                                 S'inscrire
                             </Button>
                             <Button
-                                variant="outlined"
                                 color="primary"
-                                sx={{mr: 2}}
-                                conponent={Link}
-                                to="/login"
+                                variant="outlined"
+                                component={Link}
+                                to={"/login"}
                             >
                                 Se connecter
                             </Button>

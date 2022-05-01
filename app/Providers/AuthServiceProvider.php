@@ -29,7 +29,9 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
-        // Passport::loadKeysFrom(__DIR__ . '/../secrets/oauth');
+        if(config('app.env') == 'production') {
+            Passport::loadKeysFrom(__DIR__ . '/../secrets/oauth');
+        }
 
         // Passport::hashClientSecrets();
         // Passport::tokensExpireIn(now()->addDays(15));

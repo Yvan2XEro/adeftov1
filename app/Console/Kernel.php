@@ -17,7 +17,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             $contributions = Contribution::where('is_active', true)->get();
             foreach ($contributions as $contribution) {
@@ -28,7 +27,7 @@ class Kernel extends ConsoleKernel
                 ]);
                 // Notify all members
             }
-        })->monthlyOn(1, '00:00');
+        })->monthlyOn(+date('d'), date('H:i:s'));
     }
 
     /**

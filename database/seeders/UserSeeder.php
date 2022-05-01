@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'email' => "admin@adefto.com",
             'email_verified_at' => now(),
             'phone' => '0123456789',
-            'city' => 'Dschang',
+            'city' => $faker->randomElement($this->cities),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ]);
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
             'phone' => '0123456789',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'city' => 'Cairo',
+            'city' => $faker->randomElement($this->cities),
         ]);
         $j->attachRole('administrator');
         $j->save();
@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'email_verified_at' => now(),
                 'phone' => '0123456789',
-                'city' => $faker->city,
+                'city' => $faker->randomElement($this->cities),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
                 'remember_token' => Str::random(10),
             ]);
@@ -81,7 +81,7 @@ class UserSeeder extends Seeder
             ]);
             $contribution->members()->attach($user);
             $session = $contribution->sessions()->create([
-                'date' => '2022-'. (($i+1)<10? '0'.$i+1: $i) . '-15 23:14:21',
+                'date' => '2022-' . (($i + 1) < 10 ? '0' . $i + 1 : $i) . '-15 23:14:21',
             ]);
             $session->payments()->create([
                 'amount' => $faker->numberBetween(100, 1000),
@@ -89,7 +89,25 @@ class UserSeeder extends Seeder
                 'user_id' => $user->id,
                 'session_id' => $session->id,
             ]);
-
         }
     }
+
+    private
+    $cities = [
+        "Abong-Mbang",
+        "Afanloum",
+        "Ako",
+        "Akoeman",
+        "Akom II",
+        "Akono",
+        "Akonolinga",
+        "Akwaya",
+        "Alou",
+        "Ambam",
+        "Andek",
+        "Angossas",
+        "Atok",
+        "Awaé",
+        "Ayos",
+    ];
 }

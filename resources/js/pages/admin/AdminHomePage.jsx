@@ -33,22 +33,6 @@ export default function AdminHomePage() {
                     </NavLink>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeclassname="active">
-                        <Card component={Paper} sx={{mx: 1.5, my: 1}}>
-                            <CardActionArea>
-                                <CardContent height="440">
-                                    <Badge badgeContent={100} color="secondary">
-                                        <Icon sx={{ fontSize: 50 }}>description</Icon>
-                                    </Badge>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Gestion des adhesions
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </NavLink>
-                </Grid>
-                <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
                     <NavLink to="/admin/users" className="nav-link" activeClassName="active">
                         <Card component={Paper} sx={{mx: 1.5, my: 1}}>
                             <CardActionArea>
@@ -58,22 +42,6 @@ export default function AdminHomePage() {
                                     </Badge>
                                     <Typography gutterBottom variant="h5" component="div">
                                         Gestion des membres
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </NavLink>
-                </Grid>
-                <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeclassname="active">
-                        <Card component={Paper} sx={{mx: 1.5, my: 1}}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Badge badgeContent={100} color="secondary">
-                                        <Icon sx={{ fontSize: 50 }}> attach_money</Icon>
-                                    </Badge>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Gestion des caisses
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>
@@ -96,23 +64,6 @@ export default function AdminHomePage() {
                         </Card>
                     </NavLink>
                 </Grid>
-                <Grid item xs={12} md={6} lg={4} sx={{ mt: 2, }}>
-                    <NavLink to="/admin" className="nav-link" activeclassname="active">
-                        <Card component={Paper} sx={{mx: 1.5, my: 1}}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Badge badgeContent={100} color="secondary">
-                                        <Icon sx={{ fontSize: 50 }}>construction</Icon>
-                                    </Badge>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Parametres
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </NavLink>
-                </Grid>
-
             </Grid>
         </Container>
     );

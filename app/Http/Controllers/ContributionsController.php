@@ -26,6 +26,9 @@ class ContributionsController extends Controller
                 $contribution->sessions;
                 foreach($contribution->sessions as $session) {
                     $session->payments;
+                    foreach($session->payments as $payment) {
+                        $payment->user;
+                    }
                 }
                 $contribution->membershipRequests;
             }
@@ -229,7 +232,7 @@ class ContributionsController extends Controller
         if(is_null($membership)){
             return response()->json(['message' => 'Record not found'], 404);
         }
-        if(!$user->hasRole('administrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false){
+        if(!$user->hasRole('administrator') && $membership->contribution->user_id != $user->id && $membership->contribution->specialsMembers->contains($user->id) == false && $membership->user_id != $user->id){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $membership->delete();

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 10, 2)->default(0);
             $table->enum('status', ['pending', 'paid', 'failed', 'cancelled']);
             // $table->string('currency');
             // $table->string('transaction_id');
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('session_id');
             $table->foreign('session_id')->references('id')->on('sessions')->onDelete('cascade');
+            $table->unique(['user_id', 'session_id']);
             $table->timestamps();
         });
     }

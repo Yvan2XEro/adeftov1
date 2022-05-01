@@ -67,14 +67,16 @@ class PaymentController extends Controller
         $amount = $request->amount;
         $phone = $request->phone;
         $user = User::findOrFail($request->user()->id);
-        $payment = Payment::create([
-            'amount' => $amount,
+        $payment = Payment::findOrNew([
             'user_id' => $user->id,
             'session_id' => $sessionId,
         ]);
+        $payment->amount = $amount;
+        $payment->save();
         $response = $payment->payment($phone,  $amount)->pay();
         if($response->success) {
             $payment->status = 'paid';
+            $payment->save();
             return response()->json([
                 'message' => 'Payment successful',
                 'payment' => $payment,

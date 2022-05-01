@@ -75,6 +75,8 @@ class PaymentController extends Controller
         $payment->save();
         $response = $payment->payment($phone,  $amount)->pay();
         if($response->success) {
+            $payment->session()->contribution()->amount = $amount;
+            $payment->session()->contribution()->save();
             $payment->status = 'paid';
             $payment->save();
             return response()->json([

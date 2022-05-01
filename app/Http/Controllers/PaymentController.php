@@ -81,8 +81,9 @@ class PaymentController extends Controller
         $payment->save();
         $response = $payment->payment($phone,  $amount)->pay();
         if($response->success) {
-            $payment->session()->contribution()->amount = $amount;
-            $payment->session()->contribution()->save();
+            $c = $payment->session()->first()->contribution()->first();
+            $c->balance = $amount;
+            $c->save();
             $payment->status = 'paid';
             $payment->save();
             return response()->json([
@@ -95,7 +96,6 @@ class PaymentController extends Controller
             'payment' => $payment,
         ], 400);
     }
-
     private function getCinetPayPaymentLink(
         Session $session,
         User $user,

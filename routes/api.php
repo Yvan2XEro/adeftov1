@@ -31,7 +31,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $u;
 });
 
-
 // Route::post('password/reset', [ResetPasswordAPIController::class, 'reset']);
 // Route::post('password/email', [ForgotPasswordAPIController::class, 'sendResetLinkEmail'])->name('password.email');
 

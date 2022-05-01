@@ -55,7 +55,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 setPhone(`+237${phone}`);
             }
             await mesombPayment({
-                amount,
+                amount: 100,
                 phone: phone.trim(),
                 session_id: selectedSession.id,
             }).then(()=>{
@@ -173,7 +173,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 </FormControl>
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <LoadingButton loading={pending} onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<500 || phone?.lenght<9}>
+                        <LoadingButton loading={pending} onClick={processPayment} variant="contained" size="medium" fullWidth disabled={amount<100 || phone?.lenght<9}>
                             {" "}
                             Proceder{" "}
                         </LoadingButton>

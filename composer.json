@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.7",
         "malico/laravel-mesomb": "^1.4",
         "mezatsong/laravel-swagger-docs": "dev-master",
-        "santigarcor/laratrust": "^7.1"
+        "santigarcor/laratrust": "^7.1",
+        "swiftmailer/swiftmailer": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -49,6 +50,11 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-install-cmd": [
+            "php artisan clear-compiled",
+            "chmod -R 777 storage",
+            "php artisan passport:keys"
         ]
     },
     "extra": {

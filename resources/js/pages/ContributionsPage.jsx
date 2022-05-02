@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import { getAllContributions } from "../services/contributionsServices";
 import Spinner from "../components/Spinner";
+import mtnOM from "../assets/images/paiement.png"
 
 function ContributionsPage() {
     const [contributions, setContributions] = React.useState([])
@@ -156,6 +157,9 @@ function ContributionItem({ data, index }) {
                                         >
                                             Quitter la cotisation
                                         </Button>}
+                                </Box>
+                                <Box mt={1} textAlign="center">
+                                    <Typography component="img" sx={{maxHeight: 150, maxWidth: 150}} src={mtnOM} alt="MTN Momo" />
                                 </Box>
                             </Box>
                         </Grid>

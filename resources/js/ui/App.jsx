@@ -19,7 +19,9 @@ function App() {
         setMode(mode === "dark" ? "light" : "dark");
     };
 
-    const theme = createTheme({ palette: { mode } });
+    const theme = createTheme({ palette: {
+       mode
+      }, });
     useEffect(() => {}, []);
     return (
         <ThemeProvider theme={theme}>

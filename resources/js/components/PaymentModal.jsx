@@ -70,8 +70,9 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                     onSuccess();
                     setPending(false);
                 })
-                .catch(() => {
+                .catch((err) => {
                     setPending(false);
+                    if(err.response)
                     toast.error(
                         "Erreur lors du paiement. Veillez réessayer SVP"
                     );

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->integer('month')->unique();
             $table->unsignedBigInteger('contribution_id');
             $table->foreign('contribution_id')->references('id')->on('contributions')->onDelete('cascade');
             $table->timestamps();

@@ -120,7 +120,7 @@ function ContributionDetailsPage() {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir={theme.direction}>
-                            <Infos contribution={contribution} />
+                            <Infos contribution={contribution} refetch={retriveContribution} />
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
                             <Historique contribution={contribution} />

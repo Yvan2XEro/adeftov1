@@ -28,39 +28,20 @@ function HomePage() {
                         }}
                     >
                         <Box>
-                            <Typography
-                                sx={{ fontWeight: "bold", mt: 2 }}
-                                component="h1"
-                                variant="h4"
-                                className=""
-                                color="primary"
-                            >
-                                Bienvenue sur la plateforme de cotisations
-                                ADEFTO
-                            </Typography>
-                            <Typography
-                                sx={{ flex: 1, ml: 1 }}
-                                component="h6"
-                                variant="h5"
-                            >
-                                Faites vos
-                                cotisations depuis chez vous
-                            </Typography>
-                            <Typography
-                                sx={{ flex: 1, ml: 5 }}
-                                component="h6"
-                                variant="h5"
-                            >
-                                 Via les operateurs
-                                telephoniques (OM,Momo)
-                            </Typography>
-                            <Typography
-                                sx={{ flex: 1, ml: 9 }}
-                                component="h6"
-                                variant="h5"
-                            >
-                                Le suivi en temps
-                                reel ,en live!
+                            <Box display="flex" flexDirection="row">
+                                <Typography
+                                    sx={{ fontWeight: "bold" }}
+                                    component="h1"
+                                    variant="h3"
+                                    color="primary"
+                                >
+                                    Bienvenue sur la plateforme des cotisations ADEFTO
+                                </Typography>
+                            </Box>
+                            <Typography sx={{ flex: 1, mt: 2 }} component="p">
+                                Faites vos cotisations depuis chez vous et en
+                                ligne via des operateurs telephoniques locaux
+                                (OM,Momo). Le suivi en temps reel ,en live!
                             </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">

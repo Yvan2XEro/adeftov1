@@ -45,7 +45,7 @@ function ContributionsPage() {
     return (
         <Box flex={1} mt={10}>
             {!loading?<>
-                {contributions.map((item, i)=><ContributionItem key={item.id} index={i} data={item} />)}
+                {contributions.map((item, i)=><ContributionItem fetchContributions={fetchContributions} key={item.id} index={i} data={item} />)}
             </>:<Spinner />}
         </Box>
     );
@@ -53,7 +53,7 @@ function ContributionsPage() {
 
 export default ContributionsPage;
 
-function ContributionItem({ data, index }) {
+function ContributionItem({ data, index, fetchContributions }) {
     const [expanded, setExpanded] = React.useState(index===0);
     const [selected, setSelected] = React.useState(null);
     const {user} = React.useContext(AuthContext);
@@ -170,6 +170,10 @@ function ContributionItem({ data, index }) {
                 open={selected!==null}
                 contribution={selected}
                 onClose={() => setSelected(null)}
+                onSuccess={()=>{
+                    setSelected(null);
+                    fetchContributions()
+                }}
             />
         </Box>
     );

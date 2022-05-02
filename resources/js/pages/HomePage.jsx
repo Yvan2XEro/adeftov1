@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
 import BgImg from "../assets/images/bg.svg";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 
 function HomePage() {
     return (
@@ -30,10 +30,12 @@ function HomePage() {
                     >
                         <Box>
                             <Typography
-                                sx={{ fontWeight: "bold" }}
+                                sx={{ fontWeight: "bold" ,mt:2}}
                                 component="h1"
-                                variant="h3"
+                                variant="h4"
+                                align="justify"
                                 className=""
+                                color="primary"
                             >
                                 Bienvenue sur la plateforme  de cotisations ADEFTO
                             </Typography>

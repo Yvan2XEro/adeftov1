@@ -39,15 +39,16 @@ function ProfilePage() {
         }
     }, [isAuthenticated]);
     return (
-        <Container mt={10}>
+        <Container mt={20}>
+            <Typography  sx={{mt: 10}}component="h2" variant="h3">Mon Profil</Typography>
             <Grid container>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ borderColor: "grey.500", mx: 1 }}>
+                    <Box sx={{ mx: 1, boxShadow: 5, p: 2, }}>
                         <Profile data={user} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ borderColor: "grey.500", mx: 1 }}>
+                    <Box sx={{ mx: 1, boxShadow: 5, p: 2, }}>
                         <ProfileForm data={user} onChange={setUser} />
                     </Box>
                 </Grid>

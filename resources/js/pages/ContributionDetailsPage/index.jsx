@@ -42,58 +42,94 @@ function ContributionDetailsPage() {
     }, [id]);
     return (
         <Box mt={8} sx={{ bgcolor: "background.paper" }}>
-            {!loading?<>
-            <AppBar position="static" color="inherit">
-                <Box ml={1}>
-                    <Typography pt={1} component="h3" variant="h4">
-                        {contribution?.name}
-                    </Typography>
-                    <Box flexDirection="row" mt={2}>
-                        <Typography component="span" variant="p">
-                            {contribution?.members.length} Contributeurs,
-                        </Typography>
-                        <Typography component="span" ml={2} variant="p">
-                            solde: {contribution?.balance} FCFA
-                        </Typography>
-                        {user?.id === contribution?.user_id && (
-                            <Button
-                                sx={{ ml: 10 }}
-                                variant="outlined"
-                                component={Link}
-                                to={"/admin/contributions?selected_id="+contribution?.id}
-                                title="Parametres de la cotisation"
+            {!loading ? (
+                <>
+                    <AppBar position="static" color="inherit">
+                        <Box ml={1}>
+                            <Typography pt={1} component="h3" variant="h4">
+                                {contribution?.name}
+                            </Typography>
+                            <Box
+                                display="flex"
+                                flexWrap="wrap"
+                                pr={2}
+                                justifyContent="space-between"
+                                flexDirection="row"
+                                mt={2}
                             >
-                                <Settings />
-                            </Button>
-                        )}
-                    </Box>
-                </Box>
+                                <Box>
+                                    <Typography component="p" variant="p">
+                                        Contributeurs :
+                                    </Typography>
+                                    <Button size="large">
+                                        <Typography
+                                            className="text_green"
+                                            component="p"
+                                            variant="h5"
+                                        >
+                                            {contribution?.members.length}
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                                <Box>
+                                    <Typography component="p" variant="p">
+                                        Solde :
+                                    </Typography>
+                                    <Button size="large">
+                                        <Typography
+                                            className="text_green"
+                                            component="p"
+                                            variant="h5"
+                                        >
+                                            {contribution?.balance} FCFA
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                                {user?.id === contribution?.user_id && (
+                                    <Button
+                                        sx={{ ml: 10 }}
+                                        variant="outlined"
+                                        component={Link}
+                                        to={
+                                            "/admin/contributions?selected_id=" +
+                                            contribution?.id
+                                        }
+                                        title="Parametres de la cotisation"
+                                    >
+                                        <Settings />
+                                    </Button>
+                                )}
+                            </Box>
+                        </Box>
 
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="secondary"
-                    textColor="inherit"
-                    variant="fullWidth"
-                    aria-label="full width tabs example"
-                >
-                    <Tab label="Informations" {...a11yProps(0)} />
-                    <Tab label="Historique" {...a11yProps(2)} />
-                </Tabs>
-            </AppBar>
-            <SwipeableViews
-                axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-                index={value}
-                onChangeIndex={handleChangeIndex}
-            >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                    <Infos contribution={contribution} />
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                    <Historique contribution={contribution} />
-                </TabPanel>
-            </SwipeableViews>
-            </>:<Spinner/>}
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            indicatorColor="secondary"
+                            textColor="inherit"
+                            variant="fullWidth"
+                            aria-label="full width tabs example"
+                        >
+                            <Tab label="Informations" {...a11yProps(0)} />
+                            <Tab label="Historique" {...a11yProps(2)} />
+                        </Tabs>
+                    </AppBar>
+                    <SwipeableViews
+                        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+                        index={value}
+                        onChangeIndex={handleChangeIndex}
+                    >
+                        <TabPanel value={value} index={0} dir={theme.direction}>
+                            <Infos contribution={contribution} />
+                        </TabPanel>
+                        <TabPanel value={value} index={1} dir={theme.direction}>
+                            <Historique contribution={contribution} />
+                        </TabPanel>
+                    </SwipeableViews>
+                </>
+            ) : (
+                <Spinner />
+            )}
         </Box>
     );
 }

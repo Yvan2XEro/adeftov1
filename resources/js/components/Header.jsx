@@ -9,13 +9,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import {
-    Box,
-    Button,
-    Switch,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import { Box, Button, Switch, useMediaQuery, useTheme } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "./Drawer";
@@ -29,19 +23,23 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const navigate = useNavigate();
     const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
 
-
     return (
         <>
             <CssBaseline />
-            <AppBar position="fixed" color="inherit">
+            <AppBar position="fixed" color="primary">
                 <Toolbar position="static">
-                    <Button sx={{ mr: 2 }} component={NavLink} to="/" color="inherit">
+                    <Button
+                        sx={{ mr: 2 }}
+                        component={NavLink}
+                        to="/"
+                        color="inherit"
+                    >
                         {/* <NavLink
                             to="/"
                             className="nav-link"
                             activeclassname="active"
                         > */}
-                            <HomeIcon />
+                        <HomeIcon />
                         {/* </NavLink> */}
                     </Button>
                     <Box ml="auto">
@@ -55,34 +53,26 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                                             color="inherit"
                                             aria-label="menu"
                                             sx={{ mr: 2 }}
+                                            to="/login"
+                                            component={NavLink}
                                         >
-                                            <NavLink
-                                                className="nav-link"
-                                                activeclassname="active"
-                                                to="login"
-                                            >
-                                                <LoginIcon
-                                                    size="large"
-                                                    edge="start"
-                                                    color="inherit"
-                                                />
-                                            </NavLink>
+                                            <LoginIcon
+                                                size="large"
+                                                edge="start"
+                                                color="inherit"
+                                            />
                                         </Button>
-                                        <IconButton
+                                        <Button
                                             size="small"
                                             edge="start"
                                             color="inherit"
                                             aria-label="menu"
                                             sx={{ mr: 2 }}
+                                            to="/register"
+                                            component={NavLink}
                                         >
-                                            <NavLink
-                                                className="nav-link"
-                                                activeclassname="active"
-                                                to="register"
-                                            >
-                                                <PersonAddIcon />
-                                            </NavLink>
-                                        </IconButton>
+                                            <PersonAddIcon />
+                                        </Button>
                                     </>
                                 ) : (
                                     <>
@@ -123,7 +113,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
 
                         <Switch
                             checked={isDarkTheme}
-                            icon={<DarkModeIcon color="primary" />}
+                            icon={<DarkModeIcon color="inherit" />}
                             onChange={onToggleDarkTheme}
                             inputProps={{ "aria-label": "controlled" }}
                             title="Changer de theme d'affichage"
@@ -132,6 +122,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                         {isMobile && (
                             <Button
                                 sx={{ ml: "auto" }}
+                                color="inherit"
                                 onClick={() => setOpenDrawer(!openDrawer)}
                             >
                                 <MenuIcon />
@@ -146,4 +137,3 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
         </>
     );
 }
-

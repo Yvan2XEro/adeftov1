@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
             foreach ($contributions as $contribution) {
                 $members = $contribution->members;
                 // Save new Session in DB, with date from now + 30 days
+
                 $contribution->sessions()->create([
                     'date' => date('Y-m-d', strtotime('+30 days')),
                 ]);

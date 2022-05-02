@@ -50,7 +50,8 @@ function Infos({ contribution }) {
     return (
         <Grid container columnSpacing={{ md: 3 }}>
             <Grid item xs={6} md={6}>
-                <Table>
+                <Box sx={{boxShadow: 5, p:1.5}}>
+                    <Table>
                     <TableBody>
                         <TableRow>
                             <TableCell>Coordonateur</TableCell>
@@ -87,14 +88,14 @@ function Infos({ contribution }) {
                         </Box>
                     </TableBody>
                 </Table>
+                </Box>
             </Grid>
             <Grid item md={6}>
                 <Box>
                     <Box
                         component={Paper}
                         sx={{
-                            border: 0.4,
-                            borderColor: "grey.500",
+                            boxShadow: 5,
                             padding: 2,
                         }}
                     >
@@ -139,13 +140,13 @@ function Infos({ contribution }) {
                     <Box
                         component={Paper}
                         sx={{
-                            border: 0.4,
                             marginTop: 2,
                             width: "100%",
                             height: "400px",
                             borderColor: "grey.500",
                             padding: 2,
-                            pb: 3
+                            pb: 3,
+                            boxShadow: 5,
                         }}
                     >
                         <Typography component="h3" variant="h4">

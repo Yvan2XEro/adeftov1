@@ -8,7 +8,7 @@ import AppRoutes from "../components/AppRoutes";
 import Header from "../components/Header";
 import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
-import './styles.css'
+import "./styles.css";
 
 auth.setup();
 
@@ -19,7 +19,14 @@ function App() {
         setMode(mode === "dark" ? "light" : "dark");
     };
 
-    const theme = createTheme({ palette: { mode } });
+    const theme = createTheme({
+        palette: { mode, secondary: {
+            main: "#1976d2"
+        }},
+        typography: {
+            fontFamily: ['"Montserrat"', "Open Sans"].join(","),
+        },
+    });
     useEffect(() => {}, []);
     return (
         <ThemeProvider theme={theme}>

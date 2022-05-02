@@ -89,13 +89,13 @@ export default function AdminHomePage() {
                         </Card>
                     </NavLink>
                 </Grid>
-                <Grid item md={12} xs={12}>
-                <Box maxHeight={15}>
-                    <Typography component="img" src={BgImg} alt="adefto" />
-                </Box>
             </Grid>
+            
+            <Grid item md={6} xs={false}  maxHeight={400}>
+            <Box   sx={{ ml: 45 }}>
+                <Typography component="img" src={BgImg} alt="adefto" maxHeight={600}/>
+            </Box>
             </Grid>
-
         </Container>
     );
 }

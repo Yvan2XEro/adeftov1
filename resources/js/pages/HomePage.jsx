@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
 import BgImg from "../assets/images/bg.svg";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function HomePage() {
     return (
@@ -34,15 +35,17 @@ function HomePage() {
                                 variant="h3"
                                 className=""
                             >
-                                Bienvennu sur la plateforme ADEFTO
+                                Bienvenue sur la plateforme  de cotisations ADEFTO
                             </Typography>
-                            <Typography sx={{ flex: 1, mt: 2 }} component="p">
-                                Faites vos cotisations depuis chez vous et en
-                                ligne. Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Dignissimos commodi rem
-                                aspernatur architecto eligendi ea, nemo eaque
-                                eveniet tempora hic expedita saepe corrupti a
-                                animi. Laborum beatae quam adipisci impedit.
+                            <Typography sx={{ flex: 1, mt: 2,ml:1 }} component="h5" variant="h4">
+                            Faites vos cotisations depuis chez vous et en
+                                ligne
+                            </Typography>
+                            <Typography sx={{ flex: 1, mt: 2,ml:3 }} component="h5" variant="h4">
+                            Via des operateurs telephoniques locaux (OM,Momo)
+                            </Typography>
+                            <Typography sx={{ flex: 1, mt: 2 ,ml:5}} component="h5" variant="h4">
+                            Le suivi en temps reel ,en live!
                             </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">

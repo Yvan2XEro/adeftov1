@@ -43,7 +43,7 @@ const columns = [
     },
 ];
 
-function Infos({ contribution }) {
+function Infos({ contribution, refetch }) {
     const { user } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
 
@@ -166,6 +166,10 @@ function Infos({ contribution }) {
                 open={open}
                 contribution={contribution}
                 onClose={() => setOpen(false)}
+                onSuccess={() => {
+                    setOpen(false)
+                    refetch()
+                }}
             /></>
         </Grid>
     );

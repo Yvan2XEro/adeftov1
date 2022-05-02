@@ -20,15 +20,20 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $contributions = Contribution::where('is_active', true)->get();
             foreach ($contributions as $contribution) {
-                $members = $contribution->members;
+                $members = $contribution->members();
                 // Save new Session in DB, with date from now + 30 days if not exists
-                $session = $contribution->sessions()->where('m', '==', date('m', strtotime('+30 days')))->first();
+                $session = $contribution->sessions()->where('month', '==', +date('m', strtotime('+30 days')))->first();
 
                 if (!$session) {
-                    $session = $contribution->sessions()->create([
-                        'date' => date('Y-m-d', strtotime('+30 days')),
-                        'month' => date('m', strtotime('+30 days')),
-                    ]);
+                    echo"hiiihewuihewu   ". count($contributions);
+                    try{
+                        $session = $contribution->sessions()->create([
+                            'date' => date('Y-m-d', strtotime('+30 days')),
+                            'month' => date('m', strtotime('+30 days')),
+                        ]);
+                    }catch(\Exception $e){
+                        echo $e->getMessage();
+                    }
                     // Notify all members with swift mailer
                     $transport = (new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
                         ->setUsername(env('MAIL_USERNAME'))
@@ -47,7 +52,7 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-        })->monthlyOn(+date('d'), date('H:i:s'));
+        })->monthly();
     }
 
     /**

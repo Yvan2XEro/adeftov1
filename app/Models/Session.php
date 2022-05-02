@@ -10,7 +10,8 @@ class Session extends Model
     use HasFactory;
     protected $fillable = [
         'date',
-        'contribution_id'
+        'contribution_id',
+        'month',
     ];
 
     public function contribution()

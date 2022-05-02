@@ -86,7 +86,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('users.get');
     Route::put('users/toggle-is-admin/{id}', [UserController::class, 'toggleUserIsAdmin'])->name('users.toggleUserIsAdmin');
-    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.get');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
     Route::post('/users', [UserController::class, 'store'])->name('users.post');
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.put');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.delete');

@@ -39,7 +39,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.api');
 Route::post('/register', [AuthController::class, 'register'])->name('register.api');
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.get');
+    Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.show');
     Route::get('/contributions', [ContributionsController::class, 'index'])->name('contributions.get');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
 

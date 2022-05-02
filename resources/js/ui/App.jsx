@@ -13,6 +13,7 @@ import './styles.css'
 auth.setup();
 
 function App() {
+    
     const [mode, setMode] = useState(localStorage.getItem("theme") || "light");
     const onToggleDarkTheme = () => {
         localStorage.setItem("theme", mode === "dark" ? "light" : "dark");

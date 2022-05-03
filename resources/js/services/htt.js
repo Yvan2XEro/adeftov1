@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "http://adefto.herokuapp.com";
 
 export const API_URL = API + "/api";
 

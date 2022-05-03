@@ -1,4 +1,4 @@
-const API = "http://adefto.herokuapp.com";
+const API = "https://adefto.herokuapp.com";
 
 export const API_URL = API + "/api";
 

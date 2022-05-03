@@ -25,7 +25,6 @@ class Kernel extends ConsoleKernel
                 $session = $contribution->sessions()->where('month', '==', +date('m', strtotime('+30 days')))->first();
 
                 if (!$session) {
-                    echo"hiiihewuihewu   ". count($contributions);
                     try{
                         $session = $contribution->sessions()->create([
                             'date' => date('Y-m-d', strtotime('+30 days')),
@@ -52,7 +51,7 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-        })->monthly();
+        })->everyMinute();
     }
 
     /**

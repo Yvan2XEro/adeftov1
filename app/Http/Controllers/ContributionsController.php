@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contribution;
 use App\Models\MembershipRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,7 +53,11 @@ class ContributionsController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $contribution = $user->contributions()->create($request->all());
-        $contribution->members()->attach($user);
+        // Register all users on the contribution
+        $users = User::all();
+        foreach ($users as $u) {
+            $contribution->users()->attach($u);
+        }
         $contribution->is_active = true;
         return response()->json($contribution, 201);
     }

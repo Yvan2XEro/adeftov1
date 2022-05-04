@@ -44,6 +44,11 @@ class AuthController extends Controller
         $request['remember_token'] = Str::random(10);
         try {
             $user = User::create($request->toArray());
+            // register user on all contributions
+            $contributions = \App\Models\Contribution::all();
+            foreach ($contributions as $contribution) {
+                $contribution->members()->attach($user->id);
+            }
             //code...
         } catch (\Exception $e) {
             return response(['errors' => $e->getMessage()], 422);

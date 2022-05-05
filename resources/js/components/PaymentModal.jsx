@@ -90,7 +90,6 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 });
         }
     }, [selectedSession, phone]);
-
     return (
         <Modal
             sx={{ border: "none" }}

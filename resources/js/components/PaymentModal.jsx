@@ -24,12 +24,23 @@ import { LoadingButton } from "@mui/lab";
 
 const style = {
     position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
+    top: {
+        md: "50%"
+    },
+    left: {
+        md: "50%"
+    },
+    transform: {
+        md: "translate(-50%, -50%)"
+    },
+    bgcolor: {
+        md: "background.paper"
+    },
     boxShadow: 24,
-    p: 4,
+    p: {
+        md: 4,
+        xs: .5
+    }
 };
 
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
@@ -85,19 +96,18 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
             sx={{ border: "none" }}
             closeAfterTransition={true}
             open={open}
-            onClose={onSuccess}
+            onClose={onClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={style} component={Paper}>
-                <Typography sx={{ mt: 2 }} component="h4" variant="h4">
+                <Typography sx={{ mt: 2}} xs={12} component="h4" variant="h5">
                     Payer votre cotisations
                 </Typography>
 
                 {sessions.length < 1 && (
                     <Alert severity="success">
-                        Vous avez déjà payé toutes les seances pour cette
-                        cotisation Attendez le lancement de laprochaine seance.
+                        Attendez le lancement de la prochaine seance.
                     </Alert>
                 )}
                 <FormControl sx={{ mt: 2 }} fullWidth>

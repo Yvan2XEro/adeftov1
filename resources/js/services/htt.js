@@ -1,4 +1,5 @@
-const API = "https://adefto.herokuapp.com";
+const API = "http://localhost:8000";
+// const API = "https://adefto.herokuapp.com";
 
 export const API_URL = API + "/api";
 

@@ -89,18 +89,6 @@ function AdminContributionsPage() {
                     </Box>
                     <Grid container columnSpacing={3}>
                         <Grid item xs={12} md={4}>
-                            {isAdmin && <Button
-                                variant={selected ? "outlined" : "contained"}
-                                color="primary"
-                                onClick={() => {
-                                    setSetSelected(null);
-                                    setSearchParams({});
-                                }}
-                                startIcon={<AddIcon />}
-                            >
-                                Creer une nouvelle cotisation
-                            </Button>}
-
                             <List
                                 sx={{
                                     width: "100%",
@@ -175,7 +163,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [checking, setChecking] = useState(false);
-    const [exp, setExp] = useState({ info: true, members: false });
+    const [exp, setExp] = useState({ info: true, members: true });
     useEffect(() => {
         setPage(1);
         if (selectedId) {
@@ -202,12 +190,6 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
         },
         [getContribution]
     );
-
-    const membershipsCount = useCallback(() => {
-        return selectedContribution?.membership_requests?.filter(
-            (i) => !i.is_accepted
-        ).length;
-    }, [selectedContribution]);
 
     const isSpecialMember = (member) => {
         return selectedContribution.specials_members.find((m) => {
@@ -267,18 +249,6 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                             title="Faire un retrait sur le solde de la cotisation"
                         >
                             Solde: {selectedContribution?.balance} FCFA
-                        </Button>
-                        <Button
-                            component={Link}
-                            to={`/admin/contributions/${selectedContribution?.id}/adhesions`}
-                            sx={{ mr: 1 }}
-                            title={`${membershipsCount()} Demande${
-                                membershipsCount() != 1 ? "s" : ""
-                            } d'hadesion`}
-                        >
-                            <Badge badgeContent={membershipsCount()}>
-                                <Icon sx={{ fontSize: 30 }}>person_add</Icon>
-                            </Badge>
                         </Button>
                     </Box>
                 )}
@@ -358,7 +328,7 @@ const SelectedContribution = ({ selectedId, onUpdate, setSetSelected }) => {
                 </AccordionDetails>
             </Accordion>
             {selectedId && selectedContribution?.id && (
-                <Accordion>
+                <Accordion expanded={exp.members}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         onClick={() =>

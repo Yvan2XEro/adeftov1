@@ -76,7 +76,7 @@ function ContributionItem({ data, index, fetchContributions }) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container columnSpacing={{ md: 3 }}>
-                        <Grid item xs={6} md={6}>
+                        <Grid item xs={12} md={6}>
                             <Table>
                                 <TableBody>
                                     <TableRow>
@@ -115,7 +115,7 @@ function ContributionItem({ data, index, fetchContributions }) {
                                 </Button>
                             </Box>
                         </Grid>
-                        <Grid item md={6}>
+                        <Grid item xs={12} md={6}>
                             <Box
                                 component={Paper}
                                 sx={{
@@ -135,28 +135,6 @@ function ContributionItem({ data, index, fetchContributions }) {
                                     >
                                         Plus de details
                                     </Button>
-                                </Box>
-                                <Box mt={1}>
-                                    {!iamMember()?<Button
-                                        color="success"
-                                        variant="contained"
-                                        to={`/contributions/${data.id}/new-member`}
-                                        component={Link}
-                                        fullWidth
-                                        startIcon={<AddCardIcon />}
-                                    >
-                                        Rejoindre la cotisation
-                                    </Button>:
-
-                                        <Button
-                                            color="error"
-                                            variant="contained"
-                                            fullWidth
-                                            disabled={data?.user_id===user?.id}
-                                            startIcon={<PersonRemoveIcon />}
-                                        >
-                                            Quitter la cotisation
-                                        </Button>}
                                 </Box>
                                 <Box mt={1} textAlign="center">
                                     <Typography component="img" sx={{maxHeight: 150, maxWidth: 150}} src={mtnOM} alt="MTN Momo" />

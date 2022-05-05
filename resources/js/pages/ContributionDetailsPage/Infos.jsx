@@ -8,14 +8,9 @@ import {
     TableRow,
     Typography,
     Paper,
-    TableHead,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import AddCardIcon from "@mui/icons-material/AddCard";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import { DataGrid } from "@mui/x-data-grid";
 import PaymentModal from "../../components/PaymentModal";
@@ -44,14 +39,13 @@ const columns = [
 ];
 
 function Infos({ contribution, refetch }) {
-    const { user } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
 
     return (
         <Grid container columnSpacing={{ md: 3 }}>
-            <Grid item xs={6} md={6}>
-                <Box sx={{boxShadow: 5, p:1.5}}>
-                    <Table>
+            <Grid item xs={12} md={6}>
+                <Box>
+                    <Table sx={{boxShadow: 1}}>
                     <TableBody>
                         <TableRow>
                             <TableCell>Coordonateur</TableCell>
@@ -90,7 +84,7 @@ function Infos({ contribution, refetch }) {
                 </Table>
                 </Box>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
                 <Box>
                     <Box
                         component={Paper}
@@ -109,32 +103,6 @@ function Infos({ contribution, refetch }) {
                             >
                                 Payer ma cotisation
                             </Button>
-                            {!contribution?.members.find(
-                                (m) => m.id === user?.id
-                            ) ? (
-                                <Button
-                                    color="success"
-                                    variant="contained"
-                                    to="/contributions/1/new-member"
-                                    component={Link}
-                                    fullWidth
-                                    startIcon={<AddCardIcon />}
-                                >
-                                    Rejoindre la cotisation
-                                </Button>
-                            ) : (
-                                <Button
-                                    color="error"
-                                    variant="contained"
-                                    fullWidth
-                                    disabled={
-                                        user?.id === contribution?.user_id
-                                    }
-                                    startIcon={<PersonRemoveIcon />}
-                                >
-                                    Quitter la cotisation
-                                </Button>
-                            )}
                         </Box>
                     </Box>
                     <Box
@@ -146,7 +114,6 @@ function Infos({ contribution, refetch }) {
                             borderColor: "grey.500",
                             padding: 2,
                             pb: 3,
-                            boxShadow: 5,
                         }}
                     >
                         <Typography component="h3" variant="h4">

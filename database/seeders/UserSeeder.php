@@ -18,7 +18,6 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        // $faker = \Faker\Factory::create();
         $admin = User::create([
             'firstname' => "Admin",
             'lastname' => "Admin",
@@ -38,6 +37,15 @@ class UserSeeder extends Seeder
             $admin->attachPermission($pem);
         }
 
+        $c = Contribution::create([
+            'user_id' => $admin->id,
+            'is_active' => true,
+            'name' => 'Adefto COTISATION',
+            'description' => "Une description par defaut",
+        ]);
+        $c->members()->attach($admin);
+        $c->specialsMembers()->attach($admin);
+
         $admin->save();
 
         // $j = User::create([
@@ -53,12 +61,7 @@ class UserSeeder extends Seeder
         // $j->attachRole('administrator');
         // $j->save();
 
-        // $contribution = Contribution::create([
-        //     'user_id' => $j->id,
-        //     'is_active' => true,
-        //     'name' => 'Adefto COTISATION',
-        //     'description' => $faker->text(100),
-        // ]);
+
         // $contribution->members()->attach($j);
         // $contribution->save();
 

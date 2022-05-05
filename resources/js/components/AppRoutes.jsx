@@ -8,7 +8,6 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import AdminHomePage from "../pages/admin/AdminHomePage";
 import AdminContributionsPage from "../pages/admin/AdminContributionsPage";
-import AdminAdhesionsPage from "../pages/admin/AdminAdhesionsPage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import { AuthContext } from "../contexts/AuthContextProvider";
@@ -76,14 +75,6 @@ const APP_ROUTES = [
     {
         path: "/admin/contributions",
         element: <AdminContributionsPage />,
-        exact: true,
-        meta: {
-            auth: true,
-        },
-    },
-    {
-        path: "/admin/contributions/:id/adhesions",
-        element: <AdminAdhesionsPage />,
         exact: true,
         meta: {
             auth: true,

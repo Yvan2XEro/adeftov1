@@ -1,4 +1,5 @@
 import {
+    Alert,
     Autocomplete,
     Avatar,
     Box,
@@ -39,7 +40,7 @@ function ProfilePage() {
         }
     }, [isAuthenticated]);
     return (
-        <Container mt={20}>
+        <Box mt={10}>
             <Typography  sx={{mt: 10}}component="h2" variant="h3">Mon Profil</Typography>
             <Grid container>
                 <Grid item xs={12} md={6}>
@@ -53,13 +54,13 @@ function ProfilePage() {
                     </Box>
                 </Grid>
             </Grid>
-        </Container>
+        </Box>
     );
 }
 
 export const Profile = ({ data }) => {
     return (
-        <Box mt={10}>
+        <Box>
             <Box>
                 <Avatar
                     sx={{ width: 100, height: 100, mx: "auto" }}
@@ -184,24 +185,32 @@ function ProfileForm({ data, onChange }) {
                 setIsSubmitting(false);
             })
     };
-
+    const [loadingAvatar, setLoadingAvatar] = React.useState(false);
+    const [apiError, setApiError] = React.useState("")
     const updateAvatar = async () => {
         const fd = new FormData();
         fd.append("image", avatar, avatar.name);
+        setLoadingAvatar(true)
+        setApiError('');
         await auth
             .setAvatar(fd)
             .then((response) => {
                 onChange(response.data.user);
                 toast.success("Modification effectuée avec succès");
+
+                setLoadingAvatar(false)
             })
             .catch((error) => {
-                console.log(error.response);
+                // if(error.response.status<500)
+                    setApiError(error.response.data.errors)
+                    toast.error(error.response.data.errors[0])
+                setLoadingAvatar(false)
             });
     };
 
     return (
         <Box>
-            <Box mt={10} component="form" onSubmit={submit}>
+            <Box component="form" onSubmit={submit}>
                 <Box textAlign="center">
                     <FormControl
                         sx={{
@@ -269,9 +278,10 @@ function ProfileForm({ data, onChange }) {
                                     >
                                         <DeleteIcon />
                                     </Button>
-                                    <Button
+                                    <LoadingButton
                                         sx={{ mx: "auto" }}
                                         onClick={updateAvatar}
+                                        loading={loadingAvatar}
                                         color="success"
                                         variant="outlined"
                                         aria-label="upload picture"
@@ -279,9 +289,10 @@ function ProfileForm({ data, onChange }) {
                                         size="large"
                                     >
                                         <FileUploadIcon />
-                                    </Button>
+                                    </LoadingButton>
                                 </>
                             )}
+                            {apiError && <Alert severity="error">{apiError}</Alert>}
                         </Box>
                     </FormControl>
                 </Box>

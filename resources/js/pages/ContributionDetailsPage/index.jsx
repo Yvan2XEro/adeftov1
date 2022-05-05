@@ -101,7 +101,6 @@ function ContributionDetailsPage() {
                                 )}
                             </Box>
                         </Box>
-
                         <Tabs
                             value={value}
                             onChange={handleChange}

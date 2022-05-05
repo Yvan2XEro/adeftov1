@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contribution;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -57,6 +58,10 @@ class UserController extends Controller
             $request['password'] = Hash::make($request['password']);
             $request['remember_token'] = Str::random(10);
             $user = User::create($request->all());
+            $contributions = Contribution::all();
+            foreach($contributions as $c) {
+                $c->members()->attach($user);
+            }
             return response()->json($user);
         }else{
             return response()->json(['error' => 'Unauthorized'], 401);

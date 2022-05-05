@@ -3,10 +3,13 @@ import {
     Box,
     Button,
     FormControl,
+    FormControlLabel,
     InputLabel,
     MenuItem,
     Modal,
     Paper,
+    Radio,
+    RadioGroup,
     Select,
     Slider,
     TextField,
@@ -25,22 +28,22 @@ import { LoadingButton } from "@mui/lab";
 const style = {
     position: "absolute",
     top: {
-        md: "50%"
+        md: "50%",
     },
     left: {
-        md: "50%"
+        md: "50%",
     },
     transform: {
-        md: "translate(-50%, -50%)"
+        md: "translate(-50%, -50%)",
     },
     bgcolor: {
-        md: "background.paper"
+        md: "background.paper",
     },
     boxShadow: 24,
     p: {
         md: 4,
-        xs: .5
-    }
+        xs: 0.5,
+    },
 };
 
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
@@ -50,6 +53,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
     const [phone, setPhone] = useState(user?.phone);
+    const [method, setMethod] = useState('momo')
     useEffect(() => {
         setPhone(user?.phone);
     }, [user]);
@@ -83,10 +87,10 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 })
                 .catch((err) => {
                     setPending(false);
-                    if(err.response)
-                    toast.error(
-                        "Erreur lors du paiement. Veillez réessayer SVP"
-                    );
+                    if (err.response)
+                        toast.error(
+                            "Erreur lors du paiement. Veillez réessayer SVP"
+                        );
                 });
         }
     }, [selectedSession, phone]);
@@ -100,43 +104,9 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style} component={Paper}>
-                <Typography sx={{ mt: 2}} xs={12} component="h4" variant="h5">
+                <Typography sx={{ mt: 2 }} xs={12} component="h4" variant="h5">
                     Payer votre cotisations
                 </Typography>
-
-                {sessions.length < 1 && (
-                    <Alert severity="success">
-                        Attendez le lancement de la prochaine seance.
-                    </Alert>
-                )}
-                <FormControl sx={{ mt: 2 }} fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                        Seance
-                    </InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Age"
-                        value={selectedSession?.id}
-                        onChange={(e) => {
-                            setSelectedSession(
-                                sessions.find(
-                                    (session) => session.id === e.target.value
-                                )
-                            );
-                        }}
-                    >
-                        {sessions.map((item, i) => (
-                            <MenuItem
-                                selected={i === 0}
-                                key={item.id}
-                                value={item.id}
-                            >
-                                {moment(item.date).format("MMMM  YYYY")}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
                 {selectedSession && (
                     <>
                         <Typography sx={{ mt: 2 }} component="p" variant="p">
@@ -188,6 +158,12 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         />
                     </FormControl>
                 </Box>
+                <FormControl>
+                    <RadioGroup aria-labelledby="demo-radio-buttons-group-label" value={method} onChange={e=>setMethod(e.target.value)}>
+                        <FormControlLabel control={<Radio />} value="momo" label="Mobile/Orange money" />
+                        <FormControlLabel control={<Radio />} value="paypal" label="PayPal" />
+                    </RadioGroup>
+                </FormControl>
                 <FormControl fullWidth sx={{ mt: 2 }}>
                     <TextField
                         fullWidth

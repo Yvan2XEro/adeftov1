@@ -81,7 +81,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/contributions/{id}/reject-all-membership-requests', [ContributionsController::class, 'rejectAllMemberships'])->name('contributions.rejectAllMemberships');
 
 
-    Route::get('/contributions/{id}/my-unpaid-sessions', [SessionController::class, 'myUnpaidSessions'])->name('contributions.myUnpaidSessions');
+    Route::get('/contributions/{id}/next-session', [SessionController::class, 'nextSession'])->name('contributions.nextSession');
     Route::post('/init-messonb-payments', [PaymentController::class, 'mesombPayment'])->name('contributions.mesombPayment');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.get');

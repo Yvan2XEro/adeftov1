@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->date('date')->default(now());
             $table->integer('month');
             $table->unsignedBigInteger('contribution_id');
             $table->unique(['month', 'contribution_id']);

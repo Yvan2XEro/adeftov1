@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contribution;
 use App\Models\Session;
 use Illuminate\Http\Request;
 
@@ -84,17 +85,27 @@ class SessionController extends Controller
         return response()->json(null, 204);
     }
 
-    //Find sessions of the contributionS having no Payment with the status 'paid' registered on the authenticated user
-    public function myUnpaidSessions(Request $request, $id)
+    /**
+     * Display a listing of the resource.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     *
+     * */
+
+    public function nextSession(Request $request, $id)
     {
-        $sessions = Session::whereHas('contribution', function ($query) use ($id) {
-            $query->where('contribution_id', $id);
-        })->whereDoesntHave('payments', function ($query) {
-            $query->where('user_id', auth()->user()->id)->where('status', 'paid');
-        })->get();
-        foreach ($sessions as $session) {
-            $session->contribution;
+        $contribution = Contribution::find($id);
+        if (!$contribution) {
+            return response()->json(['message' => 'Contribution not found'], 404);
         }
-        return response()->json($sessions, 200);
+        $session = Session::where('contribution_id', $id)->where('month', date('m'))->first();
+        if (!$session) {
+            $session = Session::create([
+                'contribution_id' => $id,
+                'month' => date('m')
+            ]);
+        }
+        $session->contribution;
+        return response()->json($session, 200);
     }
 }

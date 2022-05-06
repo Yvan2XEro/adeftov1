@@ -1,23 +1,19 @@
 import {
-    Alert,
     Box,
     Button,
     FormControl,
     FormControlLabel,
-    InputLabel,
-    MenuItem,
     Modal,
     Paper,
     Radio,
     RadioGroup,
-    Select,
     Slider,
     TextField,
     Typography,
 } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
-    fetchMyUnpaidSessions,
+    fetchNextSession,
     mesombPayment,
 } from "../services/contributionsServices";
 import moment from "moment";
@@ -50,18 +46,17 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [amount, setAmount] = useState(500);
     const [pending, setPending] = useState(false);
     const { user } = useContext(AuthContext);
-    const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
     const [phone, setPhone] = useState(user?.phone);
-    const [method, setMethod] = useState('momo')
+    const [method, setMethod] = useState("momo");
     useEffect(() => {
         setPhone(user?.phone);
     }, [user]);
     useEffect(() => {
         if (contribution !== null) {
-            fetchMyUnpaidSessions(contribution.id).then((response) => {
-                setSessions(response.data.reverse());
-                setSelectedSession(response.data.reverse()[0] || null);
+            fetchNextSession(contribution.id).then((response) => {
+                setSelectedSession(response.data);
+                console.log("YO", response.data);
             });
         }
     }, [contribution]);
@@ -108,24 +103,12 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                     Payer votre cotisations
                 </Typography>
                 {selectedSession && (
-                    <>
-                        <Typography sx={{ mt: 2 }} component="p" variant="p">
-                            <Typography component="span" variant="srong">
-                                Mois de:
-                            </Typography>{" "}
-                            {moment(selectedSession?.date).format("MMMM  YYYY")}
-                            <br />
-                            <Typography component="span" variant="srong">
-                                Date limite:
-                            </Typography>{" "}
-                            {moment(selectedSession?.date).format(
-                                "DD MMMM YYYY"
-                            )}
-                        </Typography>
-                        <Typography component="p" variant="p">
-                            Statut: Non paye
-                        </Typography>
-                    </>
+                    <Typography sx={{ mt: 2 }} component="p" variant="p">
+                        <Typography component="span" variant="srong">
+                            Mois de:
+                        </Typography>{" "}
+                        {moment(selectedSession?.date).format("MMMM  YYYY")}
+                    </Typography>
                 )}
                 <Box
                     sx={{
@@ -159,9 +142,21 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                     </FormControl>
                 </Box>
                 <FormControl>
-                    <RadioGroup aria-labelledby="demo-radio-buttons-group-label" value={method} onChange={e=>setMethod(e.target.value)}>
-                        <FormControlLabel control={<Radio />} value="momo" label="Mobile/Orange money" />
-                        <FormControlLabel control={<Radio />} value="paypal" label="PayPal" />
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        value={method}
+                        onChange={(e) => setMethod(e.target.value)}
+                    >
+                        <FormControlLabel
+                            control={<Radio />}
+                            value="momo"
+                            label="Mobile/Orange money"
+                        />
+                        <FormControlLabel
+                            control={<Radio />}
+                            value="paypal"
+                            label="PayPal"
+                        />
                     </RadioGroup>
                 </FormControl>
                 <FormControl fullWidth sx={{ mt: 2 }}>
@@ -181,11 +176,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                             variant="contained"
                             size="medium"
                             fullWidth
-                            disabled={
-                                amount < 100 ||
-                                phone?.lenght < 9 ||
-                                sessions.length < 1
-                            }
+                            disabled={amount < 100 || phone?.lenght < 9}
                         >
                             Proceder
                         </LoadingButton>
@@ -195,6 +186,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                             onClick={onClose}
                             variant="outlined"
                             color="error"
+                            disabled={pending}
                             fullWidth
                             size="medium"
                         >

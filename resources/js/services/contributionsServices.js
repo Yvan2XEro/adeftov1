@@ -80,8 +80,8 @@ export function acceptAllMembership(id) {
     );
 }
 
-export function fetchMyUnpaidSessions(id) {
-    return axios.get(`${API_URL}/contributions/${id}/my-unpaid-sessions`);
+export function fetchNextSession(id) {
+    return axios.get(`${API_URL}/contributions/${id}/next-session`);
 }
 
 export function mesombPayment(data) {

@@ -41,15 +41,17 @@ function ProfilePage() {
     }, [isAuthenticated]);
     return (
         <Box mt={10}>
-            <Typography  sx={{mt: 10}}component="h2" variant="h3">Mon Profil</Typography>
+            <Typography sx={{ mt: 10 }} component="h2" variant="h3">
+                Mon Profil
+            </Typography>
             <Grid container>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ mx: 1, boxShadow: 5, p: 2, }}>
+                    <Box sx={{ mx: 1, boxShadow: 5, p: 2 }}>
                         <Profile data={user} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ mx: 1, boxShadow: 5, p: 2, }}>
+                    <Box sx={{ mx: 1, boxShadow: 5, p: 2 }}>
                         <ProfileForm data={user} onChange={setUser} />
                     </Box>
                 </Grid>
@@ -171,7 +173,7 @@ function ProfileForm({ data, onChange }) {
 
     const submit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true)
+        setIsSubmitting(true);
         await auth
             .updateUser(user)
             .then((response) => {
@@ -180,34 +182,36 @@ function ProfileForm({ data, onChange }) {
                 toast.success("Modification effectuée avec succès");
             })
             .catch((error) => {
-                if(typeof error.response !== 'undefined')
+                if (typeof error.response !== "undefined")
                     toast.error("Une erreur est survenue");
                 setIsSubmitting(false);
-            })
+            });
     };
     const [loadingAvatar, setLoadingAvatar] = React.useState(false);
-    const [apiError, setApiError] = React.useState("")
+    const [apiError, setApiError] = React.useState("");
     const updateAvatar = async () => {
         const fd = new FormData();
         fd.append("image", avatar, avatar.name);
-        setLoadingAvatar(true)
-        setApiError('');
+        setLoadingAvatar(true);
+        setApiError("");
         await auth
             .setAvatar(fd)
             .then((response) => {
+                clearUploadedAvatar();
                 onChange(response.data.user);
-                toast.success("Modification effectuée avec succès");
-
-                setLoadingAvatar(false)
+                setLoadingAvatar(false);
             })
             .catch((error) => {
-                // if(error.response.status<500)
-                    setApiError(error.response.data.errors)
-                    toast.error(error.response.data.errors[0])
-                setLoadingAvatar(false)
-            });
+                if (error.response.status < 500)
+                    setApiError(error.response.data.errors);
+                setLoadingAvatar(false);
+            })
+            .finally(() => setLoadingAvatar(false));
     };
-
+    const clearUploadedAvatar = () => {
+        setAvatar(null);
+        setAvatarUrl(null);
+    };
     return (
         <Box>
             <Box component="form" onSubmit={submit}>
@@ -268,10 +272,7 @@ function ProfileForm({ data, onChange }) {
                                 <>
                                     <Button
                                         sx={{ mx: "auto" }}
-                                        onClick={() => {
-                                            setAvatarUrl(null);
-                                            setAvatar(null);
-                                        }}
+                                        onClick={clearUploadedAvatar}
                                         color="error"
                                         aria-label="upload picture"
                                         size="large"
@@ -281,7 +282,7 @@ function ProfileForm({ data, onChange }) {
                                     <LoadingButton
                                         sx={{ mx: "auto" }}
                                         onClick={updateAvatar}
-                                        loading={loadingAvatar}
+                                        loading={loadingAvatar === true}
                                         color="success"
                                         variant="outlined"
                                         aria-label="upload picture"
@@ -292,7 +293,9 @@ function ProfileForm({ data, onChange }) {
                                     </LoadingButton>
                                 </>
                             )}
-                            {apiError && <Alert severity="error">{apiError}</Alert>}
+                            {apiError && (
+                                <Alert severity="error">{apiError}</Alert>
+                            )}
                         </Box>
                     </FormControl>
                 </Box>
@@ -300,12 +303,14 @@ function ProfileForm({ data, onChange }) {
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
                         label="Nom"
-                        error={user?.firstname?.length<3}
+                        error={user?.firstname?.length < 3}
                         fullWidth
                         value={user?.firstname}
-                        onChange={e=>setUser({...user, firstname:e.target.value})}
+                        onChange={(e) =>
+                            setUser({ ...user, firstname: e.target.value })
+                        }
                     />
-                    {(user?.firstname?.length<3) && (
+                    {user?.firstname?.length < 3 && (
                         <Typography variant="caption" color="error">
                             Le nom doit contenir au moins 3 caracteres
                         </Typography>
@@ -313,13 +318,15 @@ function ProfileForm({ data, onChange }) {
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        error={user?.lastname?.length<3}
+                        error={user?.lastname?.length < 3}
                         label="Prenom"
                         fullWidth
                         value={user?.lastname}
-                        onChange={e=>setUser({...user, lastname:e.target.value})}
+                        onChange={(e) =>
+                            setUser({ ...user, lastname: e.target.value })
+                        }
                     />
-                    {(user?.lastname?.length<3) && (
+                    {user?.lastname?.length < 3 && (
                         <Typography variant="caption" color="error">
                             {errors.lastname?.message}
                         </Typography>
@@ -327,15 +334,17 @@ function ProfileForm({ data, onChange }) {
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                       error={!emailRegex.test(user?.email)}
+                        error={!emailRegex.test(user?.email)}
                         label="Email"
                         fullWidth
                         value={user?.email}
-                        onChange={e=>setUser({...user, email:e.target.value})}
+                        onChange={(e) =>
+                            setUser({ ...user, email: e.target.value })
+                        }
                     />
                     {!emailRegex.test(user?.email) && (
                         <Typography variant="caption" color="error">
-                           Veillez entrer un email valide
+                            Veillez entrer un email valide
                         </Typography>
                     )}
                 </FormControl>
@@ -345,16 +354,20 @@ function ProfileForm({ data, onChange }) {
                         fullWidth
                         type="tel"
                         value={user?.phone}
-                        onChange={e=>setUser({...user, phone:e.target.value})}
+                        onChange={(e) =>
+                            setUser({ ...user, phone: e.target.value })
+                        }
                     />
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
                     <TextField
-                        error={user?.num_cni?.length<3}
+                        error={user?.num_cni?.length < 3}
                         label="Numero de CNI"
                         fullWidth
                         value={user?.num_cni}
-                        onChange={e=>setUser({...user, num_cni:e.target.value})}
+                        onChange={(e) =>
+                            setUser({ ...user, num_cni: e.target.value })
+                        }
                     />
                 </FormControl>
                 <FormControl sx={{ mt: 1 }} fullWidth>
@@ -364,15 +377,14 @@ function ProfileForm({ data, onChange }) {
                         label="Arrondissement"
                         fullWidth
                         value={user?.city}
-                        onChange={(e,value)=>setUser({...user, city:value})}
+                        onChange={(e, value) =>
+                            setUser({ ...user, city: value })
+                        }
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Arrondissement"
-                            />
+                            <TextField {...params} label="Arrondissement" />
                         )}
                     />
-                    {cities.indexOf(user?.city)<0 && (
+                    {cities.indexOf(user?.city) < 0 && (
                         <Typography variant="caption" color="error">
                             Veillez selectionner un arrondissement
                         </Typography>

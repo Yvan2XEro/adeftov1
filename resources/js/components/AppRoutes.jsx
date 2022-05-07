@@ -13,6 +13,7 @@ import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import AdminStatPage from "../pages/admin/AdminStatPage"
 import AdminUserDetails from "../pages/admin/AdminUserDetails";
+import MyAccountPage from "../pages/MyAccountPage";
 
 const APP_ROUTES = [
     {
@@ -83,6 +84,14 @@ const APP_ROUTES = [
     {
         path: "/profile",
         element: <ProfilePage />,
+        exact: true,
+        meta: {
+            auth: true,
+        },
+    },
+    {
+        path: "/my-account",
+        element: <MyAccountPage />,
         exact: true,
         meta: {
             auth: true,

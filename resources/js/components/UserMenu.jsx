@@ -49,7 +49,7 @@ function UserMenu({onSelectItem}) {
                     </Button>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                    <Button size="small" component={Link} to="/account">
+                    <Button size="small" component={Link} to="/my-account">
                         Mon compte
                     </Button>
                 </MenuItem>

@@ -83,6 +83,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/contributions/{id}/next-session', [SessionController::class, 'nextSession'])->name('contributions.nextSession');
     Route::post('/init-messonb-payments', [PaymentController::class, 'mesombPayment'])->name('contributions.mesombPayment');
+    Route::get('/all-my-payments', [PaymentController::class, 'allMyPayments'])->name('contributions.allMyPayments');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.get');
     Route::put('users/toggle-is-admin/{id}', [UserController::class, 'toggleUserIsAdmin'])->name('users.toggleUserIsAdmin');
@@ -95,6 +96,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/user/password', [AuthController::class, 'changePassword'])->name('user.password');
     Route::post('/user/set-avatar', [AuthController::class, 'setProfilePicture'])->name('user.setProfilePicture');
     Route::delete('/user/set-avatar', [AuthController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
+
+    // Paypal payment routes
 });
 
 

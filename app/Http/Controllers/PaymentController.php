@@ -90,12 +90,27 @@ class PaymentController extends Controller
                 'message' => 'Payment successful',
                 'payment' => $payment,
             ], 200);
+        }else {
+            $payment->status = 'failed';
+            $payment->save();
+            return response()->json([
+                'message' => 'Payment failed',
+                'payment' => $payment,
+            ], 400);
         }
-        return response()->json([
-            'message' => 'Payment failed',
-            'payment' => $payment,
-        ], 400);
     }
+
+    public function allMyPayments(Request $request) {
+        $user = $request->user();
+        $payments = Payment::where('user_id', $user->id)->get();
+        foreach ($payments as $payment) {
+            $payment->user;
+            $payment->session;
+            $payment->session->contribution;
+        }
+        return response()->json($payments, 200);
+    }
+
     private function getCinetPayPaymentLink(
         Session $session,
         User $user,

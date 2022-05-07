@@ -52,7 +52,8 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-        })->monthly();
+        })->everyMinute();
+        //monthly
     }
 
     /**

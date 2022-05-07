@@ -122,6 +122,7 @@ export const DetailsModal = ({selected, onClose}) => {
                     height: "100%",
                     position: "relative",
                     margin: 0,
+                    minWidth: {md:400},
                 },
             }}
         >
@@ -159,7 +160,7 @@ export const DetailsModal = ({selected, onClose}) => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="body1">
-                                    Momo
+                                    Mtn Mobile Money/Orange Money
                                 </Typography>
                             </TableCell>
                         </TableRow>

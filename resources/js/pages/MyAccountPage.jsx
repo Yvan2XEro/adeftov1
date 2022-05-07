@@ -166,7 +166,7 @@ export const DetailsModal = ({selected, onClose}) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>
-                                <Typography>
+                                <Typography variant="strong" sx={{fontWeight: 'bold'}}>
                                     Date de paiement:
                                 </Typography>
                             </TableCell>
@@ -178,7 +178,7 @@ export const DetailsModal = ({selected, onClose}) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>
-                                <Typography>
+                                <Typography variant="strong" sx={{fontWeight: 'bold'}}>
                                     Montant:
                                 </Typography>
                             </TableCell>

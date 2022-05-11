@@ -27,12 +27,10 @@ import { AuthContext } from "../contexts/AuthContextProvider";
 
 export default function LoginPage() {
     return (
-        <>
-            <Grid container component="main" sx={{ height: "100vh" }}>
-                <ImageTheme />
-                <LoginForm />
-            </Grid>
-        </>
+        <Grid container component="main" sx={{ height: "100vh" }}>
+            <ImageTheme />
+            <LoginForm />
+        </Grid>
     );
 }
 const shema = yup.object().shape({

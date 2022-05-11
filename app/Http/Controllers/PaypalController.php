@@ -13,9 +13,15 @@ class PaypalController extends Controller
     public function handlePayment(Request $request)
     {
         $sessionId = $request->session_id;
-        $session = Session::fing($sessionId);
-        $contribution = $session->contribution();
+        $session = Session::find($sessionId);
+        if(!$session) {
+            return response()->json([
+                'message' => 'Not found'
+            ], 404);
+        }
+        $contribution = $session->contribution()->first();
         $amount = $request->amount;
+        $convertedAmount =  $amount / +env('XAF_USD_VALUE', 621.61);
         $user = User::findOrFail($request->user()->id);
 
         $payment = Payment::create([
@@ -31,20 +37,22 @@ class PaypalController extends Controller
             $product['items'] = [
                 [
                     'name' => $user->firstname.' '.$user->lastname,
-                    'price' => $request->amount,
+                    'price' => $convertedAmount,
                     'desc'  => 'Payement de la cotisation: '.$contribution->name,
                 ]
             ];
 
             $product['invoice_id'] = $payment->id;
             $product['invoice_description'] = "Order #{$product['invoice_id']} Bill";
-            $product['return_url'] = route('success.payment');
-            $product['cancel_url'] = route('cancel.payment');
-            $product['total'] = $amount;
+            $product['return_url'] = env('PAYPAL_RETURN_URL')."?selected_p=$payment->id";
+            $product['cancel_url'] = env('PAYPAL_RETURN_URL')."?selected_p=$payment->id";
+            $product['total'] = $convertedAmount;
 
             $paypalModule = new ExpressCheckout();
             $res = $paypalModule->setExpressCheckout($product);
             $res = $paypalModule->setExpressCheckout($product, true);
+
+            dd($res);
 
             return response()->json([
                 'link'=>$res['paypal_link']

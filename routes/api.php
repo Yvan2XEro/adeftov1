@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\ContributionsController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -98,6 +99,10 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/user/set-avatar', [AuthController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
 
     // Paypal payment routes
+    Route::post('/paypal-payment', [PaypalController::class, 'handlePayment'])->name('paypal.handlePayment');
+    Route::post('/paypal-payment-success', [PaypalController::class, 'paymentSuccess'])->name('paypal.paymentSuccess');
+    Route::post('/paypal-payment-cancel', [PaypalController::class, 'paymentCancel'])->name('paypal.paymentCancel');
+    
 });
 
 

@@ -22,6 +22,7 @@ class PaypalController extends Controller
             'user_id' => $user->id,
             'session_id' => $sessionId,
             'status' => 'pending',
+            'method' => 'paypal',
             'amount' => $amount
         ]);
 

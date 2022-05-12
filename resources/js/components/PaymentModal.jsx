@@ -14,12 +14,14 @@ import {
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
     fetchNextSession,
+    initPaypalPayment,
     mesombPayment,
 } from "../services/contributionsServices";
 import moment from "moment";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
+import paypal from "../assets/images/paypal.png";
 
 const style = {
     position: "absolute",
@@ -45,6 +47,7 @@ const style = {
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [amount, setAmount] = useState(500);
     const [pending, setPending] = useState(false);
+    const [paypalLoading, setPaypalLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const [selectedSession, setSelectedSession] = useState(null);
     const [phone, setPhone] = useState(user?.phone);
@@ -56,10 +59,27 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         if (contribution !== null) {
             fetchNextSession(contribution.id).then((response) => {
                 setSelectedSession(response.data);
-                console.log("YO", response.data);
             });
         }
     }, [contribution]);
+
+    const paypalPayment = useCallback(async () => {
+        if (selectedSession) {
+            setPaypalLoading(true);
+            await initPaypalPayment({
+                amount,
+                session_id: selectedSession.id,
+            }).then(response=>{
+                setPaypalLoading(false);
+                if(response.data.link)
+                    window.location.replace(response.data.link)
+                else
+                    toast.error("Veillez reessayer")
+            }).catch(err=>{
+                setPaypalLoading(false);
+            });
+        }
+    }, [selectedSession, amount]);
 
     const processPayment = useCallback(async () => {
         if (selectedSession) {
@@ -71,7 +91,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 setPhone(`+237${phone}`);
             }
             await mesombPayment({
-                amount: 100,
+                amount,
                 phone: phone.trim(),
                 session_id: selectedSession.id,
             })
@@ -88,7 +108,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         );
                 });
         }
-    }, [selectedSession, phone]);
+    }, [selectedSession, phone, amount]);
     return (
         <Modal
             sx={{ border: "none" }}
@@ -159,7 +179,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         />
                     </RadioGroup>
                 </FormControl>
-                <FormControl fullWidth sx={{ mt: 2 }}>
+                {method === "momo" && <FormControl fullWidth sx={{ mt: 2 }}>
                     <TextField
                         fullWidth
                         label="Numero de telephone pour le paiement"
@@ -167,19 +187,35 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                     />
-                </FormControl>
+                </FormControl>}
                 <Box mt={2} flexDirection="row" justifyContent="space-between">
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <LoadingButton
-                            loading={pending}
-                            onClick={processPayment}
-                            variant="contained"
-                            size="medium"
-                            fullWidth
-                            disabled={amount < 100 || phone?.lenght < 9}
-                        >
-                            Proceder
-                        </LoadingButton>
+                        {method === "momo" ? (
+                            <LoadingButton
+                                loading={pending}
+                                onClick={processPayment}
+                                variant="contained"
+                                size="medium"
+                                fullWidth
+                                disabled={amount < 100 || phone?.lenght < 9}
+                            >
+                                Proceder
+                            </LoadingButton>
+                        ) : (
+                            <LoadingButton
+                                loading={paypalLoading}
+                                onClick={paypalPayment}
+                                fullWidth
+                                variant="contained"
+                            >
+                                <Typography
+                                    sx={{ maxWidth: 100, maxHeight: 30 }}
+                                    component="img"
+                                    src={paypal}
+                                    alt="Paypal Logo"
+                                />
+                            </LoadingButton>
+                        )}
                     </Box>
                     <Box sx={{ mb: 2, mt: 2 }}>
                         <Button

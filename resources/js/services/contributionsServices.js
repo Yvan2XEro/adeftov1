@@ -88,6 +88,10 @@ export function mesombPayment(data) {
     return axios.post(`${API_URL}/init-messonb-payments`, data);
 }
 
+export function initPaypalPayment(data) {
+    return axios.post(`${API_URL}/paypal-payment`, data);
+}
+
 export function allMyPayments() {
     return axios.get(`${API_URL}/all-my-payments`);
 }

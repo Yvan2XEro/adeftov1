@@ -52,8 +52,6 @@ class PaypalController extends Controller
             $res = $paypalModule->setExpressCheckout($product);
             $res = $paypalModule->setExpressCheckout($product, true);
 
-            dd($res);
-
             return response()->json([
                 'link'=>$res['paypal_link']
             ], 200);

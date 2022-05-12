@@ -64,10 +64,14 @@ class PaypalController extends Controller
         $response = $paypalModule->getExpressCheckoutDetails($request->token);
         $paymentId = $response['InvoiceID'];
 
+        /**@var Payment|null */
         $payment = Payment::find($paymentId);
 
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
             if($payment) {
+                $c = $payment->session()->first()->contribution()->first();
+                $c->balance = $c->balance + $payment->amount;
+                $c->save();
                 $payment->status = 'paid';
                 $payment->save();
             }

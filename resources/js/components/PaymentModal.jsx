@@ -14,6 +14,7 @@ import {
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
     fetchNextSession,
+    getUsdVal,
     initPaypalPayment,
     mesombPayment,
 } from "../services/contributionsServices";
@@ -46,15 +47,22 @@ const style = {
 
 function PaymentModal({ onSuccess, contribution, open, onClose }) {
     const [amount, setAmount] = useState(500);
+    const [amountUSD, setAmountUSD] = useState(1);
     const [pending, setPending] = useState(false);
     const [paypalLoading, setPaypalLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const [selectedSession, setSelectedSession] = useState(null);
     const [phone, setPhone] = useState(user?.phone);
     const [method, setMethod] = useState("momo");
+    const [usdVal, setUsdVal] = useState(621.61)
     useEffect(() => {
         setPhone(user?.phone);
-    }, [user]);
+        (async()=>{
+            await getUsdVal().then(response=>{
+                setUsdVal(response.data)
+            })
+        })()
+    }, [selectedSession]);
     useEffect(() => {
         if (contribution !== null) {
             fetchNextSession(contribution.id).then((response) => {
@@ -67,7 +75,7 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         if (selectedSession) {
             setPaypalLoading(true);
             await initPaypalPayment({
-                amount,
+                amount: amountUSD*usdVal,
                 session_id: selectedSession.id,
             }).then(response=>{
                 setPaypalLoading(false);
@@ -119,18 +127,38 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style} component={Paper}>
-                <Typography sx={{ mt: 2 }} xs={12} component="h4" variant="h5">
+                <Typography sx={{ mt: 2 }} xs={12} component="h4" variant="h4">
                     Payer votre cotisations
                 </Typography>
                 {selectedSession && (
-                    <Typography sx={{ mt: 2 }} component="p" variant="p">
-                        <Typography component="span" variant="srong">
-                            Mois de:
-                        </Typography>{" "}
-                        {moment(selectedSession?.date).format("MMMM  YYYY")}
+                   <Box>
+                        <Typography sx={{ mt: 2 }} component="span" variant="small">
+                            (Mois de: {moment(selectedSession?.date).format("MMMM  YYYY")})
                     </Typography>
+                   </Box>
                 )}
-                <Box
+                <FormControl sx={{mt: 2.5}}>
+                    <Typography component="p" variant="strong">
+                        Mode de paiement:
+                    </Typography>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        value={method}
+                        onChange={(e) => setMethod(e.target.value)}
+                    >
+                        <FormControlLabel
+                            control={<Radio />}
+                            value="momo"
+                            label="Mobile/Orange money"
+                        />
+                        <FormControlLabel
+                            control={<Radio />}
+                            value="paypal"
+                            label="PayPal"
+                        />
+                    </RadioGroup>
+                </FormControl>
+                {method==="momo"?<Box
                     sx={{
                         border: 0.4,
                         borderColor: "grey.500",
@@ -154,31 +182,44 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                             aria-label="Restricted values"
                             value={amount}
                             onChange={(_, value) => setAmount(value)}
-                            step={500}
-                            min={500}
+                            step={usdVal}
+                            min={usdVal}
                             max={500000}
                             valueLabelDisplay="auto"
                         />
                     </FormControl>
-                </Box>
-                <FormControl>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        value={method}
-                        onChange={(e) => setMethod(e.target.value)}
-                    >
-                        <FormControlLabel
-                            control={<Radio />}
-                            value="momo"
-                            label="Mobile/Orange money"
+                </Box>:
+                <Box
+                    sx={{
+                        border: 0.4,
+                        borderColor: "grey.500",
+                        padding: 1,
+                        borderRadius: 1.5,
+                    }}
+                >
+                    <Typography component="p" variant="p">
+                        Deffinissez la somme que vous voulez payer (USD)
+                    </Typography>
+                    <FormControl sx={{ mt: 2 }} fullWidth>
+                        <TextField
+                            label="Somme a payer"
+                            type="number"
+                            value={amountUSD}
+                            onChange={({ target }) => setAmountUSD(target.value)}
                         />
-                        <FormControlLabel
-                            control={<Radio />}
-                            value="paypal"
-                            label="PayPal"
+                    </FormControl>
+                    <FormControl fullWidth sx={{ mt: 2 }}>
+                        <Slider
+                            aria-label="Restricted values"
+                            value={amountUSD}
+                            onChange={(_, value) => setAmountUSD(value)}
+                            step={10}
+                            min={1}
+                            max={10000}
+                            valueLabelDisplay="auto"
                         />
-                    </RadioGroup>
-                </FormControl>
+                    </FormControl>
+                </Box>}
                 {method === "momo" && <FormControl fullWidth sx={{ mt: 2 }}>
                     <TextField
                         fullWidth

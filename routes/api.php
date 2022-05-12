@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $u  = User::find($request->user()->id);
-    $u["permissions"] = $u->permissions;
-    $u["roles"] = $u->roles;
+    $u->permissions;
+    $u->roles;
     return $u;
 });
 
@@ -38,6 +38,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // 'middleware' => ['cors']
 Route::post('/login', [AuthController::class, 'login'])->name('login.api');
 Route::post('/register', [AuthController::class, 'register'])->name('register.api');
+Route::get('/xaf-usd-val', function(){
+    return response()->json(env('XAF_USD_VALUE'),200);
+})->name('xaf-usd-val');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/contributions/{id}', [ContributionsController::class, 'show'])->name('contributions.show');

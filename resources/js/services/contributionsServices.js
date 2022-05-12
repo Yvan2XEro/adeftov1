@@ -92,6 +92,10 @@ export function initPaypalPayment(data) {
     return axios.post(`${API_URL}/paypal-payment`, data);
 }
 
+export function getUsdVal() {
+    return axios.get(`${API_URL}/xaf-usd-val`);
+}
+
 export function allMyPayments() {
     return axios.get(`${API_URL}/all-my-payments`);
 }

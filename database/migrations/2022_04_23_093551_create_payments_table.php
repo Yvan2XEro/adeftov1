@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('amount', 10, 2)->default(0);
             $table->enum('method', ['paypal', 'momo'])->default('momo');
-            $table->enum('status', ['pending', 'paid', 'failed', 'cancelled']);
+            $table->enum('status', ['pending', 'paid', 'failed', 'cancelled'])->default('pending');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('session_id');

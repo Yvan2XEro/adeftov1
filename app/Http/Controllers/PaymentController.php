@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
 
 class PaymentController extends Controller
 {
@@ -23,9 +24,9 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Session not found'], 404);
         }
 
-        $result = $this->getCinetPayPaymentLink($session, $currency ,$user, $amount);
+        $result = $this->getCinetPayPaymentLink($session, $currency, $user, $amount);
 
-        if($result instanceof JsonResponse) {
+        if ($result instanceof JsonResponse) {
             return $result;
         } else {
             return response()->json([
@@ -34,25 +35,26 @@ class PaymentController extends Controller
         }
     }
 
-    public function notification(Request $request) {
+    public function notification(Request $request)
+    {
         $transactionId = $request->cpm_trans_id;
         $siteId = $request->cpm_site_id;
         $payment = Payment::firstWhere([
             'payment_id' => $request->payment_id
         ]);
-        if($payment && config('CINET_PAY_SITE_ID')== $siteId) {
-            $response = Http::post(config('CINET_PAY_TRANSACTION_VERIFICATION_URL'),[
+        if ($payment && config('CINET_PAY_SITE_ID') == $siteId) {
+            $response = Http::post(config('CINET_PAY_TRANSACTION_VERIFICATION_URL'), [
                 'apikey' => config('CINET_PAY_API_KEY'),
                 'site_id' => config('CINET_PAY_SITE_ID'),
                 'transaction_id' => $transactionId,
             ])->array();
 
-            if(+$response['code']==600) {
+            if (+$response['code'] == 600) {
                 $payment->status = 'failed';
                 $payment->payment_method = $response['data']['payment_method'];
                 $payment->payment_date = $response['data']['payment_date'];
                 $payment->save();
-            } elseif(+$response['code']==0) {
+            } elseif (+$response['code'] == 0) {
                 $payment->status = 'success';
                 $payment->operation_id = $response['data']['operation_id'];
                 $payment->payment_method = $response['data']['payment_method'];
@@ -62,39 +64,50 @@ class PaymentController extends Controller
         }
     }
 
-    public function mesombPayment(Request $request) {
+    public function mesombPayment(Request $request)
+    {
         $sessionId = $request->session_id;
         $amount = $request->amount;
         $phone = $request->phone;
         $user = User::findOrFail($request->user()->id);
-        
+
         $payment = Payment::create([
             'user_id' => $user->id,
             'session_id' => $sessionId,
             'amount' => $amount
         ]);
-        $response = $payment->payment($phone,  $amount)->pay();
-        if($response->success) {
-            $c = $payment->session()->first()->contribution()->first();
-            $c->balance = $amount;
-            $c->save();
-            $payment->status = 'paid';
-            $payment->save();
-            return response()->json([
-                'message' => 'Payment successful',
-                'payment' => $payment,
-            ], 200);
-        }else {
+        try {
+            $response = $payment->payment($phone,  $amount)->pay();
+            if ($response->success) {
+                $c = $payment->session()->first()->contribution()->first();
+                $c->balance = $amount;
+                $c->save();
+                $payment->status = 'paid';
+                $payment->save();
+                return response()->json([
+                    'message' => 'Payment successful',
+                    'payment' => $payment,
+                ], 200);
+            }
             $payment->status = 'failed';
             $payment->save();
             return response()->json([
                 'message' => 'Payment failed',
                 'payment' => $payment,
             ], 400);
+        } catch (RequestException $e) {
+            $payment->status = 'failed';
+            $payment->save();
+            dd($e);
+            return response()->json([
+                'message' => 'Serveur de payement momentanement indisponnible!',
+                'payment' => $payment,
+            ], 400);
         }
     }
 
-    public function allMyPayments(Request $request) {
+    public function allMyPayments(Request $request)
+    {
         $user = $request->user();
         $payments = Payment::where('user_id', $user->id)->get();
         foreach ($payments as $payment) {
@@ -110,8 +123,8 @@ class PaymentController extends Controller
         User $user,
         $currency,
         $amount,
-    ): string | JsonResponse{
-        $transactonDescription = 'Payement de la seance ' . $session->date.'Pour la cotisation :'.$session->contribution->name;
+    ): string | JsonResponse {
+        $transactonDescription = 'Payement de la seance ' . $session->date . 'Pour la cotisation :' . $session->contribution->name;
         $transactionId = uniqid();
         $payment = $session->payments()->create([
             'amount' => $amount,
@@ -148,7 +161,7 @@ class PaymentController extends Controller
 
         $response = Http::post(config('cinetpay.CINET_PAY_CHECKOUT'), $data);
         $responseData = $response->array();
-        if(+$responseData['code'] != 201) {
+        if (+$responseData['code'] != 201) {
             $payment = $session->payments()->where('id', $payment->id);
             $payment->update([
                 'status' => 'failed',

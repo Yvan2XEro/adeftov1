@@ -98,11 +98,11 @@ class PaymentController extends Controller
         } catch (RequestException $e) {
             $payment->status = 'failed';
             $payment->save();
-            dd($e);
+            // dd($e->getMessage());
             return response()->json([
                 'message' => 'Serveur de payement momentanement indisponnible!',
                 'payment' => $payment,
-            ], 400);
+            ], 503);
         }
     }
 

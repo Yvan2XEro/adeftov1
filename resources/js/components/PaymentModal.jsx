@@ -93,7 +93,8 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
         if (selectedSession) {
             setPending(true);
             toast.info("Veuillez conulter votre téléphone pour continuer", {
-                autoClose: false,
+                closeButton: true,
+                autoClose: false
             });
             if (phone.indexOf("+237") === -1) {
                 setPhone(`+237${phone}`);
@@ -110,7 +111,11 @@ function PaymentModal({ onSuccess, contribution, open, onClose }) {
                 })
                 .catch((err) => {
                     setPending(false);
-                    if (err.response)
+                    if(err.response?.status===503) {
+                        toast.error(
+                            "Service de payement mobile momentannement indisponnible!"
+                        );
+                    }else if (err.response)
                         toast.error(
                             "Erreur lors du paiement. Veillez réessayer SVP"
                         );

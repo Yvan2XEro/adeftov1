@@ -13,6 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "./Drawer";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import UserMenu from "./UserMenu";
+import Logo from "../assets/images/logo.png"
 
 export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -41,7 +42,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                         to="/"
                         color="inherit"
                     >
-                        <img style={{height: "35px", width: "35px"}} src="/images/logo.png" alt="Logo"/>
+                        <img style={{height: "35px", width: "35px"}} src={Logo} alt="Logo"/>
                         <Typography component="span" ml={1} fontSize="13px" >ADEFTO</Typography>
                     </Button>
                     <Box ml="auto">

@@ -5,9 +5,15 @@ import a1 from "../assets/images/asset1.jpg"
 import a2 from "../assets/images/asset2.jpg"
 import a3 from "../assets/images/asset3.jpg"
 import a4 from "../assets/images/asset4.jpg"
-import a5 from "../assets/images/asset5.jpg"
+import a6 from "../assets/images/home/asset1.png"
+import a7 from "../assets/images/home/asset2.png"
+import a8 from "../assets/images/home/asset3.png"
+import a9 from "../assets/images/home/asset4.png"
+import a10 from "../assets/images/home/asset5.png"
+import a11 from "../assets/images/home/asset6.png"
+import a12 from "../assets/images/home/asset7.png"
 
-const images = [a1, a2, a3, a4, a5];
+const images = [a1, a2, a3, a4, a6, a7, a8, a9, a10, a11, a12];
 function ImageTheme() {
     const [image, setImage] = React.useState(images[0]);
     React.useEffect(() => {

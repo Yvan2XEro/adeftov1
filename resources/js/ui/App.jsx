@@ -55,6 +55,7 @@ function App() {
 }
 
 const root = reactDom.createRoot(document.getElementById("root"));
+registerServiceWorker();
 root.render(
     <React.StrictMode>
         <App />

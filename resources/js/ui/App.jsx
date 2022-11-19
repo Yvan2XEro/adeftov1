@@ -9,7 +9,6 @@ import Header from "../components/Header";
 import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
 import "./styles.css";
-import registerServiceWorker from 'sw';
 
 auth.setup();
 
@@ -54,7 +53,6 @@ function App() {
 }
 
 const root = reactDom.createRoot(document.getElementById("root"));
-registerServiceWorker();
 root.render(
     <React.StrictMode>
         <App />

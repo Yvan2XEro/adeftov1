@@ -9,7 +9,7 @@ import Header from "../components/Header";
 import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
 import "./styles.css";
-import registerServiceWorker from 'react-service-worker';
+import registerServiceWorker from 'sw';
 
 auth.setup();
 
@@ -25,7 +25,6 @@ function App() {
             mode, 
             secondary: {
                 main: "#8cc47f",
-                
             },
              primary: {
                 main: "#269510",

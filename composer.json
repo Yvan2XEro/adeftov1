@@ -15,6 +15,7 @@
         "malico/laravel-mesomb": "^1.4",
         "mezatsong/laravel-swagger-docs": "dev-master",
         "santigarcor/laratrust": "^7.1",
+        "silviolleite/laravelpwa": "^2.0",
         "srmklive/paypal": "~1.0",
         "swiftmailer/swiftmailer": "^6.0"
     },

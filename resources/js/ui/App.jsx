@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import AuthContextProvider from "../contexts/AuthContextProvider";
 import auth from "../services/auth";
 import "./styles.css";
+import registerServiceWorker from 'react-service-worker';
 
 auth.setup();
 
@@ -20,9 +21,16 @@ function App() {
     };
 
     const theme = createTheme({
-        palette: { mode, secondary: {
-            main: "#1976d2"
-        }},
+        palette: { 
+            mode, 
+            secondary: {
+                main: "#8cc47f",
+                
+            },
+             primary: {
+                main: "#269510",
+            },
+        },
         typography: {
             fontFamily: ['"Montserrat"', "Open Sans"].join(","),
         },

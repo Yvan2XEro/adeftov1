@@ -1,10 +1,12 @@
 import { Button, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import BgImg from "../assets/images/bg.svg";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 function HomePage() {
+    const {isAuthenticated} = useContext(AuthContext)
     return (
         <Box
             sx={{
@@ -44,7 +46,7 @@ function HomePage() {
                                 (OM,Momo). Le suivi en temps reel ,en live!
                             </Typography>
                         </Box>
-                        <Box display="flex" justifyContent="space-between">
+                        {!isAuthenticated ? <Box display="flex" justifyContent="space-between">
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -62,7 +64,14 @@ function HomePage() {
                             >
                                 Se connecter
                             </Button>
-                        </Box>
+                        </Box>:<Button
+                                color="primary"
+                                variant="contained"
+                                component={Link}
+                                to={"/contributions"}
+                            >
+                                Cautiser maintenant
+                            </Button>}
                     </Grid>
                     <Grid item md={6} xs={12}>
                         <Box maxHeight={400}>

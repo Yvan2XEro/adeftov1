@@ -6,13 +6,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import UserMenu from "./UserMenu";
 
-function Drawer({ openDrawer, setOpenDrawer }) {
+function Drawer({ openDrawer, setOpenDrawer, switchTheme }) {
     const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
     return (
         <MuiDrawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
             <Box
                 ml={2}
-                sx={{ minWidth: 200, width: 200, position: "relative" }}
+                sx={{ minWidth: 200, width: 200, position: "relative", pr: 2 }}
             >
                 <Button
                     onClick={() => setOpenDrawer(false)}
@@ -36,6 +36,7 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                             Acceuil
                         </Button>
                     </Box>
+                    
                     {isAuthenticated ? (
                         <Box>
                             {isAdmin && (
@@ -61,6 +62,7 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                                 <Button
                                     to="/login"
                                     size="small"
+                                    sx={{width: "100%"}}
                                     variant="contained"
                                     component={Link}
                                     onClick={() => setOpenDrawer(false)}
@@ -73,12 +75,13 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                                     variant="outlined"
                                     to="/register"
                                     size="small"
+                                    sx={{width: "100%"}}
                                     component={Link}
                                     onClick={() => setOpenDrawer(false)}
                                 >
                                     Register
                                 </Button>
-                            </Box>{" "}
+                            </Box>
                         </>
                     )}
                     {isAuthenticated && (
@@ -88,6 +91,7 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                                 to="/register"
                                 color="error"
                                 size="small"
+                                sx={{width: "100%"}}
                                 component={Link}
                                 onClick={() => {
                                     logout();
@@ -98,6 +102,9 @@ function Drawer({ openDrawer, setOpenDrawer }) {
                             </Button>
                         </Box>
                     )}
+                    <Box>
+                        {switchTheme}
+                    </Box>
                 </Box>
             </Box>
         </MuiDrawer>

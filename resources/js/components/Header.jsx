@@ -2,14 +2,12 @@ import React, { useContext, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Box, Button, Switch, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Switch, Typography, useMediaQuery, useTheme } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "./Drawer";
@@ -23,24 +21,28 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
     const navigate = useNavigate();
     const { isAdmin, user, isAuthenticated, logout } = useContext(AuthContext);
 
+    const switchTheme = ()=>{
+        return (<Switch
+                    checked={isDarkTheme}
+                    icon={<DarkModeIcon color="inherit" />}
+                    onChange={onToggleDarkTheme}
+                    inputProps={{ "aria-label": "controlled" }}
+                    title="Changer de theme d'affichage"
+                />)
+    }
     return (
         <>
             <CssBaseline />
             <AppBar position="fixed" color="primary">
                 <Toolbar position="static">
                     <Button
-                        sx={{ mr: 2 }}
+                        // sx={{ mr: 2 }}
                         component={NavLink}
                         to="/"
                         color="inherit"
                     >
-                        {/* <NavLink
-                            to="/"
-                            className="nav-link"
-                            activeclassname="active"
-                        > */}
-                        <HomeIcon />
-                        {/* </NavLink> */}
+                        <img style={{height: "35px", width: "35px"}} src="/images/logo.png" alt="Logo"/>
+                        <Typography component="span" ml={1} fontSize="13px" >ADEFTO</Typography>
                     </Button>
                     <Box ml="auto">
                         {!isMobile && (
@@ -111,13 +113,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                             </>
                         )}
 
-                        <Switch
-                            checked={isDarkTheme}
-                            icon={<DarkModeIcon color="inherit" />}
-                            onChange={onToggleDarkTheme}
-                            inputProps={{ "aria-label": "controlled" }}
-                            title="Changer de theme d'affichage"
-                        />
+                       {!isMobile && switchTheme()}
 
                         {isMobile && (
                             <Button
@@ -132,7 +128,7 @@ export default function Header({ onToggleDarkTheme, isDarkTheme }) {
                 </Toolbar>
             </AppBar>
             {isMobile && (
-                <Drawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+                <Drawer switchTheme={switchTheme()} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
             )}
         </>
     );

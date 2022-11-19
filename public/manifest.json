@@ -1,0 +1,33 @@
+{
+    "short_name": "ADEFTO",
+    "name": "Cautisation ADEFTO",
+    "display": "standalone",
+    "theme_color": "#fafafa",
+    "orientation": "portrait",
+    "background_color": "#040404",
+    "description": "Yo",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/icons/icon-256.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        },
+        {
+            "src": "/icons/icon-384.png",
+            "type": "image/png",
+            "sizes": "384x384"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

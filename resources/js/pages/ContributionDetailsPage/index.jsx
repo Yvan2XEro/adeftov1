@@ -88,7 +88,7 @@ function ContributionDetailsPage() {
                                 {user?.id === contribution?.user_id && (
                                     <Button
                                         sx={{ ml: 10 }}
-                                        variant="outlined"
+                                        variant="text"
                                         component={Link}
                                         to={
                                             "/admin/contributions?selected_id=" +

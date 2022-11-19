@@ -42,23 +42,23 @@ return [
         'status_bar' => 'black',
         'icons' => [
             '72x72' => [
-                'path' => '/icons/icon-72x72.png',
+                'path' => '/icons/icon-72.png',
                 'purpose' => 'any'
             ],
             '96x96' => [
-                'path' => '/icons/icon-96x96.png',
+                'path' => '/icons/icon-96.png',
                 'purpose' => 'any'
             ],
             '128x128' => [
-                'path' => '/icons/icon-128x128.png',
+                'path' => '/icons/icon-128.png',
                 'purpose' => 'any'
             ],
             '144x144' => [
-                'path' => '/icons/icon-144x144.png',
+                'path' => '/icons/icon-144.png',
                 'purpose' => 'any'
             ],
             '152x152' => [
-                'path' => '/icons/icon-152x152.png',
+                'path' => '/icons/icon-152.png',
                 'purpose' => 'any'
             ],
             "192x192"=>[

@@ -18,12 +18,14 @@ function App() {
         localStorage.setItem("theme", mode === "dark" ? "light" : "dark");
         setMode(mode === "dark" ? "light" : "dark");
     };
+    useEffect
 
     const theme = createTheme({
         palette: { 
             mode, 
             secondary: {
                 main: "#8cc47f",
+                
             },
              primary: {
                 main: "#269510",
